@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\MaintenanceType;
 use Illuminate\Database\Seeder;
 
 class MaintenanceTypeSeeder extends Seeder
@@ -13,6 +14,8 @@ class MaintenanceTypeSeeder extends Seeder
      */
     public function run()
     {
-        //
+        MaintenanceType::factory()->create(['name'=>'Preventivo']);
+        MaintenanceType::factory()->create(['name'=>'Correctivo']);
+        MaintenanceType::factory()->create(['name'=>'Predictivo']);
     }
 }

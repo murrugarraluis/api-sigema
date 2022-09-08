@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Article;
+use App\Models\MaintenanceSheet;
 use Illuminate\Database\Seeder;
 
 class MaintenanceSheetSeeder extends Seeder
@@ -13,6 +15,12 @@ class MaintenanceSheetSeeder extends Seeder
      */
     public function run()
     {
-        //
+        $articles = Article::inRandomOrder()->limit(5)->get();
+
+        MaintenanceSheet::factory(10)
+            ->hasAttached($articles, [
+                'quantity' => 6
+            ])
+            ->create();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ArticleType;
 use Illuminate\Database\Seeder;
 
 class ArticleTypeSeeder extends Seeder
@@ -13,6 +14,8 @@ class ArticleTypeSeeder extends Seeder
      */
     public function run()
     {
-        //
+        ArticleType::factory()->create(['name'=>'Oficina']);
+        ArticleType::factory()->create(['name'=>'Repuesto']);
+        ArticleType::factory()->create(['name'=>'EPP']);
     }
 }

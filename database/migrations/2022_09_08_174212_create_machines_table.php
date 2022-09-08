@@ -19,8 +19,8 @@ class CreateMachinesTable extends Migration
             $table->string('name');
             $table->string('model');
             $table->string('brand');
-            $table->time('maximum_working_time');
-            $table->time('time_worked');
+            $table->integer('maximum_working_time');
+            $table->integer('time_worked');
             $table->timestamps();
         });
     }

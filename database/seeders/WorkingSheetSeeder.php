@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\WorkingSheet;
 use Illuminate\Database\Seeder;
 
 class WorkingSheetSeeder extends Seeder
@@ -13,6 +14,6 @@ class WorkingSheetSeeder extends Seeder
      */
     public function run()
     {
-        //
+        WorkingSheet::factory(20)->create();
     }
 }

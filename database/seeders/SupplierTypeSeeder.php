@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\SupplierType;
 use Illuminate\Database\Seeder;
 
 class SupplierTypeSeeder extends Seeder
@@ -13,6 +14,7 @@ class SupplierTypeSeeder extends Seeder
      */
     public function run()
     {
-        //
+        SupplierType::factory()->create(['name'=>'Proveedor de Servicios']);
+        SupplierType::factory()->create(['name'=>'Proveedor de Articulos']);
     }
 }

@@ -18,7 +18,7 @@ class CreateEmployeesTable extends Migration
             $table->string('document_number');
             $table->string('name');
             $table->string('lastname');
-            $table->string('perosnal_email');
+            $table->string('personal_email');
             $table->string('phone');
             $table->string('address');
             $table->timestamps();

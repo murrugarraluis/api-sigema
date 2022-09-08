@@ -9,4 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class Bank extends Model
 {
     use HasFactory, Uuids;
+    public function suppliers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Supplier::class);
+    }
 }

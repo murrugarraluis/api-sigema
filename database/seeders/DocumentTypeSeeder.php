@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\DocumentType;
 use Illuminate\Database\Seeder;
 
 class DocumentTypeSeeder extends Seeder
@@ -13,6 +14,8 @@ class DocumentTypeSeeder extends Seeder
      */
     public function run()
     {
-        //
+        DocumentType::factory()->create(['name' => 'DNI']);
+        DocumentType::factory()->create(['name' => 'RUC']);
+        DocumentType::factory()->create(['name' => 'Passport']);
     }
 }

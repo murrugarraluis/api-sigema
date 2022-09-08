@@ -9,4 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class Notification extends Model
 {
     use HasFactory, Uuids;
+    public function employees(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

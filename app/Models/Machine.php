@@ -9,4 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class Machine extends Model
 {
     use HasFactory,Uuids;
+    public function articles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Article::class);
+    }
 }
