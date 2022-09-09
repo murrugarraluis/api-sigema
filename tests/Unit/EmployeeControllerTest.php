@@ -2,6 +2,9 @@
 
 namespace Tests\Unit;
 
+use App\Models\DocumentType;
+use App\Models\Employee;
+use App\Models\Position;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -9,6 +12,7 @@ use Tests\TestCase;
 class EmployeeControllerTest extends TestCase
 {
     use RefreshDatabase;
+
     private $resource = 'employees';
 
     public function test_index()
@@ -18,11 +22,33 @@ class EmployeeControllerTest extends TestCase
             'email' => 'admin@jextecnologies.com',
             'password' => bcrypt('123456')
         ]);
+
+        Position::factory()->create(['name' => 'System Engineer']);
+        DocumentType::factory()->create(['name' => 'DNI']);
+        Employee::factory(10)->create();
+
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource");
 
         $response->assertStatus(200)
-            ->assertJsonStructure(['data' => []]);
+            ->assertJsonStructure(['data' => [
+                '*' => [
+                    'id',
+                    'document_number',
+                    'name',
+                    'lastname',
+                    'personal_email',
+                    'phone',
+                    'address',
+                    'user',
+                    'position' => [
+                        'name'
+                    ],
+                    'document_type' => [
+                        'name'
+                    ],
+                ]
+            ]]);
 
     }
 }
