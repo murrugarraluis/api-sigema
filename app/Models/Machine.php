@@ -18,4 +18,8 @@ class Machine extends Model
     {
         return $this->morphOne(Image::class, 'imageable');
     }
+    public function maintenance_sheets(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(MaintenanceSheet::class);
+    }
 }

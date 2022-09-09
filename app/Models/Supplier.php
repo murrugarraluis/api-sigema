@@ -18,4 +18,8 @@ class Supplier extends Model
     {
         return $this->belongsToMany(Article::class);
     }
+    public function maintenance_sheets(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(MaintenanceSheet::class);
+    }
 }

@@ -23,9 +23,9 @@ class EmployeeResource extends JsonResource
             "personal_email" => $this->personal_email,
             "phone" => $this->phone,
             "address" => $this->address,
-            "user" => $this->user,
-            "position" => $this->position,
-            "document_type" => $this->document_type,
+            "user" => new UserResource($this->user),
+            "position" => new PositionResource($this->position),
+            "document_type" => new DocumentTypeResource($this->document_type),
         ];
     }
 }
