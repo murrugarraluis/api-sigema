@@ -44,7 +44,6 @@ class EmployeeControllerTest extends TestCase
                     'personal_email',
                     'phone',
                     'address',
-                    'user',
                     'position' => [
                         'name'
                     ],

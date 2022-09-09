@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\DocumentType;
 use App\Models\Position;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EmployeeFactory extends Factory
@@ -25,7 +26,8 @@ class EmployeeFactory extends Factory
             'phone' => $this->faker->randomNumber(9),
             'address' => $this->faker->address(),
             'position_id' => $position,
-            'document_type_id' => $document_type
+            'document_type_id' => $document_type,
+            'user_id'=>User::factory()->create()
         ];
     }
 }
