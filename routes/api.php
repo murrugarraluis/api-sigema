@@ -39,6 +39,9 @@ Route::prefix('v1/')->group(function () {
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
 
+//        TODO:
+//          -TEST ASSERT FILEDS IN LIST RESOURCES
+//          -DOCUMENTATION POSTMAN
         Route::get('articles', [ArticleController::class, 'index']);
         Route::get('article-types', [ArticleTypeController::class, 'index']);
         Route::get('attendance-sheets', [AttendanceSheetController::class, 'index']);
