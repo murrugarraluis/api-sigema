@@ -22,4 +22,12 @@ class Supplier extends Model
     {
         return $this->hasMany(MaintenanceSheet::class);
     }
+    public function supplier_type(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(SupplierType::class);
+    }
+    public function document_type(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(DocumentType::class);
+    }
 }

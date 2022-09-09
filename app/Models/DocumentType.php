@@ -14,4 +14,8 @@ class DocumentType extends Model
     {
         return $this->hasMany(Employee::class);
     }
+    public function suppliers(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Supplier::class);
+    }
 }
