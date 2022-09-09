@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\DocumentType;
 use App\Models\Employee;
+use App\Models\Machine;
 use App\Models\Position;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -15,6 +16,13 @@ class EmployeeControllerTest extends TestCase
 
     private $resource = 'employees';
 
+    public function seedData()
+    {
+        Position::factory()->create(['name' => 'System Engineer']);
+        DocumentType::factory()->create(['name' => 'DNI']);
+        Employee::factory(10)->create();
+    }
+
     public function test_index()
     {
         $this->withoutExceptionHandling();
@@ -22,11 +30,7 @@ class EmployeeControllerTest extends TestCase
             'email' => 'admin@jextecnologies.com',
             'password' => bcrypt('123456')
         ]);
-
-        Position::factory()->create(['name' => 'System Engineer']);
-        DocumentType::factory()->create(['name' => 'DNI']);
-        Employee::factory(10)->create();
-
+        $this->seedData();
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource");
 

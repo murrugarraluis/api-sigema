@@ -5,18 +5,27 @@ namespace App\Http\Resources;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use JsonSerializable;
+
 
 class MachineResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  Request  $request
-     * @return array|Arrayable|JsonSerializable
+     * @param Request $request
+     * @return array
      */
-    public function toArray($request)
+    public function toArray($request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'serie_number' => $this->serie_number,
+            'name' => $this->name,
+            'brand' => $this->brand,
+            'model' => $this->model,
+            'image' => $this->image ? $this->image->url : null,
+            'maximum_working_time' => $this->maximum_working_time,
+            'status' => $this->status,
+        ];
     }
 }

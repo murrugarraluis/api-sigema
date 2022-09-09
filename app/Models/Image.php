@@ -9,4 +9,8 @@ class Image extends Model
 {
     use HasFactory;
     protected $hidden = ['created_at', 'updated_at'];
+    public function imageable()
+    {
+        return $this->morphTo();
+    }
 }

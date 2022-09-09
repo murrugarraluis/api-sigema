@@ -20,12 +20,12 @@ class ImageSeeder extends Seeder
         $employee = Employee::limit(1)->first();
         $machine = Machine::limit(1)->first();
         Image::factory()->create([
-            'imagable_type' => Employee::class,
-            'imagable_id' => $employee,
+            'imageable_type' => Employee::class,
+            'imageable_id' => $employee,
         ]);
         Image::factory()->create([
-            'imagable_type' => Machine::class,
-            'imagable_id' => $machine,
+            'imageable_type' => Machine::class,
+            'imageable_id' => $machine,
         ]);
     }
 }

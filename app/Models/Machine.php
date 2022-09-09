@@ -14,4 +14,8 @@ class Machine extends Model
     {
         return $this->belongsToMany(Article::class);
     }
+    public function image(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
 }
