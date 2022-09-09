@@ -34,19 +34,19 @@ class ArticleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Article $article
-     * @return \Illuminate\Http\Response
+     * @param Article $article
+     * @return ArticleResource
      */
-    public function show(Article $article)
+    public function show(Article $article): ArticleResource
     {
-        //
+        return new ArticleResource($article);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Article $article
+     * @param Article $article
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Article $article)
@@ -57,7 +57,7 @@ class ArticleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Article $article
+     * @param Article $article
      * @return \Illuminate\Http\Response
      */
     public function destroy(Article $article)

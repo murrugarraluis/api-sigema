@@ -44,4 +44,42 @@ class WorkingSheetControllerTest extends TestCase
             ]]);
 
     }
+    public function test_show()
+    {
+//        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+
+        $this->seedData();
+        $working_sheet = WorkingSheet::limit(1)->first();
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->getJson("api/v1/$this->resource/$working_sheet->id");
+
+        $response->assertStatus(200)
+            ->assertJsonStructure(['data' => [
+                    'id',
+                    'date_start',
+                    'date_end',
+                    'description',
+                    'machine'=>[
+                        'name'
+                    ],
+            ]]);
+
+    }
+    public function test_show_not_found()
+    {
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->getJson("api/v1/$this->resource/1");
+
+        $response->assertStatus(404)
+            ->assertExactJson(['message' => "Unable to locate the working sheet you requested."]);
+    }
+
 }

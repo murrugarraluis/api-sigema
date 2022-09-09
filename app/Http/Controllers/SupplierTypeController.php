@@ -35,19 +35,20 @@ class SupplierTypeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\SupplierType  $supplierType
-     * @return \Illuminate\Http\Response
+     * @param SupplierType $supplierType
+     * @return SupplierTypeResource
      */
-    public function show(SupplierType $supplierType)
+    public function show(SupplierType $supplierType): SupplierTypeResource
     {
-        //
+        return new SupplierTypeResource($supplierType);
+
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\SupplierType  $supplierType
+     * @param SupplierType $supplierType
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, SupplierType $supplierType)
@@ -58,7 +59,7 @@ class SupplierTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\SupplierType  $supplierType
+     * @param SupplierType $supplierType
      * @return \Illuminate\Http\Response
      */
     public function destroy(SupplierType $supplierType)

@@ -36,19 +36,19 @@ class ArticleTypeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ArticleType  $articleType
-     * @return \Illuminate\Http\Response
+     * @param ArticleType $articleType
+     * @return ArticleTypeResource
      */
-    public function show(ArticleType $articleType)
+    public function show(ArticleType $articleType): ArticleTypeResource
     {
-        //
+        return new ArticleTypeResource($articleType);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ArticleType  $articleType
+     * @param ArticleType $articleType
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, ArticleType $articleType)
@@ -59,7 +59,7 @@ class ArticleTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ArticleType  $articleType
+     * @param ArticleType $articleType
      * @return \Illuminate\Http\Response
      */
     public function destroy(ArticleType $articleType)

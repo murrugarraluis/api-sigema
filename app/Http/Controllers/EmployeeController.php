@@ -34,19 +34,20 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Employee  $employee
-     * @return \Illuminate\Http\Response
+     * @param Employee $employee
+     * @return EmployeeResource
      */
-    public function show(Employee $employee)
+    public function show(Employee $employee): EmployeeResource
     {
-        //
+        return new EmployeeResource($employee);
+
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Employee  $employee
+     * @param Employee $employee
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Employee $employee)
@@ -57,7 +58,7 @@ class EmployeeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Employee  $employee
+     * @param Employee $employee
      * @return \Illuminate\Http\Response
      */
     public function destroy(Employee $employee)

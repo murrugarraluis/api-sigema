@@ -23,7 +23,7 @@ class MaintenanceSheetController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -34,19 +34,21 @@ class MaintenanceSheetController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\MaintenanceSheet  $maintenanceSheet
-     * @return \Illuminate\Http\Response
+     * @param MaintenanceSheet $maintenanceSheet
+     * @return MaintenanceSheetResource
      */
-    public function show(MaintenanceSheet $maintenanceSheet)
+    public function show(MaintenanceSheet $maintenanceSheet): MaintenanceSheetResource
     {
-        //
+//        dd(new MaintenanceSheetResource($maintenanceSheet));
+        return new MaintenanceSheetResource($maintenanceSheet);
+
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\MaintenanceSheet  $maintenanceSheet
+     * @param \Illuminate\Http\Request $request
+     * @param MaintenanceSheet $maintenanceSheet
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, MaintenanceSheet $maintenanceSheet)
@@ -57,7 +59,7 @@ class MaintenanceSheetController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\MaintenanceSheet  $maintenanceSheet
+     * @param MaintenanceSheet $maintenanceSheet
      * @return \Illuminate\Http\Response
      */
     public function destroy(MaintenanceSheet $maintenanceSheet)

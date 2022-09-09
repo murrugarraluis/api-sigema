@@ -34,19 +34,20 @@ class MaintenanceTypeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\MaintenanceType  $maintenanceType
-     * @return \Illuminate\Http\Response
+     * @param MaintenanceType $maintenanceType
+     * @return MaintenanceTypeResource
      */
-    public function show(MaintenanceType $maintenanceType)
+    public function show(MaintenanceType $maintenanceType): MaintenanceTypeResource
     {
-        //
+        return new MaintenanceTypeResource($maintenanceType);
+
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\MaintenanceType  $maintenanceType
+     * @param MaintenanceType $maintenanceType
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, MaintenanceType $maintenanceType)
@@ -57,7 +58,7 @@ class MaintenanceTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\MaintenanceType  $maintenanceType
+     * @param MaintenanceType $maintenanceType
      * @return \Illuminate\Http\Response
      */
     public function destroy(MaintenanceType $maintenanceType)

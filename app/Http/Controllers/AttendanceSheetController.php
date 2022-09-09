@@ -34,19 +34,19 @@ class AttendanceSheetController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\AttendanceSheet  $attendanceSheet
-     * @return \Illuminate\Http\Response
+     * @param AttendanceSheet $attendanceSheet
+     * @return AttendanceSheetResource
      */
-    public function show(AttendanceSheet $attendanceSheet)
+    public function show(AttendanceSheet $attendanceSheet): AttendanceSheetResource
     {
-        //
+        return new AttendanceSheetResource($attendanceSheet);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\AttendanceSheet  $attendanceSheet
+     * @param AttendanceSheet $attendanceSheet
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, AttendanceSheet $attendanceSheet)
@@ -57,7 +57,7 @@ class AttendanceSheetController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\AttendanceSheet  $attendanceSheet
+     * @param AttendanceSheet $attendanceSheet
      * @return \Illuminate\Http\Response
      */
     public function destroy(AttendanceSheet $attendanceSheet)

@@ -34,19 +34,20 @@ class DocumentTypeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\DocumentType  $documentType
-     * @return \Illuminate\Http\Response
+     * @param DocumentType $documentType
+     * @return DocumentTypeResource
      */
-    public function show(DocumentType $documentType)
+    public function show(DocumentType $documentType): DocumentTypeResource
     {
-        //
+        return new DocumentTypeResource($documentType);
+
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\DocumentType  $documentType
+     * @param DocumentType $documentType
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, DocumentType $documentType)
@@ -57,7 +58,7 @@ class DocumentTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\DocumentType  $documentType
+     * @param DocumentType $documentType
      * @return \Illuminate\Http\Response
      */
     public function destroy(DocumentType $documentType)

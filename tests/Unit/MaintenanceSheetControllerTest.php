@@ -61,4 +61,50 @@ class MaintenanceSheetControllerTest extends TestCase
             ]]);
 
     }
+    public function test_show()
+    {
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+
+        $this->seedData();
+        $maintenance_sheet = MaintenanceSheet::limit(1)->first();
+//        dd($maintenance_sheet->id);
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->getJson("api/v1/$this->resource/$maintenance_sheet->id");
+
+        $response->assertStatus(200)
+            ->assertJsonStructure(['data' => [
+                    'id',
+                    'date',
+                    'responsible',
+                    'technical',
+                    'description',
+                    'maintenance_type'=>[
+                        'name'
+                    ],
+                    'supplier'=>[
+                        'name'
+                    ],
+                    'machine'=>[
+                        'name'
+                    ],
+            ]]);
+
+    }
+    public function test_show_not_found()
+    {
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->getJson("api/v1/$this->resource/1");
+
+        $response->assertStatus(404)
+            ->assertExactJson(['message' => "Unable to locate the maintenance sheet you requested."]);
+    }
+
 }

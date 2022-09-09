@@ -54,4 +54,47 @@ class EmployeeControllerTest extends TestCase
             ]]);
 
     }
+    public function test_show()
+    {
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $this->seedData();
+        $employee = Employee::limit(1)->first();
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->getJson("api/v1/$this->resource/$employee->id");
+
+        $response->assertStatus(200)
+            ->assertJsonStructure(['data' => [
+                    'id',
+                    'document_number',
+                    'name',
+                    'lastname',
+                    'personal_email',
+                    'phone',
+                    'address',
+                    'position' => [
+                        'name'
+                    ],
+                    'document_type' => [
+                        'name'
+                    ],
+            ]]);
+
+    }
+    public function test_show_not_found()
+    {
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->getJson("api/v1/$this->resource/1");
+
+        $response->assertStatus(404)
+            ->assertExactJson(['message' => "Unable to locate the employee you requested."]);
+    }
+
 }

@@ -34,19 +34,20 @@ class WorkingSheetController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\WorkingSheet  $workingSheet
-     * @return \Illuminate\Http\Response
+     * @param WorkingSheet $workingSheet
+     * @return WorkingSheetResource
      */
-    public function show(WorkingSheet $workingSheet)
+    public function show(WorkingSheet $workingSheet): WorkingSheetResource
     {
-        //
+        return new WorkingSheetResource($workingSheet);
+
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\WorkingSheet  $workingSheet
+     * @param WorkingSheet $workingSheet
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, WorkingSheet $workingSheet)
@@ -57,7 +58,7 @@ class WorkingSheetController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\WorkingSheet  $workingSheet
+     * @param WorkingSheet $workingSheet
      * @return \Illuminate\Http\Response
      */
     public function destroy(WorkingSheet $workingSheet)

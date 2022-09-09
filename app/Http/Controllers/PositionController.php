@@ -34,19 +34,20 @@ class PositionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Position  $position
-     * @return \Illuminate\Http\Response
+     * @param Position $position
+     * @return PositionResource
      */
-    public function show(Position $position)
+    public function show(Position $position): PositionResource
     {
-        //
+        return new PositionResource($position);
+
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Position  $position
+     * @param Position $position
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Position $position)
@@ -57,7 +58,7 @@ class PositionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Position  $position
+     * @param Position $position
      * @return \Illuminate\Http\Response
      */
     public function destroy(Position $position)

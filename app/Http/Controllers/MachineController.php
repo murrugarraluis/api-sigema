@@ -34,19 +34,20 @@ class MachineController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Machine  $machine
-     * @return \Illuminate\Http\Response
+     * @param Machine $machine
+     * @return MachineResource
      */
-    public function show(Machine $machine)
+    public function show(Machine $machine): MachineResource
     {
-        //
+        return new MachineResource($machine);
+
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Machine  $machine
+     * @param Machine $machine
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Machine $machine)
@@ -57,7 +58,7 @@ class MachineController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Machine  $machine
+     * @param Machine $machine
      * @return \Illuminate\Http\Response
      */
     public function destroy(Machine $machine)
