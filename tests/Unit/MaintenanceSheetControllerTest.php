@@ -48,9 +48,15 @@ class MaintenanceSheetControllerTest extends TestCase
                     'responsible',
                     'technical',
                     'description',
-                    'maintenance_type',
-                    'supplier',
-                    'machine',
+                    'maintenance_type'=>[
+                        'name'
+                    ],
+                    'supplier'=>[
+                        'name'
+                    ],
+                    'machine'=>[
+                        'name'
+                    ],
                 ]
             ]]);
 

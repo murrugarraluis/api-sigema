@@ -22,4 +22,8 @@ class Machine extends Model
     {
         return $this->hasMany(MaintenanceSheet::class);
     }
+    public function working_sheets(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(WorkingSheet::class);
+    }
 }
