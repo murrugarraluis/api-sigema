@@ -52,7 +52,7 @@ Route::prefix('v1/')->group(function () {
         Route::get('machines', [MachineController::class, 'index']);
         Route::get('maintenance-sheets', [MaintenanceSheetController::class, 'index']);
         Route::get('maintenance-types', [MaintenanceTypeController::class, 'index']);
-        Route::get('notifications', [NotificationController::class, 'index']);
+//        Route::get('notifications', [NotificationController::class, 'index']);
         Route::get('positions', [PositionController::class, 'index']);
         Route::get('suppliers', [SupplierController::class, 'index']);
         Route::get('supplier-types', [SupplierTypeController::class, 'index']);

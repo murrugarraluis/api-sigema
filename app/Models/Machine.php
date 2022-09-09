@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Machine extends Model
 {
     use HasFactory,Uuids;
+    protected $hidden = ['created_at', 'updated_at'];
     public function articles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Article::class);

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Supplier extends Model
 {
     use HasFactory,Uuids;
+    protected $hidden = ['created_at', 'updated_at'];
     public function banks(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Bank::class);

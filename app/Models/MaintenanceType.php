@@ -9,4 +9,5 @@ use Illuminate\Database\Eloquent\Model;
 class MaintenanceType extends Model
 {
     use HasFactory,Uuids;
+    protected $hidden = ['created_at', 'updated_at'];
 }
