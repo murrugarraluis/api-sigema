@@ -12,7 +12,10 @@ class BankControllerTest extends TestCase
 {
     use RefreshDatabase;
     private $resource = 'banks';
-
+    public function seedData()
+    {
+        Bank::factory()->create(['name'=>'BCP']);
+    }
     public function test_index()
     {
         $this->withoutExceptionHandling();
@@ -34,7 +37,8 @@ class BankControllerTest extends TestCase
             'email' => 'admin@jextecnologies.com',
             'password' => bcrypt('123456')
         ]);
-        $bank = Bank::factory()->create(['name'=>'BCP']);
+        $this->seedData();
+        $bank = Bank::limit(1)->first();
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource/$bank->id");
 

@@ -10,7 +10,13 @@ use Tests\TestCase;
 class AttendanceSheetControllerTest extends TestCase
 {
     use RefreshDatabase;
+
     private $resource = 'attendance-sheets';
+
+    public function seedData()
+    {
+        AttendanceSheet::factory()->create();
+    }
 
     public function test_index()
     {
@@ -26,6 +32,7 @@ class AttendanceSheetControllerTest extends TestCase
             ->assertJsonStructure(['data' => []]);
 
     }
+
     public function test_show()
     {
         $this->withoutExceptionHandling();
@@ -33,7 +40,8 @@ class AttendanceSheetControllerTest extends TestCase
             'email' => 'admin@jextecnologies.com',
             'password' => bcrypt('123456')
         ]);
-        $attendance_sheet = AttendanceSheet::factory()->create();
+        $this->seedData();
+        $attendance_sheet = AttendanceSheet::limit(1)->first();
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource/$attendance_sheet->id");
 
@@ -41,6 +49,7 @@ class AttendanceSheetControllerTest extends TestCase
             ->assertJsonStructure(['data' => []]);
 
     }
+
     public function test_show_not_found()
     {
         $user = User::factory()->create([

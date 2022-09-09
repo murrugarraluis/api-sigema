@@ -11,7 +11,10 @@ class MaintenanceTypeControllerTest extends TestCase
 {
     use RefreshDatabase;
     private $resource = 'maintenance-types';
-
+    public function seedData()
+    {
+        MaintenanceType::factory()->create(['name'=>'Preventivo']);
+    }
     public function test_index()
     {
         $this->withoutExceptionHandling();
@@ -33,7 +36,8 @@ class MaintenanceTypeControllerTest extends TestCase
             'email' => 'admin@jextecnologies.com',
             'password' => bcrypt('123456')
         ]);
-        $maintenance_type = MaintenanceType::factory()->create(['name'=>'Preventivo']);
+        $this->seedData();
+        $maintenance_type = MaintenanceType::limit(1)->first();
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource/$maintenance_type->id");
 

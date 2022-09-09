@@ -11,7 +11,10 @@ class PositionControllerTest extends TestCase
 {
     use RefreshDatabase;
     private $resource = 'positions';
-
+    public function seedData()
+    {
+        Position::factory()->create(['name'=>'position']);
+    }
     public function test_index()
     {
         $this->withoutExceptionHandling();
@@ -33,7 +36,8 @@ class PositionControllerTest extends TestCase
             'email' => 'admin@jextecnologies.com',
             'password' => bcrypt('123456')
         ]);
-        $position = Position::factory()->create(['name'=>'position']);
+        $this->seedData();
+        $position = Position::limit(1)->first();
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource/$position->id");
 

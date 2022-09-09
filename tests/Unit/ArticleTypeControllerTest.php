@@ -11,7 +11,10 @@ class ArticleTypeControllerTest extends TestCase
 {
     use RefreshDatabase;
     private $resource = 'article-types';
-
+    public function seedData()
+    {
+        ArticleType::factory()->create(['name'=>'article type']);
+    }
     public function test_index()
     {
         $this->withoutExceptionHandling();
@@ -33,7 +36,8 @@ class ArticleTypeControllerTest extends TestCase
             'email' => 'admin@jextecnologies.com',
             'password' => bcrypt('123456')
         ]);
-        $article_type = ArticleType::factory()->create(['name'=>'article type']);
+        $this->seedData();
+        $article_type = ArticleType::limit(1)->first();
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource/$article_type->id");
 

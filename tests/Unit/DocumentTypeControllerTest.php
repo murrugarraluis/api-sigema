@@ -10,7 +10,10 @@ class DocumentTypeControllerTest extends TestCase
 {
     use RefreshDatabase;
     private $resource = 'document-types';
-
+    public function seedData()
+    {
+        DocumentType::factory()->create(['name'=>'Document']);
+    }
     public function test_index()
     {
         $this->withoutExceptionHandling();
@@ -32,8 +35,8 @@ class DocumentTypeControllerTest extends TestCase
             'email' => 'admin@jextecnologies.com',
             'password' => bcrypt('123456')
         ]);
-        $document_type = DocumentType::factory()->create(['name'=>'Document']);
-
+        $this->seedData();
+        $document_type = DocumentType::limit(1)->first();
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource/$document_type->id");
 

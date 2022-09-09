@@ -12,7 +12,11 @@ class SupplierTypeControllerTest extends TestCase
 {
     use RefreshDatabase;
     private $resource = 'supplier-types';
+    public function seedData()
+    {
+       SupplierType::factory()->create(['name'=>'Supplier Type']);
 
+    }
     public function test_index()
     {
         $this->withoutExceptionHandling();
@@ -34,7 +38,8 @@ class SupplierTypeControllerTest extends TestCase
             'email' => 'admin@jextecnologies.com',
             'password' => bcrypt('123456')
         ]);
-        $supplier_type = SupplierType::factory()->create(['name'=>'Supplier Type']);
+        $this->seedData();
+        $supplier_type = SupplierType::limit(1)->first();
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource/$supplier_type->id");
 
