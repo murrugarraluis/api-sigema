@@ -26,4 +26,8 @@ class Article extends Model
     {
         return $this->belongsToMany(MaintenanceSheet::class);
     }
+    public function article_type(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(ArticleType::class);
+    }
 }
