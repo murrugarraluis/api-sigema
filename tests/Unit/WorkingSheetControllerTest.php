@@ -64,7 +64,13 @@ class WorkingSheetControllerTest extends TestCase
                     'date_end',
                     'description',
                     'machine'=>[
-                        'name'
+                        'id',
+                        'name',
+                        'image',
+                        'status',
+                        'date_last_use',
+                        'total_hours_used',
+                        'date_last_maintenance',
                     ],
             ]]);
 

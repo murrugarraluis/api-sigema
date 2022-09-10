@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\WorkingSheetDetailResource;
 use App\Http\Resources\WorkingSheetResource;
 use App\Models\WorkingSheet;
 use Illuminate\Http\JsonResponse;
@@ -36,11 +37,11 @@ class WorkingSheetController extends Controller
      * Display the specified resource.
      *
      * @param WorkingSheet $workingSheet
-     * @return WorkingSheetResource
+     * @return WorkingSheetDetailResource
      */
-    public function show(WorkingSheet $workingSheet): WorkingSheetResource
+    public function show(WorkingSheet $workingSheet): WorkingSheetDetailResource
     {
-        return new WorkingSheetResource($workingSheet);
+        return new WorkingSheetDetailResource($workingSheet);
 
     }
 
