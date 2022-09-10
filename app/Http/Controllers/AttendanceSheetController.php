@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AttendanceSheetDetailResource;
 use App\Http\Resources\AttendanceSheetResource;
 use App\Models\AttendanceSheet;
 use Illuminate\Http\JsonResponse;
@@ -36,11 +37,11 @@ class AttendanceSheetController extends Controller
      * Display the specified resource.
      *
      * @param AttendanceSheet $attendanceSheet
-     * @return AttendanceSheetResource
+     * @return AttendanceSheetDetailResource
      */
-    public function show(AttendanceSheet $attendanceSheet): AttendanceSheetResource
+    public function show(AttendanceSheet $attendanceSheet): AttendanceSheetDetailResource
     {
-        return new AttendanceSheetResource($attendanceSheet);
+        return new AttendanceSheetDetailResource($attendanceSheet);
     }
 
     /**

@@ -15,7 +15,8 @@ class Employee extends Model
 
     public function attendance_sheets(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(AttendanceSheet::class);
+        return $this->belongsToMany(AttendanceSheet::class)
+            ->withPivot('check_in','check_out','attendance');
     }
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
