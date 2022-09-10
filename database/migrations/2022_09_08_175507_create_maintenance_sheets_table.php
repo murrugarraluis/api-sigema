@@ -25,6 +25,8 @@ class CreateMaintenanceSheetsTable extends Migration
             $table->foreignUuid('machine_id')->constrained('machines');
 
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

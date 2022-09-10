@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\MaintenanceTypeResource;
 use App\Models\MaintenanceType;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -59,10 +60,11 @@ class MaintenanceTypeController extends Controller
      * Remove the specified resource from storage.
      *
      * @param MaintenanceType $maintenanceType
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy(MaintenanceType $maintenanceType)
+    public function destroy(MaintenanceType $maintenanceType): JsonResponse
     {
-        //
+        $maintenanceType->delete();
+        return response()->json(['message'=>'Maintenance Type removed.'],200);
     }
 }

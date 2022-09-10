@@ -22,6 +22,8 @@ class CreateAttendanceSheetsTable extends Migration
             $table->string('responsible');
             $table->string('status');
             $table->timestamps();
+            $table->softDeletes();
+
 
         });
     }

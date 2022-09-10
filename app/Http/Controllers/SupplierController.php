@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\SupplierResource;
 use App\Models\Supplier;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 class SupplierController extends Controller
 {
@@ -24,7 +26,7 @@ class SupplierController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -48,7 +50,7 @@ class SupplierController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param Supplier $supplier
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Supplier $supplier)
     {
@@ -59,10 +61,11 @@ class SupplierController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Supplier $supplier
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy(Supplier $supplier)
+    public function destroy(Supplier $supplier): JsonResponse
     {
-        //
+        $supplier->delete();
+        return response()->json(['message'=>'Supplier removed.'],200);
     }
 }

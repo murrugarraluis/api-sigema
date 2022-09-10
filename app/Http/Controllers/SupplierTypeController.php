@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ArticleResource;
 use App\Http\Resources\SupplierTypeResource;
 use App\Models\SupplierType;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -60,10 +61,11 @@ class SupplierTypeController extends Controller
      * Remove the specified resource from storage.
      *
      * @param SupplierType $supplierType
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy(SupplierType $supplierType)
+    public function destroy(SupplierType $supplierType): JsonResponse
     {
-        //
+        $supplierType->delete();
+        return response()->json(['message'=>'Supplier Type removed.'],200);
     }
 }

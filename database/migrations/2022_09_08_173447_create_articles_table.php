@@ -21,6 +21,7 @@ class CreateArticlesTable extends Migration
             $table->integer('quantity');
             $table->foreignUuid('article_type_id')->constrained('article_types');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

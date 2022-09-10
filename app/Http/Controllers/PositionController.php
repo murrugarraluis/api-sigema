@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PositionResource;
 use App\Models\Position;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -59,10 +60,11 @@ class PositionController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Position $position
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy(Position $position)
+    public function destroy(Position $position): JsonResponse
     {
-        //
+        $position->delete();
+        return response()->json(['message'=>'Position removed.'],200);
     }
 }

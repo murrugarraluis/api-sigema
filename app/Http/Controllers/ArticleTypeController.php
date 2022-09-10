@@ -6,6 +6,7 @@ use App\Http\Resources\ArticleResource;
 use App\Http\Resources\ArticleTypeResource;
 use App\Models\Article;
 use App\Models\ArticleType;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -60,10 +61,11 @@ class ArticleTypeController extends Controller
      * Remove the specified resource from storage.
      *
      * @param ArticleType $articleType
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy(ArticleType $articleType)
+    public function destroy(ArticleType $articleType): JsonResponse
     {
-        //
+        $articleType->delete();
+        return response()->json(['message'=>'Article Type removed.'],200);
     }
 }

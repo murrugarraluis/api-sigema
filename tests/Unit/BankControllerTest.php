@@ -58,4 +58,20 @@ class BankControllerTest extends TestCase
         $response->assertStatus(404)
             ->assertExactJson(['message' => "Unable to locate the bank you requested."]);
     }
+    public function test_destroy()
+    {
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $this->seedData();
+        $bank = Bank::limit(1)->first();
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->deleteJson("api/v1/$this->resource/$bank->id");
+
+        $response->assertStatus(200)
+            ->assertExactJson(['message' => 'Bank removed.']);
+
+    }
 }

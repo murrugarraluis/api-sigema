@@ -81,5 +81,22 @@ class WorkingSheetControllerTest extends TestCase
         $response->assertStatus(404)
             ->assertExactJson(['message' => "Unable to locate the working sheet you requested."]);
     }
+    public function test_destroy()
+    {
+//        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+
+        $this->seedData();
+        $working_sheet = WorkingSheet::limit(1)->first();
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->deleteJson("api/v1/$this->resource/$working_sheet->id");
+
+        $response->assertStatus(200)
+            ->assertExactJson(['message' => 'Working Sheet removed.']);
+
+    }
 
 }

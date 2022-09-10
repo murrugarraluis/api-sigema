@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\BankResource;
 use App\Models\Bank;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -58,10 +59,11 @@ class BankController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Bank $bank
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy(Bank $bank)
+    public function destroy(Bank $bank): JsonResponse
     {
-        //
+        $bank->delete();
+        return response()->json(['message'=>'Bank removed.'],200);
     }
 }

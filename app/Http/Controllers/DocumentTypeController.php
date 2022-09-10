@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DocumentTypeResource;
 use App\Models\DocumentType;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -59,10 +60,11 @@ class DocumentTypeController extends Controller
      * Remove the specified resource from storage.
      *
      * @param DocumentType $documentType
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy(DocumentType $documentType)
+    public function destroy(DocumentType $documentType): JsonResponse
     {
-        //
+        $documentType->delete();
+        return response()->json(['message'=>'Document Type removed.'],200);
     }
 }

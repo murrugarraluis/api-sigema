@@ -106,5 +106,22 @@ class MaintenanceSheetControllerTest extends TestCase
         $response->assertStatus(404)
             ->assertExactJson(['message' => "Unable to locate the maintenance sheet you requested."]);
     }
+    public function test_destroy()
+    {
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+
+        $this->seedData();
+        $maintenance_sheet = MaintenanceSheet::limit(1)->first();
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->deleteJson("api/v1/$this->resource/$maintenance_sheet->id");
+
+        $response->assertStatus(200)
+            ->assertExactJson(['message' => 'Maintenance Sheet removed.']);
+
+    }
 
 }

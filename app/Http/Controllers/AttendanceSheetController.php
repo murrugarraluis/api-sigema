@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\AttendanceSheetResource;
 use App\Models\AttendanceSheet;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -58,10 +59,11 @@ class AttendanceSheetController extends Controller
      * Remove the specified resource from storage.
      *
      * @param AttendanceSheet $attendanceSheet
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy(AttendanceSheet $attendanceSheet)
+    public function destroy(AttendanceSheet $attendanceSheet): JsonResponse
     {
-        //
+        $attendanceSheet->delete();
+        return response()->json(['message'=>'Attendance Sheet removed.'],200);
     }
 }

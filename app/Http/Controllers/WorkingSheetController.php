@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\WorkingSheetResource;
 use App\Models\WorkingSheet;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -59,10 +60,11 @@ class WorkingSheetController extends Controller
      * Remove the specified resource from storage.
      *
      * @param WorkingSheet $workingSheet
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy(WorkingSheet $workingSheet)
+    public function destroy(WorkingSheet $workingSheet): JsonResponse
     {
-        //
+        $workingSheet->delete();
+        return response()->json(['message'=>'Working Sheet removed.'],200);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ArticleResource;
 use App\Models\Article;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -54,14 +55,15 @@ class ArticleController extends Controller
         //
     }
 
-    /**
+    /**A
      * Remove the specified resource from storage.
      *
      * @param Article $article
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy(Article $article)
+    public function destroy(Article $article): JsonResponse
     {
-        //
+        $article->delete();
+        return response()->json(['message'=>'Article removed.'],200);
     }
 }

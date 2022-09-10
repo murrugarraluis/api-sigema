@@ -22,6 +22,8 @@ class CreateEmployeesTable extends Migration
             $table->string('phone');
             $table->string('address');
             $table->timestamps();
+            $table->softDeletes();
+
 
 //            FK
             $table->foreignUuid('user_id')->nullable()->constrained('users');

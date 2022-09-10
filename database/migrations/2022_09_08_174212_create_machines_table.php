@@ -22,6 +22,8 @@ class CreateMachinesTable extends Migration
             $table->integer('maximum_working_time');
             $table->integer('time_worked');
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

@@ -20,6 +20,8 @@ class CreateWorkingSheetsTable extends Migration
             $table->text('description');
             $table->foreignUuid('machine_id')->constrained('machines');
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\EmployeeResource;
 use App\Models\Employee;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 class EmployeeController extends Controller
 {
@@ -24,7 +26,7 @@ class EmployeeController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -48,7 +50,7 @@ class EmployeeController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param Employee $employee
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Employee $employee)
     {
@@ -59,10 +61,11 @@ class EmployeeController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Employee $employee
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy(Employee $employee)
+    public function destroy(Employee $employee): JsonResponse
     {
-        //
+        $employee->delete();
+        return response()->json(['message'=>'Employee removed.'],200);
     }
 }

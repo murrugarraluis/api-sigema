@@ -62,4 +62,20 @@ class AttendanceSheetControllerTest extends TestCase
         $response->assertStatus(404)
             ->assertExactJson(['message' => "Unable to locate the attendance sheet you requested."]);
     }
+    public function test_deleted()
+    {
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $this->seedData();
+        $attendance_sheet = AttendanceSheet::limit(1)->first();
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->deleteJson("api/v1/$this->resource/$attendance_sheet->id");
+
+        $response->assertStatus(200)
+            ->assertExactJson(['message' => 'Attendance Sheet removed.']);
+
+    }
 }

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\MaintenanceSheetResource;
 use App\Models\MaintenanceSheet;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 class MaintenanceSheetController extends Controller
 {
@@ -24,7 +26,7 @@ class MaintenanceSheetController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -49,7 +51,7 @@ class MaintenanceSheetController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param MaintenanceSheet $maintenanceSheet
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, MaintenanceSheet $maintenanceSheet)
     {
@@ -60,10 +62,11 @@ class MaintenanceSheetController extends Controller
      * Remove the specified resource from storage.
      *
      * @param MaintenanceSheet $maintenanceSheet
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy(MaintenanceSheet $maintenanceSheet)
+    public function destroy(MaintenanceSheet $maintenanceSheet): JsonResponse
     {
-        //
+        $maintenanceSheet->delete();
+        return response()->json(['message'=>'Maintenance Sheet removed.'],200);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\MachineResource;
 use App\Models\Machine;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -59,10 +60,11 @@ class MachineController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Machine $machine
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy(Machine $machine)
+    public function destroy(Machine $machine): JsonResponse
     {
-        //
+        $machine->delete();
+        return response()->json(['message'=>'Machine removed.'],200);
     }
 }

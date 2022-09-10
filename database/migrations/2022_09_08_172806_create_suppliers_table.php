@@ -25,6 +25,8 @@ class CreateSuppliersTable extends Migration
             $table->foreignUuid('document_type_id')->constrained('document_types');
 
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 
