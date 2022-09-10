@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\MachineResource;
+use App\Http\Resources\MachinetDetailResource;
 use App\Models\Machine;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -36,11 +37,11 @@ class MachineController extends Controller
      * Display the specified resource.
      *
      * @param Machine $machine
-     * @return MachineResource
+     * @return MachinetDetailResource
      */
-    public function show(Machine $machine): MachineResource
+    public function show(Machine $machine): MachinetDetailResource
     {
-        return new MachineResource($machine);
+        return new MachinetDetailResource($machine);
 
     }
 

@@ -43,6 +43,7 @@ class MachineControllerTest extends TestCase
             ]]);
 
     }
+
     public function test_show()
     {
         $this->withoutExceptionHandling();
@@ -56,17 +57,24 @@ class MachineControllerTest extends TestCase
             ->getJson("api/v1/$this->resource/$machine->id");
         $response->assertStatus(200)
             ->assertJsonStructure(['data' => [
-                    'id',
-                    'serie_number',
-                    'name',
-                    'brand',
-                    'model',
-                    'image',
-                    'maximum_working_time',
-                    'status',
+                'id',
+                'serie_number',
+                'name',
+                'brand',
+                'model',
+                'image',
+                'maximum_working_time',
+                'articles' => [
+                    '*' => [
+                        'id',
+                        'name',
+                    ]
+                ],
+                'status',
             ]]);
 
     }
+
     public function test_show_not_found()
     {
         $user = User::factory()->create([
@@ -79,6 +87,7 @@ class MachineControllerTest extends TestCase
         $response->assertStatus(404)
             ->assertExactJson(['message' => "Unable to locate the machine you requested."]);
     }
+
     public function test_destroy()
     {
         $this->withoutExceptionHandling();
