@@ -71,6 +71,13 @@ class ArticleControllerTest extends TestCase
                         'id',
                         'name'
                     ],
+                    'suppliers'=>[
+                        '*'=>[
+                            'id',
+                            'name',
+                            'price'
+                        ]
+                    ]
             ]]);
 
     }

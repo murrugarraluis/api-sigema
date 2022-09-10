@@ -15,7 +15,8 @@ class Article extends Model
 
     public function suppliers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Supplier::class);
+        return $this->belongsToMany(Supplier::class)
+            ->withPivot('price');
     }
 
     public function machines(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

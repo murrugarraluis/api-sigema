@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ArticleDetailResource;
 use App\Http\Resources\ArticleResource;
 use App\Models\Article;
 use Illuminate\Http\JsonResponse;
@@ -36,11 +37,11 @@ class ArticleController extends Controller
      * Display the specified resource.
      *
      * @param Article $article
-     * @return ArticleResource
+     * @return ArticleDetailResource
      */
-    public function show(Article $article): ArticleResource
+    public function show(Article $article): ArticleDetailResource
     {
-        return new ArticleResource($article);
+        return new ArticleDetailResource($article);
     }
 
     /**
