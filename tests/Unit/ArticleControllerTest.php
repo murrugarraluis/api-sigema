@@ -4,7 +4,10 @@ namespace Tests\Unit;
 
 use App\Models\Article;
 use App\Models\ArticleType;
+use App\Models\DocumentType;
 use App\Models\Machine;
+use App\Models\Supplier;
+use App\Models\SupplierType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -14,11 +17,16 @@ class ArticleControllerTest extends TestCase
     use RefreshDatabase;
 
     private $resource = 'articles';
+
     public function seedData()
     {
-        ArticleType::factory()->create(['name'=>'Oficina']);
+        DocumentType::factory()->create(['name' => 'RUC']);
+        SupplierType::factory()->create(['name' => 'Proveedor de Articulos']);
+        Supplier::factory(5)->create();
+        ArticleType::factory()->create(['name' => 'Oficina']);
         Article::factory(5)->create();
     }
+
     public function test_index()
     {
 
@@ -47,6 +55,7 @@ class ArticleControllerTest extends TestCase
             ]]);
 
     }
+
     public function test_show()
     {
 
@@ -62,25 +71,26 @@ class ArticleControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonStructure(['data' => [
+                'id',
+                'name',
+                'brand',
+                'model',
+                'quantity',
+                'article_type' => [
                     'id',
-                    'name',
-                    'brand',
-                    'model',
-                    'quantity',
-                    'article_type' => [
+                    'name'
+                ],
+                'suppliers' => [
+                    '*' => [
                         'id',
-                        'name'
-                    ],
-                    'suppliers'=>[
-                        '*'=>[
-                            'id',
-                            'name',
-                            'price'
-                        ]
+                        'name',
+                        'price'
                     ]
+                ]
             ]]);
 
     }
+
     public function test_show_not_found()
     {
         $user = User::factory()->create([
@@ -93,6 +103,60 @@ class ArticleControllerTest extends TestCase
         $response->assertStatus(404)
             ->assertExactJson(['message' => "Unable to locate the article you requested."]);
     }
+
+    public function test_store()
+    {
+
+//        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $this->seedData();
+        $payload = [
+            'name' => 'Article',
+            'brand' => 'Brand',
+            'model' => 'Model',
+            'quantity' => 2,
+            'article_type' => [
+                'id' => ArticleType::limit(1)->first()->id,
+            ],
+            'suppliers' => [
+                ['id' => Supplier::orderBy('id','desc')->limit(1)->first()->id, 'price' => 12.5],
+                ['id' => Supplier::orderBy('id','asc')->limit(1)->first()->id, 'price' => 12.5],
+            ],
+        ];
+//        dd($payload);
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->postJson("api/v1/$this->resource", $payload);
+
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'brand',
+                    'model',
+                    'quantity',
+                    'article_type' => [
+                        'id',
+                        'name'
+                    ],
+                    'suppliers' => [
+                        '*' => [
+                            'id',
+                            'name',
+                            'price'
+                        ]
+                    ]
+                ],
+            ])->assertJson([
+                'message' => 'Article created.',
+                'data' => []
+            ]);
+
+    }
+
     public function test_destroy()
     {
 

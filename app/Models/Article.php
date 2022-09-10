@@ -9,9 +9,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Article extends Model
 {
-    use HasFactory, Uuids,SoftDeletes;
+    use HasFactory, Uuids, SoftDeletes;
 
-    protected $hidden = ['created_at', 'updated_at','deleted_at'];
+    protected $fillable = [
+        'name',
+        'brand',
+        'model',
+        'quantity',
+        'article_type_id'
+    ];
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
     public function suppliers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -28,6 +35,7 @@ class Article extends Model
     {
         return $this->belongsToMany(MaintenanceSheet::class);
     }
+
     public function article_type(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(ArticleType::class);
