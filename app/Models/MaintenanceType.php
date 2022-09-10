@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class MaintenanceType extends Model
 {
     use HasFactory,Uuids,SoftDeletes;
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['created_at', 'updated_at','deleted_at'];
     public function maintenance_sheets(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(MaintenanceSheet::class);

@@ -10,7 +10,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ArticleType extends Model
 {
     use HasFactory,Uuids,SoftDeletes;
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['created_at', 'updated_at','deleted_at'];
+
     public function articles(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Article::class);
