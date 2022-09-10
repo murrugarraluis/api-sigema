@@ -19,7 +19,8 @@ class MaintenanceSheetSeeder extends Seeder
 
         MaintenanceSheet::factory(10)
             ->hasAttached($articles, [
-                'quantity' => 6
+                'quantity' => 6,
+                'price' => 40.5
             ])
             ->create();
     }

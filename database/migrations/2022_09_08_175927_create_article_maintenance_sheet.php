@@ -17,6 +17,7 @@ class CreateArticleMaintenanceSheet extends Migration
             $table->foreignUuid('article_id')->constrained('articles');
             $table->foreignUuid('maintenance_sheet_id')->constrained('maintenance_sheets');
             $table->integer('quantity');
+            $table->double('price');
             $table->text('description')->nullable();
             $table->primary(['article_id', 'maintenance_sheet_id'],'article_maintenance_sheet_pk');
         });

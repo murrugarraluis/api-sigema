@@ -13,7 +13,8 @@ class MaintenanceSheet extends Model
     protected $hidden = ['created_at', 'updated_at','deleted_at'];
     public function articles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Article::class);
+        return $this->belongsToMany(Article::class)
+            ->withPivot('description','price','quantity');
     }
     public function supplier(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

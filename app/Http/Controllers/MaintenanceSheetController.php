@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MaintenanceSheetDetailResource;
 use App\Http\Resources\MaintenanceSheetResource;
 use App\Models\MaintenanceSheet;
 use Illuminate\Http\JsonResponse;
@@ -37,12 +38,12 @@ class MaintenanceSheetController extends Controller
      * Display the specified resource.
      *
      * @param MaintenanceSheet $maintenanceSheet
-     * @return MaintenanceSheetResource
+     * @return MaintenanceSheetDetailResource
      */
-    public function show(MaintenanceSheet $maintenanceSheet): MaintenanceSheetResource
+    public function show(MaintenanceSheet $maintenanceSheet): MaintenanceSheetDetailResource
     {
 //        dd(new MaintenanceSheetResource($maintenanceSheet));
-        return new MaintenanceSheetResource($maintenanceSheet);
+        return new MaintenanceSheetDetailResource($maintenanceSheet);
 
     }
 

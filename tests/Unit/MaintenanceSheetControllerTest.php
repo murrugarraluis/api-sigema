@@ -71,7 +71,6 @@ class MaintenanceSheetControllerTest extends TestCase
 
         $this->seedData();
         $maintenance_sheet = MaintenanceSheet::limit(1)->first();
-//        dd($maintenance_sheet->id);
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource/$maintenance_sheet->id");
 
@@ -91,6 +90,15 @@ class MaintenanceSheetControllerTest extends TestCase
                     'machine'=>[
                         'name'
                     ],
+                    'articles'=>[
+                        '*'=>[
+                            'id',
+                            'name',
+                            'description',
+                            'price',
+                            'quantity'
+                        ]
+                    ]
             ]]);
 
     }
