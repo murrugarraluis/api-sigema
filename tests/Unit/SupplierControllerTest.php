@@ -14,12 +14,14 @@ class SupplierControllerTest extends TestCase
     use RefreshDatabase;
 
     private $resource = 'suppliers';
+
     public function seedData()
     {
         DocumentType::factory()->create(['name' => 'RUC']);
-        SupplierType::factory()->create(['name'=>'Proveedor de Servicios']);
+        SupplierType::factory()->create(['name' => 'Proveedor de Servicios']);
         Supplier::factory(10)->create();
     }
+
     public function test_index()
     {
         $this->withoutExceptionHandling();
@@ -52,6 +54,7 @@ class SupplierControllerTest extends TestCase
             ]]);
 
     }
+
     public function test_show()
     {
         $this->withoutExceptionHandling();
@@ -66,23 +69,32 @@ class SupplierControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonStructure(['data' => [
+                'id',
+                'document_number',
+                'name',
+                'phone',
+                'email',
+                'address',
+                'supplier_type' => [
                     'id',
-                    'document_number',
-                    'name',
-                    'phone',
-                    'email',
-                    'address',
-                    'supplier_type' => [
+                    'name'
+                ],
+                'document_type' => [
+                    'id',
+                    'name'
+                ],
+                'banks' => [
+                    '*' => [
                         'id',
-                        'name'
-                    ],
-                    'document_type' => [
-                        'id',
-                        'name'
-                    ],
+                        'name',
+                        'account_number',
+                        'interbank_account_number',
+                    ]
+                ]
             ]]);
 
     }
+
     public function test_show_not_found()
     {
         $user = User::factory()->create([
@@ -95,6 +107,7 @@ class SupplierControllerTest extends TestCase
         $response->assertStatus(404)
             ->assertExactJson(['message' => "Unable to locate the supplier you requested."]);
     }
+
     public function test_destroy()
     {
         $this->withoutExceptionHandling();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SupplierDetailResource;
 use App\Http\Resources\SupplierResource;
 use App\Models\Supplier;
 use Illuminate\Http\JsonResponse;
@@ -37,11 +38,11 @@ class SupplierController extends Controller
      * Display the specified resource.
      *
      * @param Supplier $supplier
-     * @return SupplierResource
+     * @return SupplierDetailResource
      */
-    public function show(Supplier $supplier): SupplierResource
+    public function show(Supplier $supplier): SupplierDetailResource
     {
-        return new SupplierResource($supplier);
+        return new SupplierDetailResource($supplier);
 
     }
 

@@ -13,7 +13,8 @@ class Supplier extends Model
     protected $hidden = ['created_at', 'updated_at','deleted_at'];
     public function banks(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Bank::class);
+        return $this->belongsToMany(Bank::class)
+            ->withPivot('account_number','interbank_account_number');
     }
     public function articles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
