@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\EmployeeResource;
+use App\Http\Resources\SafeCredentialsResource;
 use App\Models\Employee;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -25,12 +27,34 @@ class EmployeeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return Response
      */
     public function store(Request $request)
     {
         //
+    }
+
+    /**
+     * Generate credentials Employee.
+     *
+     * @param Employee $employee
+     * @return SafeCredentialsResource
+     */
+    public function generate_safe_credentials(Employee $employee): SafeCredentialsResource
+    {
+        $username = substr(strtolower($employee->name), 0, 1) . strtolower($employee->lastname);
+        $count_users = User::where('email', 'like', '%' . $username . '%')->count();
+        if ($count_users > 0) $username = $username . $count_users;
+
+        $email = $username . "@jextecnologies.com";
+        $password = $employee->document_number;
+        $credentials = [
+            "email" => $email,
+            "password" => $password
+        ];
+
+        return (new SafeCredentialsResource($credentials))->additional(['message' => 'Safe credentials generated.']);
     }
 
     /**
@@ -48,7 +72,7 @@ class EmployeeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param Employee $employee
      * @return Response
      */
@@ -66,6 +90,6 @@ class EmployeeController extends Controller
     public function destroy(Employee $employee): JsonResponse
     {
         $employee->delete();
-        return response()->json(['message'=>'Employee removed.'],200);
+        return response()->json(['message' => 'Employee removed.'], 200);
     }
 }

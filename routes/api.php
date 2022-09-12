@@ -47,6 +47,7 @@ Route::prefix('v1/')->group(function () {
         Route::get('employees', [EmployeeController::class, 'index']);
         Route::get('employees/{employee}', [EmployeeController::class, 'show']);
         Route::post('employees', [EmployeeController::class, 'store']);
+        Route::post('employees/{employee}/generate-safe-credentials', [EmployeeController::class, 'generate_safe_credentials']);
         Route::delete('employees/{employee}', [EmployeeController::class, 'destroy']);
 
         Route::get('attendance-sheets', [AttendanceSheetController::class, 'index']);

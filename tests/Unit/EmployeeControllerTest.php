@@ -150,6 +150,32 @@ class EmployeeControllerTest extends TestCase
 
     }
 
+    public function test_generate_safe_credentials()
+    {
+
+//        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $this->seedData();
+        $employee = Employee::factory()->create(['user_id' => null]);
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->postJson("api/v1/$this->resource/$employee->id/generate-safe-credentials");
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'email',
+                    'password',
+                ],
+            ])->assertJson([
+                'message' => 'Safe credentials generated.',
+                'data' => []
+            ]);
+
+    }
+
     public function test_destroy()
     {
         $this->withoutExceptionHandling();

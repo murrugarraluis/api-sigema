@@ -36,7 +36,6 @@ class UserController extends Controller
     {
         DB::beginTransaction();
         try {
-//            TODO : -VALIDATE EMPLOYEE HAS NOT USER PREVIUS
             $employee = Employee::find($request->employee["id"]);
             $user = User::create([
                 'email' => $request->email,
