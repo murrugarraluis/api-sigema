@@ -8,6 +8,7 @@ use App\Models\Machine;
 use App\Models\Position;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PhpParser\Comment\Doc;
 use Tests\TestCase;
 
 class EmployeeControllerTest extends TestCase
@@ -54,6 +55,7 @@ class EmployeeControllerTest extends TestCase
             ]]);
 
     }
+
     public function test_show()
     {
         $this->withoutExceptionHandling();
@@ -68,6 +70,65 @@ class EmployeeControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonStructure(['data' => [
+                'id',
+                'document_number',
+                'name',
+                'lastname',
+                'personal_email',
+                'phone',
+                'address',
+                'position' => [
+                    'name'
+                ],
+                'document_type' => [
+                    'name'
+                ],
+            ]]);
+
+    }
+
+    public function test_show_not_found()
+    {
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->getJson("api/v1/$this->resource/1");
+
+        $response->assertStatus(404)
+            ->assertExactJson(['message' => "Unable to locate the employee you requested."]);
+    }
+
+    public function test_store()
+    {
+
+//        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $this->seedData();
+        $payload = [
+            'document_number' => '12345678',
+            'name' => 'Luis',
+            'lastname' => 'Rodriguez',
+            'personal_email' => 'example@email.com',
+            'phone' => '98765432',
+            'address' => 'Av.Larco',
+            'position' => [
+                'id' => Position::limit(1)->first()->id,
+            ],
+            'document_type' => [
+                'id' => DocumentType::limit(1)->first()->id,
+            ],
+        ];
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->postJson("api/v1/$this->resource", $payload);
+
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'data' => [
                     'id',
                     'document_number',
                     'name',
@@ -81,21 +142,14 @@ class EmployeeControllerTest extends TestCase
                     'document_type' => [
                         'name'
                     ],
-            ]]);
+                ],
+            ])->assertJson([
+                'message' => 'Employee created.',
+                'data' => []
+            ]);
 
     }
-    public function test_show_not_found()
-    {
-        $user = User::factory()->create([
-            'email' => 'admin@jextecnologies.com',
-            'password' => bcrypt('123456')
-        ]);
-        $response = $this->actingAs($user)->withSession(['banned' => false])
-            ->getJson("api/v1/$this->resource/1");
 
-        $response->assertStatus(404)
-            ->assertExactJson(['message' => "Unable to locate the employee you requested."]);
-    }
     public function test_destroy()
     {
         $this->withoutExceptionHandling();

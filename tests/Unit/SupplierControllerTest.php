@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\Bank;
 use App\Models\DocumentType;
 use App\Models\Supplier;
 use App\Models\SupplierType;
@@ -106,6 +107,71 @@ class SupplierControllerTest extends TestCase
 
         $response->assertStatus(404)
             ->assertExactJson(['message' => "Unable to locate the supplier you requested."]);
+    }
+
+    public function test_store()
+    {
+
+//        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $this->seedData();
+        $payload = [
+            'document_number' => '12345678',
+            'name' => 'Supplier',
+            'phone' => '123456788',
+            'email' => 'example@email.com',
+            'address' => 'Av.Larco',
+            'supplier_type' => [
+                'id' => SupplierType::limit(1)->first()->id,
+            ],
+            'document_type' => [
+                'id' => DocumentType::limit(1)->first()->id,
+            ],
+            'banks' => [
+                [
+                    'id' => Bank::factory()->create(['BCP']),
+                    'account_number' => '12345678912312',
+                    'interbank_account_number' => '1234566788642134',
+                ]
+            ]
+        ];
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->postJson("api/v1/$this->resource", $payload);
+
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'document_number',
+                    'name',
+                    'phone',
+                    'email',
+                    'address',
+                    'supplier_type' => [
+                        'id',
+                        'name'
+                    ],
+                    'document_type' => [
+                        'id',
+                        'name'
+                    ],
+                    'banks' => [
+                        '*' => [
+                            'id',
+                            'name',
+                            'account_number',
+                            'interbank_account_number',
+                        ]
+                    ]
+                ],
+            ])->assertJson([
+                'message' => 'Supplier created.',
+                'data' => []
+            ]);
+
     }
 
     public function test_destroy()

@@ -41,17 +41,21 @@ Route::prefix('v1/')->group(function () {
 
         Route::get('users', [UserController::class, 'index']);
         Route::get('users/{user}', [UserController::class, 'show']);
+        Route::post('users', [UserController::class, 'store']);
         Route::delete('users/{user}', [UserController::class, 'destroy']);
 
         Route::get('employees', [EmployeeController::class, 'index']);
         Route::get('employees/{employee}', [EmployeeController::class, 'show']);
+        Route::post('employees', [EmployeeController::class, 'store']);
         Route::delete('employees/{employee}', [EmployeeController::class, 'destroy']);
 
         Route::get('attendance-sheets', [AttendanceSheetController::class, 'index']);
         Route::get('attendance-sheets/{attendanceSheet}', [AttendanceSheetController::class, 'show']);
+        Route::post('attendance-sheets', [AttendanceSheetController::class, 'store']);
 
         Route::get('suppliers', [SupplierController::class, 'index']);
         Route::get('suppliers/{supplier}', [SupplierController::class, 'show']);
+        Route::post('suppliers', [SupplierController::class, 'store']);
         Route::delete('suppliers/{supplier}', [SupplierController::class, 'destroy']);
 
         Route::get('articles', [ArticleController::class, 'index']);
@@ -61,14 +65,17 @@ Route::prefix('v1/')->group(function () {
 
         Route::get('machines', [MachineController::class, 'index']);
         Route::get('machines/{machine}', [MachineController::class, 'show']);
+        Route::post('machines', [MachineController::class, 'store']);
         Route::delete('machines/{machine}', [MachineController::class, 'destroy']);
 
         Route::get('maintenance-sheets', [MaintenanceSheetController::class, 'index']);
         Route::get('maintenance-sheets/{maintenanceSheet}', [MaintenanceSheetController::class, 'show']);
+        Route::post('maintenance-sheets', [MaintenanceSheetController::class, 'store']);
         Route::delete('maintenance-sheets/{maintenanceSheet}', [MaintenanceSheetController::class, 'destroy']);
 
         Route::get('working-sheets', [WorkingSheetController::class, 'index']);
         Route::get('working-sheets/{workingSheet}', [WorkingSheetController::class, 'show']);
+        Route::post('working-sheets', [WorkingSheetController::class, 'store']);
         Route::delete('working-sheets/{workingSheet}', [WorkingSheetController::class, 'destroy']);
 
         Route::get('images', [ImageController::class, 'index']);
@@ -76,6 +83,7 @@ Route::prefix('v1/')->group(function () {
 
         Route::get('article-types', [ArticleTypeController::class, 'index']);
         Route::get('article-types/{articleType}', [ArticleTypeController::class, 'show']);
+        Route::post('article-types', [ArticleTypeController::class, 'store']);
         Route::delete('article-types/{articleType}', [ArticleTypeController::class, 'destroy']);
 
         Route::get('maintenance-types', [MaintenanceTypeController::class, 'index']);

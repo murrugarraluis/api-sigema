@@ -126,7 +126,6 @@ class ArticleControllerTest extends TestCase
                 ['id' => Supplier::orderBy('id','asc')->limit(1)->first()->id, 'price' => 12.5],
             ],
         ];
-//        dd($payload);
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->postJson("api/v1/$this->resource", $payload);
 

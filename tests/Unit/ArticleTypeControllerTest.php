@@ -10,11 +10,14 @@ use Tests\TestCase;
 class ArticleTypeControllerTest extends TestCase
 {
     use RefreshDatabase;
+
     private $resource = 'article-types';
+
     public function seedData()
     {
-        ArticleType::factory()->create(['name'=>'article type']);
+        ArticleType::factory()->create(['name' => 'article type']);
     }
+
     public function test_index()
     {
         $this->withoutExceptionHandling();
@@ -29,6 +32,7 @@ class ArticleTypeControllerTest extends TestCase
             ->assertJsonStructure(['data' => []]);
 
     }
+
     public function test_show()
     {
         $this->withoutExceptionHandling();
@@ -45,6 +49,7 @@ class ArticleTypeControllerTest extends TestCase
             ->assertJsonStructure(['data' => []]);
 
     }
+
     public function test_show_not_found()
     {
         $user = User::factory()->create([
@@ -57,6 +62,34 @@ class ArticleTypeControllerTest extends TestCase
         $response->assertStatus(404)
             ->assertExactJson(['message' => "Unable to locate the article type you requested."]);
     }
+
+    public function test_store()
+    {
+
+//        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $payload = [
+            'name' => 'Article Type',
+        ];
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->postJson("api/v1/$this->resource", $payload);
+
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                ],
+            ])->assertJson([
+                'message' => 'Article Type created.',
+                'data' => []
+            ]);
+
+    }
+
     public function test_destroy()
     {
         $this->withoutExceptionHandling();

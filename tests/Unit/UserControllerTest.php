@@ -15,6 +15,12 @@ class UserControllerTest extends TestCase
 
     private $resource = 'users';
 
+    public function seedData()
+    {
+        DocumentType::factory()->create(['name' => 'DNI']);
+        Position::factory()->create(['name' => 'System Engineer']);
+    }
+
     public function test_index()
     {
         $this->withoutExceptionHandling();
@@ -22,8 +28,7 @@ class UserControllerTest extends TestCase
             'email' => 'admin@jextecnologies.com',
             'password' => bcrypt('123456')
         ]);
-        DocumentType::factory()->create(['name' => 'DNI']);
-        Position::factory()->create(['name' => 'System Engineer']);
+        $this->seedData();
         Employee::factory()->create([
             'user_id' => $user
         ]);
@@ -42,6 +47,7 @@ class UserControllerTest extends TestCase
             ]]);
 
     }
+
     public function test_show()
     {
         $this->withoutExceptionHandling();
@@ -49,8 +55,7 @@ class UserControllerTest extends TestCase
             'email' => 'admin@jextecnologies.com',
             'password' => bcrypt('123456')
         ]);
-        DocumentType::factory()->create(['name' => 'DNI']);
-        Position::factory()->create(['name' => 'System Engineer']);
+        $this->seedData();
         Employee::factory()->create([
             'user_id' => $user
         ]);
@@ -60,14 +65,15 @@ class UserControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonStructure(['data' => [
+                'id',
+                'email',
+                'employee' => [
                     'id',
-                    'email',
-                    'employee' => [
-                        'id',
-                    ],
+                ],
             ]]);
 
     }
+
     public function test_show_not_found()
     {
         $user = User::factory()->create([
@@ -80,6 +86,40 @@ class UserControllerTest extends TestCase
         $response->assertStatus(404)
             ->assertExactJson(['message' => "Unable to locate the user you requested."]);
     }
+
+    public function test_store()
+    {
+
+//        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $this->seedData();
+        $payload = [
+            'employee' => [
+                'id' => (Employee::factory()->create())->id
+            ],
+        ];
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->postJson("api/v1/$this->resource", $payload);
+
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'email',
+                    'employee' => [
+                        'id',
+                    ],
+                ],
+            ])->assertJson([
+                'message' => 'User created.',
+                'data' => []
+            ]);
+
+    }
+
     public function test_destroy()
     {
         $this->withoutExceptionHandling();
