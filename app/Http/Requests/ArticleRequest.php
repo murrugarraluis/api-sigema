@@ -23,25 +23,16 @@ class ArticleRequest extends FormRequest
      */
     public function rules(): array
     {
-//        TODO:
-//          -VALIDATE UUIDS
-//          -VALIDATE TYPES
-//          -VALIDATE UUIDS EXIST IN TABLES
-//
         return [
-            "name" => "required",
-            "brand" => 'required',
-            "model" => 'required',
-            "quantity" => 'required',
-            "article_type" => [
-                'id' => 'required',
-            ],
-            "suppliers" => [
-                '*' => [
-                    'id' => 'required',
-                    'price' => 'required'
-                ],
-            ],
+            "name" => ['required', 'string'],
+            "brand" => ['required', 'string'],
+            "model" => ['required', 'string'],
+            "quantity" => ['required', 'numeric', 'min:0'],
+            "article_type" => ['required', 'array'],
+            "article_type.id" => ['required', 'uuid', 'exists:article_types,id'],
+            'suppliers' => ['required', 'array'],
+            'suppliers.*.id' => ['required', 'uuid', 'exists:suppliers,id'],
+            'suppliers.*.price' => ['required', 'numeric', 'min:0'],
         ];
     }
 }

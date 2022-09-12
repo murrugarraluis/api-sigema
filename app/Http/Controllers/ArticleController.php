@@ -30,11 +30,10 @@ class ArticleController extends Controller
      * Store a newly created resource in storage.
      *
      * @param ArticleRequest $request
-     * @return JsonResponse|object|string
+     * @return JsonResponse|object
      */
     public function store(ArticleRequest $request)
     {
-//        TODO:REFACTOR
         DB::beginTransaction();
         try {
 //            CREATE ARTICLE
@@ -62,7 +61,6 @@ class ArticleController extends Controller
                 ->setStatusCode(201);
         } catch (\Exception $e) {
             DB::rollback();
-//            dd($e->getMessage());
             throw new BadRequestException($e->getMessage());
         }
     }
