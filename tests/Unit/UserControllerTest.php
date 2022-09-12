@@ -97,8 +97,10 @@ class UserControllerTest extends TestCase
         ]);
         $this->seedData();
         $payload = [
+            'email' => 'example@email.com',
+            'password' => '123456',
             'employee' => [
-                'id' => (Employee::factory()->create())->id
+                'id' => (Employee::factory()->create(['user_id' => null]))->id
             ],
         ];
         $response = $this->actingAs($user)->withSession(['banned' => false])

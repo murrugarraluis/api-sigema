@@ -26,7 +26,7 @@ class CreateEmployeesTable extends Migration
 
 
 //            FK
-            $table->foreignUuid('user_id')->nullable()->constrained('users');
+            $table->foreignUuid('user_id')->nullable()->unique()->constrained('users');
             $table->foreignUuid('position_id')->constrained('positions');
             $table->foreignUuid('document_type_id')->constrained('document_types');
 
