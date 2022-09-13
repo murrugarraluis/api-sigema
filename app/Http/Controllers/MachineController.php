@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MachineRequest;
+use App\Http\Requests\MachineUpdateRequest;
 use App\Http\Resources\MachineResource;
 use App\Http\Resources\MachinetDetailResource;
 use App\Models\Machine;
@@ -36,7 +37,7 @@ class MachineController extends Controller
     {
         DB::beginTransaction();
         try {
-//          CREATE ARTICLE TYPE
+//          CREATE MACHINE
             $machine = Machine::create($request->except(['articles', 'image']));
 //            ATTACH ARTICLES
             $articles = [];
@@ -72,13 +73,30 @@ class MachineController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param MachineUpdateRequest $request
      * @param Machine $machine
-     * @return Response
+     * @return MachinetDetailResource
      */
-    public function update(Request $request, Machine $machine)
+    public function update(MachineUpdateRequest $request, Machine $machine): MachinetDetailResource
     {
-        //
+        DB::beginTransaction();
+        try {
+//          UPDATE MACHINE
+            $machine->update($request->except(['articles', 'image']));
+//            ATTACH ARTICLES
+            $articles = [];
+            array_map(function ($article) use (&$articles) {
+                $article_id = $article['id'];
+                $articles[] = $article_id;
+            }, $request->articles);
+            $machine->articles()->sync($articles);
+            DB::commit();
+            return (new MachinetDetailResource($machine))->additional(['message' => 'Machine updated.']);
+        } catch (\Exception $e) {
+            DB::rollback();
+//            dd($e->getMessage());
+            throw new BadRequestException($e->getMessage());
+        }
     }
 
     /**

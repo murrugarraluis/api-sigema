@@ -69,6 +69,7 @@ Route::prefix('v1/')->group(function () {
         Route::get('machines', [MachineController::class, 'index']);
         Route::get('machines/{machine}', [MachineController::class, 'show']);
         Route::post('machines', [MachineController::class, 'store']);
+        Route::put('machines/{machine}', [MachineController::class, 'update']);
         Route::delete('machines/{machine}', [MachineController::class, 'destroy']);
 
         Route::get('maintenance-sheets', [MaintenanceSheetController::class, 'index']);

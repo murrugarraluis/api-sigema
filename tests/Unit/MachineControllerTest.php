@@ -142,6 +142,7 @@ class MachineControllerTest extends TestCase
             ]);
 
     }
+
     public function test_update()
     {
         $this->withoutExceptionHandling();
@@ -151,8 +152,22 @@ class MachineControllerTest extends TestCase
         ]);
         $this->seedData();
         $machine = Machine::limit(1)->first();
+        $payload = [
+            'serie_number' => '123456789',
+            'name' => 'Machine',
+            'brand' => 'brand',
+            'model' => 'model',
+            'image' => '',
+            'maximum_working_time' => 300,
+            'articles' => [
+                [
+                    'id' => Article::limit(1)->first()->id,
+                ]
+            ],
+            'status' => '',
+        ];
         $response = $this->actingAs($user)->withSession(['banned' => false])
-            ->putJson("api/v1/$this->resource/$machine->id");
+            ->putJson("api/v1/$this->resource/$machine->id", $payload);
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
