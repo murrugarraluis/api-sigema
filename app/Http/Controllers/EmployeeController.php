@@ -98,11 +98,29 @@ class EmployeeController extends Controller
      *
      * @param Request $request
      * @param Employee $employee
-     * @return Response
+     * @return EmployeeResource
      */
-    public function update(Request $request, Employee $employee)
+    public function update(EmployeeRequest $request, Employee $employee): EmployeeResource
     {
-        //
+        DB::beginTransaction();
+        try {
+//          UPDATE EMPLOYEE
+            $employee->update([
+                'document_number' => $request->document_number,
+                'name' => $request->name,
+                'lastname' => $request->lastname,
+                'personal_email' => $request->personal_email,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'position_id' => $request->position["id"],
+                'document_type_id' => $request->document_type["id"],
+            ]);
+            DB::commit();
+            return (new EmployeeResource($employee))->additional(['message' => 'Employee updated.']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new BadRequestException($e->getMessage());
+        }
     }
 
     /**

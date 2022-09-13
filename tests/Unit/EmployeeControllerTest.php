@@ -149,6 +149,7 @@ class EmployeeControllerTest extends TestCase
             ]);
 
     }
+
     public function test_update()
     {
         $this->withoutExceptionHandling();
@@ -158,8 +159,22 @@ class EmployeeControllerTest extends TestCase
         ]);
         $this->seedData();
         $employee = Employee::limit(1)->first();
+        $payload = [
+            'document_number' => '12345678',
+            'name' => 'Luis',
+            'lastname' => 'Rodriguez',
+            'personal_email' => 'example@email.com',
+            'phone' => '987654321',
+            'address' => 'Av.Larco',
+            'position' => [
+                'id' => Position::limit(1)->first()->id,
+            ],
+            'document_type' => [
+                'id' => DocumentType::limit(1)->first()->id,
+            ],
+        ];
         $response = $this->actingAs($user)->withSession(['banned' => false])
-            ->getJson("api/v1/$this->resource/$employee->id");
+            ->putJson("api/v1/$this->resource/$employee->id", $payload);
 
         $response->assertStatus(200)
             ->assertJsonStructure([
