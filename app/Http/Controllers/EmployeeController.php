@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EmployeeRequest;
 use App\Http\Resources\EmployeeResource;
 use App\Http\Resources\SafeCredentialsResource;
 use App\Models\Employee;
@@ -10,6 +11,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class EmployeeController extends Controller
 {
@@ -28,11 +31,32 @@ class EmployeeController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Response
+     * @return JsonResponse|Response|object
      */
-    public function store(Request $request)
+    public function store(EmployeeRequest $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+//          CREATE EMPLOYEE
+            $employee = Employee::create([
+                'document_number' => $request->document_number,
+                'name' => $request->name,
+                'lastname' => $request->lastname,
+                'personal_email' => $request->personal_email,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'position_id' => $request->position["id"],
+                'document_type_id' => $request->document_type["id"],
+            ]);
+            DB::commit();
+            return (new EmployeeResource($employee))
+                ->additional(['message' => 'Employee created.'])
+                ->response()
+                ->setStatusCode(201);
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new BadRequestException($e->getMessage());
+        }
     }
 
     /**

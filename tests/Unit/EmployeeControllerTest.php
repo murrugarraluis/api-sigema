@@ -114,7 +114,7 @@ class EmployeeControllerTest extends TestCase
             'name' => 'Luis',
             'lastname' => 'Rodriguez',
             'personal_email' => 'example@email.com',
-            'phone' => '98765432',
+            'phone' => '987654321',
             'address' => 'Av.Larco',
             'position' => [
                 'id' => Position::limit(1)->first()->id,

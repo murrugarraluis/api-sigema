@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ArticleTypeRequest;
 use App\Http\Resources\ArticleResource;
 use App\Http\Resources\ArticleTypeResource;
 use App\Models\Article;
@@ -9,6 +10,9 @@ use App\Models\ArticleType;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class ArticleTypeController extends Controller
 {
@@ -26,12 +30,24 @@ class ArticleTypeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param ArticleTypeRequest $request
+     * @return JsonResponse|object
      */
-    public function store(Request $request)
+    public function store(ArticleTypeRequest $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+//          CREATE ARTICLE TYPE
+            $article_type = ArticleType::create(['name' => $request->name]);
+            DB::commit();
+            return (new ArticleTypeResource($article_type))
+                ->additional(['message' => 'Article Type created.'])
+                ->response()
+                ->setStatusCode(201);
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new BadRequestException($e->getMessage());
+        }
     }
 
     /**
@@ -48,9 +64,9 @@ class ArticleTypeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @param ArticleType $articleType
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, ArticleType $articleType)
     {
@@ -66,6 +82,6 @@ class ArticleTypeController extends Controller
     public function destroy(ArticleType $articleType): JsonResponse
     {
         $articleType->delete();
-        return response()->json(['message'=>'Article Type removed.'],200);
+        return response()->json(['message' => 'Article Type removed.'], 200);
     }
 }

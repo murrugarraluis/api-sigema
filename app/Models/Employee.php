@@ -9,14 +9,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends Model
 {
-    use HasFactory, Uuids,SoftDeletes;
+    use HasFactory, Uuids, SoftDeletes;
 
-    protected $hidden = ['created_at', 'updated_at','deleted_at'];
+    protected $fillable = [
+        'document_number',
+        'name',
+        'lastname',
+        'personal_email',
+        'phone',
+        'address',
+        'position_id',
+        'document_type_id',
+    ];
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
     public function attendance_sheets(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(AttendanceSheet::class)
-            ->withPivot('check_in','check_out','attendance');
+            ->withPivot('check_in', 'check_out', 'attendance');
     }
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
