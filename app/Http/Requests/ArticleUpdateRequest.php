@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ArticleRequest extends FormRequest
+class ArticleUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,7 +30,7 @@ class ArticleRequest extends FormRequest
             "quantity" => ['bail','required', 'numeric', 'min:0'],
             "article_type" => ['bail','required', 'array'],
             "article_type.id" => ['bail','required', 'uuid', 'exists:article_types,id'],
-            'suppliers' => ['bail','required', 'array'],
+            'suppliers' => ['bail','nullable', 'array'],
             'suppliers.*.id' => ['bail','required', 'uuid', 'exists:suppliers,id'],
             'suppliers.*.price' => ['bail','required', 'numeric', 'min:0'],
         ];

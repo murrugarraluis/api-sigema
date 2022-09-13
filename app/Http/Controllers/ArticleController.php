@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ArticleRequest;
+use App\Http\Requests\ArticleUpdateRequest;
 use App\Http\Resources\ArticleDetailResource;
 use App\Http\Resources\ArticleResource;
 use App\Models\Article;
@@ -79,13 +80,38 @@ class ArticleController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param ArticleUpdateRequest $request
      * @param Article $article
-     * @return \Illuminate\Http\Response
+     * @return ArticleDetailResource
      */
-    public function update(Request $request, Article $article)
+    public function update(ArticleUpdateRequest $request, Article $article): ArticleDetailResource
     {
-        //
+        DB::beginTransaction();
+        try {
+//            UPDATE ARTICLE
+            $article->update([
+                'name' => $request->name,
+                'brand' => $request->brand,
+                'model' => $request->model,
+                'quantity' => $request->quantity,
+                'article_type_id' => $request->article_type["id"],
+            ]);
+//            ATTACH SUPPLIERS
+            $suppliers = [];
+            array_map(function ($supplier) use (&$suppliers) {
+                $supplier_id = $supplier['id'];
+                $price = $supplier['price'];
+                $suppliers[$supplier_id]= ["price" => $price];
+            }, $request->suppliers);
+
+            $article->suppliers()->sync($suppliers);
+
+            DB::commit();
+            return (new ArticleDetailResource($article))->additional(['message' => 'Article updated.']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new BadRequestException($e->getMessage());
+        }
     }
 
     /**A

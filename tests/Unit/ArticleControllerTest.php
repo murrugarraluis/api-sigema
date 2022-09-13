@@ -122,8 +122,8 @@ class ArticleControllerTest extends TestCase
                 'id' => ArticleType::limit(1)->first()->id,
             ],
             'suppliers' => [
-                ['id' => Supplier::orderBy('id','desc')->limit(1)->first()->id, 'price' => 12.5],
-                ['id' => Supplier::orderBy('id','asc')->limit(1)->first()->id, 'price' => 12.5],
+                ['id' => Supplier::orderBy('id', 'desc')->limit(1)->first()->id, 'price' => 12.5],
+                ['id' => Supplier::orderBy('id', 'asc')->limit(1)->first()->id, 'price' => 12.5],
             ],
         ];
         $response = $this->actingAs($user)->withSession(['banned' => false])
@@ -155,6 +155,7 @@ class ArticleControllerTest extends TestCase
             ]);
 
     }
+
     public function test_update()
     {
 
@@ -165,8 +166,21 @@ class ArticleControllerTest extends TestCase
         ]);
         $this->seedData();
         $article = Article::limit(1)->first();
+        $payload = [
+            'name' => 'Article',
+            'brand' => 'Brand',
+            'model' => 'Model',
+            'quantity' => 2,
+            'article_type' => [
+                'id' => ArticleType::limit(1)->first()->id,
+            ],
+            'suppliers' => [
+                ['id' => Supplier::orderBy('id', 'desc')->limit(1)->first()->id, 'price' => 12.5],
+                ['id' => Supplier::orderBy('id', 'asc')->limit(1)->first()->id, 'price' => 12.5],
+            ],
+        ];
         $response = $this->actingAs($user)->withSession(['banned' => false])
-            ->putJson("api/v1/$this->resource/$article->id");
+            ->putJson("api/v1/$this->resource/$article->id", $payload);
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -189,7 +203,7 @@ class ArticleControllerTest extends TestCase
                     ]
                 ],
             ])->assertJson([
-                'message' => 'Article created.',
+                'message' => 'Article updated.',
                 'data' => []
             ]);
 
