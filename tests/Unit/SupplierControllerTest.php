@@ -132,7 +132,7 @@ class SupplierControllerTest extends TestCase
             ],
             'banks' => [
                 [
-                    'id' => Bank::factory()->create(['BCP']),
+                    'id' => Bank::factory()->create(['name'=>'BCP'])->id,
                     'account_number' => '12345678912312',
                     'interbank_account_number' => '1234566788642134',
                 ]

@@ -46,7 +46,7 @@ class ArticleController extends Controller
             ]);
 //            ATTACH SUPPLIERS
             $suppliers = [];
-            array_map(function ($supplier) use ($article,&$suppliers) {
+            array_map(function ($supplier) use (&$suppliers) {
                 $supplier_id = $supplier['id'];
                 $price = $supplier['price'];
                 $suppliers[$supplier_id]= ["price" => $price];
