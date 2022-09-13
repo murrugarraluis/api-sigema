@@ -90,6 +90,34 @@ class ArticleTypeControllerTest extends TestCase
 
     }
 
+    public function test_update()
+    {
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $this->seedData();
+        $article_type = ArticleType::limit(1)->first();
+        $payload = [
+            'name' => 'Article Type',
+        ];
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->putJson("api/v1/$this->resource/$article_type->id", $payload);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                ],
+            ])->assertJson([
+                'message' => 'Article Type updated.',
+                'data' => []
+            ]);
+
+    }
+
     public function test_destroy()
     {
         $this->withoutExceptionHandling();

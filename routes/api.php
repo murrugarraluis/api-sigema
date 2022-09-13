@@ -85,6 +85,7 @@ Route::prefix('v1/')->group(function () {
         Route::get('article-types', [ArticleTypeController::class, 'index']);
         Route::get('article-types/{articleType}', [ArticleTypeController::class, 'show']);
         Route::post('article-types', [ArticleTypeController::class, 'store']);
+        Route::put('article-types/{articleType}', [ArticleTypeController::class, 'update']);
         Route::delete('article-types/{articleType}', [ArticleTypeController::class, 'destroy']);
 
         Route::get('maintenance-types', [MaintenanceTypeController::class, 'index']);

@@ -64,13 +64,14 @@ class ArticleTypeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param ArticleTypeRequest $request
      * @param ArticleType $articleType
-     * @return Response
+     * @return ArticleTypeResource
      */
-    public function update(Request $request, ArticleType $articleType)
+    public function update(ArticleTypeRequest $request, ArticleType $articleType): ArticleTypeResource
     {
-        //
+        $articleType->update($request->all());
+        return (new ArticleTypeResource($articleType))->additional(['message' => 'Article Type updated.']);
     }
 
     /**
