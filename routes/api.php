@@ -57,6 +57,7 @@ Route::prefix('v1/')->group(function () {
         Route::get('suppliers', [SupplierController::class, 'index']);
         Route::get('suppliers/{supplier}', [SupplierController::class, 'show']);
         Route::post('suppliers', [SupplierController::class, 'store']);
+        Route::put('suppliers/{supplier}', [SupplierController::class, 'update']);
         Route::delete('suppliers/{supplier}', [SupplierController::class, 'destroy']);
 
         Route::get('articles', [ArticleController::class, 'index']);

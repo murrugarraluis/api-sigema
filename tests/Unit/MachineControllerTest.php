@@ -142,6 +142,41 @@ class MachineControllerTest extends TestCase
             ]);
 
     }
+    public function test_update()
+    {
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $this->seedData();
+        $machine = Machine::limit(1)->first();
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->putJson("api/v1/$this->resource/$machine->id");
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'serie_number',
+                    'name',
+                    'brand',
+                    'model',
+                    'image',
+                    'maximum_working_time',
+                    'articles' => [
+                        '*' => [
+                            'id',
+                            'name',
+                        ]
+                    ],
+                    'status',
+                ]
+            ])->assertJson([
+                'message' => 'Machine updated.',
+                'data' => []
+            ]);
+
+    }
 
     public function test_destroy()
     {

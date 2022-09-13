@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SupplierRequest;
+use App\Http\Requests\SupplierUpdateRequest;
 use App\Http\Resources\SupplierDetailResource;
 use App\Http\Resources\SupplierResource;
 use App\Models\Supplier;
@@ -82,13 +83,41 @@ class SupplierController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param SupplierRequest $request
      * @param Supplier $supplier
-     * @return Response
+     * @return SupplierDetailResource
      */
-    public function update(Request $request, Supplier $supplier)
+    public function update(SupplierUpdateRequest $request, Supplier $supplier): SupplierDetailResource
     {
-        //
+        DB::beginTransaction();
+        try {
+//            UPDATE SUPPLIER
+            $supplier->update([
+                'document_number' => $request->document_number,
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'address' => $request->address,
+                'supplier_type_id' => $request->supplier_type["id"],
+                'document_type_id' => $request->document_type["id"],
+            ]);
+//            ATTACH BANKS
+            $banks = [];
+            array_map(function ($bank) use (&$banks) {
+                $bank_id = $bank['id'];
+                $account_number = $bank['account_number'];
+                $interbank_account_number = $bank['interbank_account_number'];
+                $banks[$bank_id] = ["account_number" => $account_number, "interbank_account_number" => $interbank_account_number];
+            }, $request->banks);
+
+            $supplier->banks()->sync($banks);
+            DB::commit();
+            return (new SupplierDetailResource($supplier))->additional(['message' => 'Supplier updated.']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            dd($e->getMessage());
+            throw new BadRequestException($e->getMessage());
+        }
     }
 
     /**

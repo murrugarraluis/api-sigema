@@ -132,7 +132,7 @@ class SupplierControllerTest extends TestCase
             ],
             'banks' => [
                 [
-                    'id' => Bank::factory()->create(['name'=>'BCP'])->id,
+                    'id' => Bank::factory()->create(['name' => 'BCP'])->id,
                     'account_number' => '12345678912312',
                     'interbank_account_number' => '1234566788642134',
                 ]
@@ -169,6 +169,71 @@ class SupplierControllerTest extends TestCase
                 ],
             ])->assertJson([
                 'message' => 'Supplier created.',
+                'data' => []
+            ]);
+
+    }
+
+    public function test_update()
+    {
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $this->seedData();
+        $supplier = Supplier::limit(1)->first();
+        $payload = [
+            'document_number' => '12345678',
+            'name' => 'Supplier',
+            'phone' => '123456788',
+            'email' => 'example@email.com',
+            'address' => 'Av.Larco',
+            'supplier_type' => [
+                'id' => SupplierType::limit(1)->first()->id,
+            ],
+            'document_type' => [
+                'id' => DocumentType::limit(1)->first()->id,
+            ],
+            'banks' => [
+                [
+                    'id' => Bank::factory()->create(['name' => 'BCP'])->id,
+                    'account_number' => '12345678912312',
+                    'interbank_account_number' => '1234566788642134',
+                ]
+            ]
+        ];
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->putJson("api/v1/$this->resource/$supplier->id", $payload);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'document_number',
+                    'name',
+                    'phone',
+                    'email',
+                    'address',
+                    'supplier_type' => [
+                        'id',
+                        'name'
+                    ],
+                    'document_type' => [
+                        'id',
+                        'name'
+                    ],
+                    'banks' => [
+                        '*' => [
+                            'id',
+                            'name',
+                            'account_number',
+                            'interbank_account_number',
+                        ]
+                    ]
+                ],
+            ])->assertJson([
+                'message' => 'Supplier updated.',
                 'data' => []
             ]);
 

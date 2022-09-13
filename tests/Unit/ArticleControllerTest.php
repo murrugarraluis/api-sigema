@@ -155,6 +155,45 @@ class ArticleControllerTest extends TestCase
             ]);
 
     }
+    public function test_update()
+    {
+
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $this->seedData();
+        $article = Article::limit(1)->first();
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->putJson("api/v1/$this->resource/$article->id");
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'brand',
+                    'model',
+                    'quantity',
+                    'article_type' => [
+                        'id',
+                        'name'
+                    ],
+                    'suppliers' => [
+                        '*' => [
+                            'id',
+                            'name',
+                            'price'
+                        ]
+                    ]
+                ],
+            ])->assertJson([
+                'message' => 'Article created.',
+                'data' => []
+            ]);
+
+    }
 
     public function test_destroy()
     {
