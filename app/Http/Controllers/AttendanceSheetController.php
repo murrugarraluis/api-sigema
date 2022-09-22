@@ -18,7 +18,7 @@ class AttendanceSheetController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $attendance_sheets = AttendanceSheet::all();
+        $attendance_sheets = AttendanceSheet::all()->sortByDesc('created_at');
         return AttendanceSheetResource::collection($attendance_sheets);
     }
 

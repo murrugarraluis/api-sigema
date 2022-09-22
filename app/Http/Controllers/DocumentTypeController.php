@@ -17,7 +17,7 @@ class DocumentTypeController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $document_types = DocumentType::all();
+        $document_types = DocumentType::all()->sortByDesc('created_at');
         return DocumentTypeResource::collection($document_types);
     }
 

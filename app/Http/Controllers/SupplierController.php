@@ -23,7 +23,7 @@ class SupplierController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $suppliers = Supplier::all();
+        $suppliers = Supplier::all()->sortByDesc('created_at');
         return SupplierResource::collection($suppliers);
     }
 

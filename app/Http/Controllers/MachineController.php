@@ -23,7 +23,7 @@ class MachineController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $machines = Machine::all();
+        $machines = Machine::all()->sortByDesc('created_at');
         return MachineResource::collection($machines);
     }
 

@@ -18,7 +18,7 @@ class SupplierTypeController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $supplier_types = SupplierType::all();
+        $supplier_types = SupplierType::all()->sortByDesc('created_at');
         return SupplierTypeResource::collection($supplier_types);
     }
 

@@ -17,7 +17,7 @@ class PositionController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $positions = Position::all();
+        $positions = Position::all()->sortByDesc('created_at');
         return PositionResource::collection($positions);
     }
 

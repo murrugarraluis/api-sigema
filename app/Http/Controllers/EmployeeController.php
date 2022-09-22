@@ -23,7 +23,7 @@ class EmployeeController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $employees = Employee::all();
+        $employees = Employee::all()->sortByDesc('created_at');
         return EmployeeResource::collection($employees);
     }
 

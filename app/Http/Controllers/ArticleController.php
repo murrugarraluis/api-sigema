@@ -23,7 +23,7 @@ class ArticleController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $articles = Article::all();
+        $articles = Article::all()->sortByDesc('created_at');
         return ArticleResource::collection($articles);
     }
 

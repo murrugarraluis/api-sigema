@@ -19,7 +19,7 @@ class MaintenanceSheetController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $maintenance_sheets = MaintenanceSheet::all();
+        $maintenance_sheets = MaintenanceSheet::all()->sortByDesc('created_at');
         return MaintenanceSheetResource::collection($maintenance_sheets);
     }
 

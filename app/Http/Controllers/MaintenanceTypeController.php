@@ -17,7 +17,7 @@ class MaintenanceTypeController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $maintenance_types = MaintenanceType::all();
+        $maintenance_types = MaintenanceType::all()->sortByDesc('created_at');
         return MaintenanceTypeResource::collection($maintenance_types);
     }
 

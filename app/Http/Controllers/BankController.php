@@ -17,7 +17,7 @@ class BankController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $banks = Bank::all();
+        $banks = Bank::all()->sortByDesc('created_at');
         return BankResource::collection($banks);
     }
 

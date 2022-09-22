@@ -18,7 +18,7 @@ class WorkingSheetController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $working_sheets = WorkingSheet::all();
+        $working_sheets = WorkingSheet::all()->sortByDesc('created_at');
         return WorkingSheetResource::collection($working_sheets);
     }
 
