@@ -21,6 +21,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@jextecnologies.com',
             'password' => bcrypt('123456')
         ]);
+        $user->assignRole('Admin');
         Employee::factory()->create([
             'user_id' => $user
         ]);

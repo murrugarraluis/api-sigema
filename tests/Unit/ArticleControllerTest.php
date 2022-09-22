@@ -10,6 +10,8 @@ use App\Models\Supplier;
 use App\Models\SupplierType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class ArticleControllerTest extends TestCase
@@ -20,6 +22,20 @@ class ArticleControllerTest extends TestCase
 
     public function seedData()
     {
+        $role = Role::create(['name' => 'Admin']);
+
+        Permission::create(['name' => 'users']);
+        Permission::create(['name' => 'employees']);
+        Permission::create(['name' => 'attendance-sheets']);
+        Permission::create(['name' => 'suppliers']);
+        Permission::create(['name' => 'articles']);
+        Permission::create(['name' => 'machines']);
+        Permission::create(['name' => 'maintenance-sheets']);
+        Permission::create(['name' => 'working-sheets']);
+        Permission::create(['name' => 'article-types']);
+
+        $permissions = Permission::all();
+        $role->syncPermissions($permissions);
         DocumentType::factory()->create(['name' => 'RUC']);
         SupplierType::factory()->create(['name' => 'Proveedor de Articulos']);
         Supplier::factory(5)->create();
@@ -27,7 +43,8 @@ class ArticleControllerTest extends TestCase
         Article::factory(5)->create();
     }
 
-    public function test_index()
+    public
+    function test_index()
     {
 
         $this->withoutExceptionHandling();
@@ -36,6 +53,8 @@ class ArticleControllerTest extends TestCase
             'password' => bcrypt('123456')
         ]);
         $this->seedData();
+        $user->assignRole('Admin');
+
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource");
 
@@ -56,7 +75,8 @@ class ArticleControllerTest extends TestCase
 
     }
 
-    public function test_show()
+    public
+    function test_show()
     {
 
         $this->withoutExceptionHandling();
@@ -65,6 +85,8 @@ class ArticleControllerTest extends TestCase
             'password' => bcrypt('123456')
         ]);
         $this->seedData();
+        $user->assignRole('Admin');
+
         $article = Article::limit(1)->first();
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource/$article->id");
@@ -91,7 +113,8 @@ class ArticleControllerTest extends TestCase
 
     }
 
-    public function test_show_not_found()
+    public
+    function test_show_not_found()
     {
         $user = User::factory()->create([
             'email' => 'admin@jextecnologies.com',
@@ -104,7 +127,8 @@ class ArticleControllerTest extends TestCase
             ->assertExactJson(['message' => "Unable to locate the article you requested."]);
     }
 
-    public function test_store()
+    public
+    function test_store()
     {
 
 //        $this->withoutExceptionHandling();
@@ -113,6 +137,8 @@ class ArticleControllerTest extends TestCase
             'password' => bcrypt('123456')
         ]);
         $this->seedData();
+        $user->assignRole('Admin');
+
         $payload = [
             'name' => 'Article',
             'brand' => 'Brand',
@@ -156,7 +182,8 @@ class ArticleControllerTest extends TestCase
 
     }
 
-    public function test_update()
+    public
+    function test_update()
     {
 
         $this->withoutExceptionHandling();
@@ -165,6 +192,8 @@ class ArticleControllerTest extends TestCase
             'password' => bcrypt('123456')
         ]);
         $this->seedData();
+        $user->assignRole('Admin');
+
         $article = Article::limit(1)->first();
         $payload = [
             'name' => 'Article',
@@ -209,7 +238,8 @@ class ArticleControllerTest extends TestCase
 
     }
 
-    public function test_destroy()
+    public
+    function test_destroy()
     {
 
         $this->withoutExceptionHandling();
@@ -218,6 +248,8 @@ class ArticleControllerTest extends TestCase
             'password' => bcrypt('123456')
         ]);
         $this->seedData();
+        $user->assignRole('Admin');
+
         $article = Article::limit(1)->first();
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->deleteJson("api/v1/$this->resource/$article->id");

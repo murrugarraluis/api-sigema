@@ -6,6 +6,8 @@ use App\Models\Machine;
 use App\Models\User;
 use App\Models\WorkingSheet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class WorkingSheetControllerTest extends TestCase
@@ -14,6 +16,21 @@ class WorkingSheetControllerTest extends TestCase
     private $resource = 'working-sheets';
     public function seedData()
     {
+        $role = Role::create(['name' => 'Admin']);
+
+        Permission::create(['name' => 'users']);
+        Permission::create(['name' => 'employees']);
+        Permission::create(['name' => 'attendance-sheets']);
+        Permission::create(['name' => 'suppliers']);
+        Permission::create(['name' => 'articles']);
+        Permission::create(['name' => 'machines']);
+        Permission::create(['name' => 'maintenance-sheets']);
+        Permission::create(['name' => 'working-sheets']);
+        Permission::create(['name' => 'article-types']);
+
+        $permissions = Permission::all();
+        $role->syncPermissions($permissions);
+
         Machine::factory()->create();
         WorkingSheet::factory()->create();
     }
@@ -26,6 +43,7 @@ class WorkingSheetControllerTest extends TestCase
         ]);
 
         $this->seedData();
+        $user->assignRole('Admin');
 
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource");
@@ -53,6 +71,8 @@ class WorkingSheetControllerTest extends TestCase
         ]);
 
         $this->seedData();
+        $user->assignRole('Admin');
+
         $working_sheet = WorkingSheet::limit(1)->first();
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource/$working_sheet->id");
@@ -96,6 +116,8 @@ class WorkingSheetControllerTest extends TestCase
         ]);
 
         $this->seedData();
+        $user->assignRole('Admin');
+
         $working_sheet = WorkingSheet::limit(1)->first();
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->deleteJson("api/v1/$this->resource/$working_sheet->id");

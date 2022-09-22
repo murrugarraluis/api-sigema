@@ -8,6 +8,8 @@ use App\Models\Notification;
 use App\Models\Position;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class UserControllerTest extends TestCase
@@ -18,12 +20,28 @@ class UserControllerTest extends TestCase
 
     public function seedData()
     {
+        $role = Role::create(['name' => 'Admin']);
+
+        Permission::create(['name' => 'users']);
+        Permission::create(['name' => 'employees']);
+        Permission::create(['name' => 'attendance-sheets']);
+        Permission::create(['name' => 'suppliers']);
+        Permission::create(['name' => 'articles']);
+        Permission::create(['name' => 'machines']);
+        Permission::create(['name' => 'maintenance-sheets']);
+        Permission::create(['name' => 'working-sheets']);
+        Permission::create(['name' => 'article-types']);
+
+        $permissions = Permission::all();
+        $role->syncPermissions($permissions);
+
         Notification::factory(2)->create();
         DocumentType::factory()->create(['name' => 'DNI']);
         Position::factory()->create(['name' => 'System Engineer']);
     }
 
-    public function test_index()
+    public
+    function test_index()
     {
         $this->withoutExceptionHandling();
         $user = User::factory()->create([
@@ -31,6 +49,8 @@ class UserControllerTest extends TestCase
             'password' => bcrypt('123456')
         ]);
         $this->seedData();
+        $user->assignRole('Admin');
+
         Employee::factory()->create([
             'user_id' => $user
         ]);
@@ -50,7 +70,8 @@ class UserControllerTest extends TestCase
 
     }
 
-    public function test_show()
+    public
+    function test_show()
     {
         $this->withoutExceptionHandling();
         $user = User::factory()->create([
@@ -58,6 +79,8 @@ class UserControllerTest extends TestCase
             'password' => bcrypt('123456')
         ]);
         $this->seedData();
+        $user->assignRole('Admin');
+
         Employee::factory()->create([
             'user_id' => $user
         ]);
@@ -76,19 +99,23 @@ class UserControllerTest extends TestCase
 
     }
 
-    public function test_show_notifications()
+    public
+    function test_show_notifications()
     {
         $this->withoutExceptionHandling();
         $this->seedData();
+
         $notifications = Notification::all();
         $user = User::factory()->hasAttached($notifications)->create([
             'email' => 'admin@jextecnologies.com',
             'password' => bcrypt('123456')
         ]);
+        $user->assignRole('Admin');
         Employee::factory()->create([
             'user_id' => $user
         ]);
         $user = User::limit(1)->first();
+
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource/$user->id/notifications");
 
@@ -102,7 +129,8 @@ class UserControllerTest extends TestCase
 
     }
 
-    public function test_show_not_found()
+    public
+    function test_show_not_found()
     {
         $user = User::factory()->create([
             'email' => 'admin@jextecnologies.com',
@@ -115,7 +143,8 @@ class UserControllerTest extends TestCase
             ->assertExactJson(['message' => "Unable to locate the user you requested."]);
     }
 
-    public function test_store()
+    public
+    function test_store()
     {
 
 //        $this->withoutExceptionHandling();
@@ -124,6 +153,8 @@ class UserControllerTest extends TestCase
             'password' => bcrypt('123456')
         ]);
         $this->seedData();
+        $user->assignRole('Admin');
+
         $payload = [
             'email' => 'example@email.com',
             'password' => '123456',
@@ -150,7 +181,8 @@ class UserControllerTest extends TestCase
 
     }
 
-    public function test_destroy()
+    public
+    function test_destroy()
     {
         $this->withoutExceptionHandling();
         $user = User::factory()->create([
@@ -163,6 +195,8 @@ class UserControllerTest extends TestCase
             'user_id' => $user
         ]);
         $user = User::limit(1)->first();
+        $this->seedData();
+        $user->assignRole('Admin');
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->deleteJson("api/v1/$this->resource/$user->id");
 

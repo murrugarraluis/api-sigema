@@ -8,6 +8,8 @@ use App\Models\Employee;
 use App\Models\Position;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class AttendanceSheetControllerTest extends TestCase
@@ -18,19 +20,34 @@ class AttendanceSheetControllerTest extends TestCase
 
     public function seedData()
     {
-        Position::factory()->create(['name'=>'System Engineer']);
+        $role = Role::create(['name' => 'Admin']);
+
+        Permission::create(['name' => 'users']);
+        Permission::create(['name' => 'employees']);
+        Permission::create(['name' => 'attendance-sheets']);
+        Permission::create(['name' => 'suppliers']);
+        Permission::create(['name' => 'articles']);
+        Permission::create(['name' => 'machines']);
+        Permission::create(['name' => 'maintenance-sheets']);
+        Permission::create(['name' => 'working-sheets']);
+        Permission::create(['name' => 'article-types']);
+
+        $permissions = Permission::all();
+        $role->syncPermissions($permissions);
+        Position::factory()->create(['name' => 'System Engineer']);
         DocumentType::factory()->create(['name' => 'DNI']);
         $employees = Employee::factory(2)->create();
         AttendanceSheet::factory(5)
-            ->hasAttached($employees,[
-                "check_in"=>'10:00:00',
-                "check_out"=>'15:00:00',
-                "attendance"=>'asistencia',
+            ->hasAttached($employees, [
+                "check_in" => '10:00:00',
+                "check_out" => '15:00:00',
+                "attendance" => 'asistencia',
             ])
             ->create();
     }
 
-    public function test_index()
+    public
+    function test_index()
     {
         $this->withoutExceptionHandling();
         $user = User::factory()->create([
@@ -38,13 +55,15 @@ class AttendanceSheetControllerTest extends TestCase
             'password' => bcrypt('123456')
         ]);
         $this->seedData();
+        $user->assignRole('Admin');
+
 //        $attendance_sheet = AttendanceSheet::limit(1)->first();
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource");
 
         $response->assertStatus(200)
             ->assertJsonStructure(['data' => [
-                '*'=>[
+                '*' => [
                     'id',
                     'date',
                     'time_start',
@@ -56,7 +75,8 @@ class AttendanceSheetControllerTest extends TestCase
 
     }
 
-    public function test_show()
+    public
+    function test_show()
     {
         $this->withoutExceptionHandling();
         $user = User::factory()->create([
@@ -64,6 +84,8 @@ class AttendanceSheetControllerTest extends TestCase
             'password' => bcrypt('123456')
         ]);
         $this->seedData();
+        $user->assignRole('Admin');
+
         $attendance_sheet = AttendanceSheet::limit(1)->first();
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource/$attendance_sheet->id");
@@ -75,8 +97,8 @@ class AttendanceSheetControllerTest extends TestCase
                 'time_start',
                 'time_end',
                 'responsible',
-                'employee'=>[
-                    '*'=>[
+                'employee' => [
+                    '*' => [
                         'id',
                         'check_in',
                         'check_out',
@@ -92,7 +114,8 @@ class AttendanceSheetControllerTest extends TestCase
 
     }
 
-    public function test_show_not_found()
+    public
+    function test_show_not_found()
     {
         $user = User::factory()->create([
             'email' => 'admin@jextecnologies.com',
@@ -104,6 +127,7 @@ class AttendanceSheetControllerTest extends TestCase
         $response->assertStatus(404)
             ->assertExactJson(['message' => "Unable to locate the attendance sheet you requested."]);
     }
+
 //    public function test_deleted()
 //    {
 //        $this->withoutExceptionHandling();

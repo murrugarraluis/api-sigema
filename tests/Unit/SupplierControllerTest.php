@@ -7,7 +7,10 @@ use App\Models\DocumentType;
 use App\Models\Supplier;
 use App\Models\SupplierType;
 use App\Models\User;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class SupplierControllerTest extends TestCase
@@ -18,6 +21,21 @@ class SupplierControllerTest extends TestCase
 
     public function seedData()
     {
+        $role = Role::create(['name' => 'Admin']);
+
+        Permission::create(['name' => 'users']);
+        Permission::create(['name' => 'employees']);
+        Permission::create(['name' => 'attendance-sheets']);
+        Permission::create(['name' => 'suppliers']);
+        Permission::create(['name' => 'articles']);
+        Permission::create(['name' => 'machines']);
+        Permission::create(['name' => 'maintenance-sheets']);
+        Permission::create(['name' => 'working-sheets']);
+        Permission::create(['name' => 'article-types']);
+
+        $permissions = Permission::all();
+        $role->syncPermissions($permissions);
+
         DocumentType::factory()->create(['name' => 'RUC']);
         SupplierType::factory()->create(['name' => 'Proveedor de Servicios']);
         Supplier::factory(10)->create();
@@ -31,6 +49,7 @@ class SupplierControllerTest extends TestCase
             'password' => bcrypt('123456')
         ]);
         $this->seedData();
+        $user->assignRole('Admin');
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource");
 
@@ -64,6 +83,7 @@ class SupplierControllerTest extends TestCase
             'password' => bcrypt('123456')
         ]);
         $this->seedData();
+        $user->assignRole('Admin');
         $supplier = Supplier::limit(1)->first();
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->getJson("api/v1/$this->resource/$supplier->id");
@@ -118,6 +138,8 @@ class SupplierControllerTest extends TestCase
             'password' => bcrypt('123456')
         ]);
         $this->seedData();
+        $user->assignRole('Admin');
+
         $payload = [
             'document_number' => '12345678',
             'name' => 'Supplier',
@@ -182,6 +204,8 @@ class SupplierControllerTest extends TestCase
             'password' => bcrypt('123456')
         ]);
         $this->seedData();
+        $user->assignRole('Admin');
+
         $supplier = Supplier::limit(1)->first();
         $payload = [
             'document_number' => '12345678',
@@ -247,6 +271,8 @@ class SupplierControllerTest extends TestCase
             'password' => bcrypt('123456')
         ]);
         $this->seedData();
+        $user->assignRole('Admin');
+
         $supplier = Supplier::limit(1)->first();
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->deleteJson("api/v1/$this->resource/$supplier->id");
