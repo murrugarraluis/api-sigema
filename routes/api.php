@@ -20,7 +20,8 @@ use App\Http\Controllers\{
     SupplierTypeController,
     UserController,
     WorkingSheetController,
-    RoleController
+    RoleController,
+    PermissionController
 
 };
 
@@ -136,6 +137,7 @@ Route::prefix('v1/')->group(function () {
             Route::delete('roles/{role}', [RoleController::class, 'destroy']);
             //
         });
+        Route::get('permissions', [PermissionController::class, 'index']);
     });
 });
 
