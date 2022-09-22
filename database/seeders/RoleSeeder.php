@@ -26,6 +26,7 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'maintenance-sheets']);
         Permission::create(['name' => 'working-sheets']);
         Permission::create(['name' => 'article-types']);
+        Permission::create(['name' => 'roles']);
 
         $permissions = Permission::all();
         $role->syncPermissions($permissions);

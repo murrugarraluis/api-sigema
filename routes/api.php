@@ -19,7 +19,8 @@ use App\Http\Controllers\{
     SupplierController,
     SupplierTypeController,
     UserController,
-    WorkingSheetController
+    WorkingSheetController,
+    RoleController
 
 };
 
@@ -127,6 +128,14 @@ Route::prefix('v1/')->group(function () {
 
         Route::get('supplier-types', [SupplierTypeController::class, 'index']);
 
+        Route::group(['middleware' => ['permission:roles']], function () {
+            Route::get('roles', [RoleController::class, 'index']);
+            Route::get('roles/{role}', [RoleController::class, 'show']);
+            Route::post('roles', [RoleController::class, 'store']);
+            Route::put('roles/{role}', [RoleController::class, 'update']);
+            Route::delete('roles/{role}', [RoleController::class, 'destroy']);
+            //
+        });
     });
 });
 

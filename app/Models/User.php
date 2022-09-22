@@ -25,7 +25,6 @@ class User extends Authenticatable
         'email',
         'password',
     ];
-
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -39,6 +38,8 @@ class User extends Authenticatable
         'updated_at',
         'deleted_at'
     ];
+//    protected $guard_name = 'sanctum';
+
 
     /**
      * The attributes that should be cast.
