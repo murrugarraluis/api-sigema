@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Http\Resources\UserNotificationResource;
 use App\Http\Resources\UserResource;
 use App\Models\Employee;
 use App\Models\User;
@@ -62,6 +63,11 @@ class UserController extends Controller
     public function show(User $user): UserResource
     {
         return new UserResource($user);
+
+    }
+    public function show_notifications(User $user): AnonymousResourceCollection
+    {
+        return UserNotificationResource::collection($user->notifications);
 
     }
 

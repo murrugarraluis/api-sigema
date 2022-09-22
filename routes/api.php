@@ -41,6 +41,7 @@ Route::prefix('v1/')->group(function () {
 
         Route::get('users', [UserController::class, 'index']);
         Route::get('users/{user}', [UserController::class, 'show']);
+        Route::get('users/{user}/notifications', [UserController::class, 'show_notifications']);
         Route::post('users', [UserController::class, 'store']);
         Route::delete('users/{user}', [UserController::class, 'destroy']);
 

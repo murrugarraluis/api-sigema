@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\DocumentType;
 use App\Models\Employee;
+use App\Models\Notification;
 use App\Models\Position;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,6 +18,7 @@ class UserControllerTest extends TestCase
 
     public function seedData()
     {
+        Notification::factory(2)->create();
         DocumentType::factory()->create(['name' => 'DNI']);
         Position::factory()->create(['name' => 'System Engineer']);
     }
@@ -70,6 +72,32 @@ class UserControllerTest extends TestCase
                 'employee' => [
                     'id',
                 ],
+            ]]);
+
+    }
+
+    public function test_show_notifications()
+    {
+        $this->withoutExceptionHandling();
+        $this->seedData();
+        $notifications = Notification::all();
+        $user = User::factory()->hasAttached($notifications)->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        Employee::factory()->create([
+            'user_id' => $user
+        ]);
+        $user = User::limit(1)->first();
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->getJson("api/v1/$this->resource/$user->id/notifications");
+
+        $response->assertStatus(200)
+            ->assertJsonStructure(['data' => [
+                '*' => [
+                    'id',
+                    'name',
+                ]
             ]]);
 
     }
