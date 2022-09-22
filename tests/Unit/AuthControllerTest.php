@@ -4,18 +4,43 @@ namespace Tests\Unit;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Requests\LoginRequest;
+use App\Models\Article;
+use App\Models\ArticleType;
+use App\Models\DocumentType;
+use App\Models\Supplier;
+use App\Models\SupplierType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function seedData()
+    {
+        $role = Role::create(['name' => 'Admin']);
+
+        Permission::create(['name' => 'users']);
+        Permission::create(['name' => 'employees']);
+        Permission::create(['name' => 'attendance-sheets']);
+        Permission::create(['name' => 'suppliers']);
+        Permission::create(['name' => 'articles']);
+        Permission::create(['name' => 'machines']);
+        Permission::create(['name' => 'maintenance-sheets']);
+        Permission::create(['name' => 'working-sheets']);
+        Permission::create(['name' => 'article-types']);
+
+        $permissions = Permission::all();
+        $role->syncPermissions($permissions);
+    }
+
     public function test_login()
     {
         $this->withoutExceptionHandling();
-        User::factory()->create([
+        $user = User::factory()->create([
             'email' => 'admin@jextecnologies.com',
             'password' => bcrypt('123456')
         ]);
@@ -23,11 +48,23 @@ class AuthControllerTest extends TestCase
             'email' => 'admin@jextecnologies.com',
             'password' => '123456'
         ];
+        $this->seedData();
+        $user->assignRole('Admin');
         $response = $this->postJson('api/v1/login', $payload);
         $response
             ->assertStatus(200)
             ->assertJsonStructure([
-                'data' => [],
+                'data' => [
+                    'id',
+                    'email',
+                    'employee',
+                    'permissions' => [
+                        '*' => [
+                            'id',
+                            'name'
+                        ]
+                    ]
+                ],
                 'token',
             ]);
     }
