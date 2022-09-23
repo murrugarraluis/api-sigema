@@ -21,7 +21,8 @@ use App\Http\Controllers\{
     UserController,
     WorkingSheetController,
     RoleController,
-    PermissionController
+    PermissionController,
+    FileController
 
 };
 
@@ -107,9 +108,10 @@ Route::prefix('v1/')->group(function () {
         });
 
 
-        Route::get('images', [ImageController::class, 'index']);
-        Route::get('images/{image}', [ImageController::class, 'show']);
+//        Route::get('images', [ImageController::class, 'index']);
+//        Route::get('images/{image}', [ImageController::class, 'show']);
         Route::post('images', [ImageController::class, 'upload']);
+        Route::post('files', [FileController::class, 'upload']);
 
         Route::group(['middleware' => ['permission:article-types']], function () {
             Route::get('article-types', [ArticleTypeController::class, 'index']);
