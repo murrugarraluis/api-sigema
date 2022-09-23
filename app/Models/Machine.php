@@ -30,6 +30,10 @@ class Machine extends Model
     {
         return $this->morphOne(Image::class, 'imageable');
     }
+    public function technical_sheet(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    {
+        return $this->morphOne(TechnicalSheet::class, 'technical_sheetable');
+    }
 
     public function maintenance_sheets(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

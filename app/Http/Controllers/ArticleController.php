@@ -48,12 +48,13 @@ class ArticleController extends Controller
                 'article_type_id' => $request->article_type["id"],
             ]);
             $this->addImage($article, $request->image);
+            $this->addTechnicalSheet($article, $request->technical_sheet);
 //            ATTACH SUPPLIERS
             $suppliers = [];
             array_map(function ($supplier) use (&$suppliers) {
                 $supplier_id = $supplier['id'];
                 $price = $supplier['price'];
-                $suppliers[$supplier_id]= ["price" => $price];
+                $suppliers[$supplier_id] = ["price" => $price];
             }, $request->suppliers);
 
             $article->suppliers()->attach($suppliers);
@@ -68,12 +69,21 @@ class ArticleController extends Controller
             throw new BadRequestException($e->getMessage());
         }
     }
+
     public function addImage(Article $article, $path)
     {
         if (!$path) return;
         $article->image()->create(['path' => $path]);
 
     }
+
+    public function addTechnicalSheet(Article $article, $path)
+    {
+        if (!$path) return;
+        $article->technical_sheet()->create(['path' => $path]);
+
+    }
+
     public function updateImage(Article $article, $path)
     {
         if (!$path) return;
@@ -84,6 +94,17 @@ class ArticleController extends Controller
         if ($path == $article->image->path) return;
         if (Storage::exists("public/" . $article->image->path)) Storage::delete("public/" . $article->image->path);
         $article->image()->update(['path' => $path]);
+    }
+    public function updateTechnicalSheet(Article $article, $path)
+    {
+        if (!$path) return;
+        if (!$article->technical_sheet) {
+            $this->addTechnicalSheet($article, $path);
+            return;
+        }
+        if ($path == $article->technical_sheet->path) return;
+        if (Storage::exists("public/" . $article->technical_sheet->path)) Storage::delete("public/" . $article->technical_sheet->path);
+        $article->technical_sheet()->update(['path' => $path]);
     }
 
     /**
@@ -117,13 +138,14 @@ class ArticleController extends Controller
                 'article_type_id' => $request->article_type["id"],
             ]);
             $this->updateImage($article, $request->image);
+            $this->updateTechnicalSheet($article, $request->technical_sheet);
 
 //            ATTACH SUPPLIERS
             $suppliers = [];
             array_map(function ($supplier) use (&$suppliers) {
                 $supplier_id = $supplier['id'];
                 $price = $supplier['price'];
-                $suppliers[$supplier_id]= ["price" => $price];
+                $suppliers[$supplier_id] = ["price" => $price];
             }, $request->suppliers);
 
             $article->suppliers()->sync($suppliers);

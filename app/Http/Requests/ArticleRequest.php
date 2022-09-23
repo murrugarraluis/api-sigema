@@ -29,6 +29,7 @@ class ArticleRequest extends FormRequest
             "model" => ['bail','required', 'string'],
             "quantity" => ['bail','required', 'numeric', 'min:0'],
             'image' => ['bail','nullable','string'],
+            'technical_sheet' => ['bail','nullable','string'],
             "article_type" => ['bail','required', 'array'],
             "article_type.id" => ['bail','required', 'uuid', 'exists:article_types,id'],
             'suppliers' => ['bail','required', 'array'],

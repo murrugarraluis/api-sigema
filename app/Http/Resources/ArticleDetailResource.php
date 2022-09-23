@@ -24,6 +24,7 @@ class ArticleDetailResource extends JsonResource
             'quantity' => $this->quantity,
             'article_type' => $this->article_type,
             'image' => $this->image ? $this->image->path : null,
+            'technical_sheet' => $this->technical_sheet ? $this->technical_sheet->path : null,
             'suppliers' => ArticleSupplierResource::collection($this->suppliers)
         ];
     }
