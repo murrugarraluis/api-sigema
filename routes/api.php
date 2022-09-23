@@ -109,6 +109,7 @@ Route::prefix('v1/')->group(function () {
 
         Route::get('images', [ImageController::class, 'index']);
         Route::get('images/{image}', [ImageController::class, 'show']);
+        Route::post('images', [ImageController::class, 'upload']);
 
         Route::group(['middleware' => ['permission:article-types']], function () {
             Route::get('article-types', [ArticleTypeController::class, 'index']);

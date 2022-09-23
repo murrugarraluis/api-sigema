@@ -20,7 +20,7 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'email' => $this->email,
             'employee' => new EmployeeResource($this->employee),
-            'permissions'=> PermissionResource::collection($this->roles->first()->permissions)
+            'permissions' => $this->roles->first() ? PermissionResource::collection($this->roles->first()->permissions) : null
         ];
     }
 }

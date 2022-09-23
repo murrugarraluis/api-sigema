@@ -65,6 +65,7 @@ class UserControllerTest extends TestCase
                     'employee' => [
                         'id',
                     ],
+                    'permissions'=>[]
                 ]
             ]]);
 
