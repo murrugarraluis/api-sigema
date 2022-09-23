@@ -69,7 +69,6 @@ class MachineController extends Controller
 
     public function updateImage(Machine $machine, $path)
     {
-//        dd(Storage::exists("public/".$machine->image->path), $machine->image->path);
         if (!$path) return;
         if (!$machine->image) {
             $this->addImage($machine, $path);

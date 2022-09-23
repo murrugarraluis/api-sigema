@@ -7,10 +7,12 @@ use App\Http\Requests\ArticleUpdateRequest;
 use App\Http\Resources\ArticleDetailResource;
 use App\Http\Resources\ArticleResource;
 use App\Models\Article;
+use App\Models\Machine;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use mysql_xdevapi\Collection;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
@@ -45,6 +47,7 @@ class ArticleController extends Controller
                 'quantity' => $request->quantity,
                 'article_type_id' => $request->article_type["id"],
             ]);
+            $this->addImage($article, $request->image);
 //            ATTACH SUPPLIERS
             $suppliers = [];
             array_map(function ($supplier) use (&$suppliers) {
@@ -64,6 +67,23 @@ class ArticleController extends Controller
             DB::rollback();
             throw new BadRequestException($e->getMessage());
         }
+    }
+    public function addImage(Article $article, $path)
+    {
+        if (!$path) return;
+        $article->image()->create(['path' => $path]);
+
+    }
+    public function updateImage(Article $article, $path)
+    {
+        if (!$path) return;
+        if (!$article->image) {
+            $this->addImage($article, $path);
+            return;
+        }
+        if ($path == $article->image->path) return;
+        if (Storage::exists("public/" . $article->image->path)) Storage::delete("public/" . $article->image->path);
+        $article->image()->update(['path' => $path]);
     }
 
     /**
@@ -96,6 +116,8 @@ class ArticleController extends Controller
                 'quantity' => $request->quantity,
                 'article_type_id' => $request->article_type["id"],
             ]);
+            $this->updateImage($article, $request->image);
+
 //            ATTACH SUPPLIERS
             $suppliers = [];
             array_map(function ($supplier) use (&$suppliers) {
@@ -105,6 +127,7 @@ class ArticleController extends Controller
             }, $request->suppliers);
 
             $article->suppliers()->sync($suppliers);
+            $article = Article::find($article->id);
 
             DB::commit();
             return (new ArticleDetailResource($article))->additional(['message' => 'Article updated.']);
