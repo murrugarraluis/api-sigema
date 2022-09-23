@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class MachineController extends Controller
@@ -39,7 +40,7 @@ class MachineController extends Controller
         try {
 //          CREATE MACHINE
             $machine = Machine::create($request->except(['articles', 'image']));
-            $this->addImage($machine,$request->image);
+            $this->addImage($machine, $request->image);
 //            ATTACH ARTICLES
             $articles = [];
             array_map(function ($article) use (&$articles) {
@@ -58,10 +59,25 @@ class MachineController extends Controller
             throw new BadRequestException($e->getMessage());
         }
     }
-    public function addImage(Machine $machine,$path){
-        if ($path){
-            $machine->image()->create(['path'=>$path]);
+
+    public function addImage(Machine $machine, $path)
+    {
+        if (!$path) return;
+        $machine->image()->create(['path' => $path]);
+
+    }
+
+    public function updateImage(Machine $machine, $path)
+    {
+//        dd(Storage::exists("public/".$machine->image->path), $machine->image->path);
+        if (!$path) return;
+        if (!$machine->image) {
+            $this->addImage($machine, $path);
+            return;
         }
+        if ($path == $machine->image->path) return;
+        if (Storage::exists("public/" . $machine->image->path)) Storage::delete("public/" . $machine->image->path);
+        $machine->image()->update(['path' => $path]);
     }
 
     /**
@@ -89,6 +105,7 @@ class MachineController extends Controller
         try {
 //          UPDATE MACHINE
             $machine->update($request->except(['articles', 'image']));
+            $this->updateImage($machine, $request->image);
 //            ATTACH ARTICLES
             $articles = [];
             array_map(function ($article) use (&$articles) {
@@ -96,6 +113,7 @@ class MachineController extends Controller
                 $articles[] = $article_id;
             }, $request->articles);
             $machine->articles()->sync($articles);
+            $machine = Machine::find($machine->id);
             DB::commit();
             return (new MachinetDetailResource($machine))->additional(['message' => 'Machine updated.']);
         } catch (\Exception $e) {
