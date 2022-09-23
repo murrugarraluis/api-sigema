@@ -25,5 +25,14 @@ class UserSeeder extends Seeder
         Employee::factory()->create([
             'user_id' => $user
         ]);
+
+        $user = User::factory()->hasAttached($notifications)->create([
+            'email' => 'employee@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $user->assignRole('Employee');
+        Employee::factory()->create([
+            'user_id' => $user
+        ]);
     }
 }
