@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Image extends Model
 {
     use HasFactory;
-    protected $hidden = ['created_at', 'updated_at','deleted_at'];
+
+    protected $fillable = ['path'];
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
     public function imageable()
     {

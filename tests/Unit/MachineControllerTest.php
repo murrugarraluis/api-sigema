@@ -133,7 +133,7 @@ class MachineControllerTest extends TestCase
             'name' => 'Machine',
             'brand' => 'brand',
             'model' => 'model',
-            'image' => '',
+            'image' => 'www.image.com',
             'maximum_working_time' => 300,
             'articles' => [
                 [

@@ -39,6 +39,7 @@ class MachineController extends Controller
         try {
 //          CREATE MACHINE
             $machine = Machine::create($request->except(['articles', 'image']));
+            $this->addImage($machine,$request->image);
 //            ATTACH ARTICLES
             $articles = [];
             array_map(function ($article) use (&$articles) {
@@ -55,6 +56,11 @@ class MachineController extends Controller
             DB::rollback();
 //            dd($e->getMessage());
             throw new BadRequestException($e->getMessage());
+        }
+    }
+    public function addImage(Machine $machine,$path){
+        if ($path){
+            $machine->image()->create(['path'=>$path]);
         }
     }
 

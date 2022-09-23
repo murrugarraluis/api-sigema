@@ -23,7 +23,7 @@ class MachineResource extends JsonResource
             'name' => $this->name,
             'brand' => $this->brand,
             'model' => $this->model,
-            'image' => $this->image ? $this->image->url : null,
+            'image' => $this->image ? $this->image->path : null,
             'maximum_working_time' => $this->maximum_working_time,
             'status' => $this->status,
         ];
