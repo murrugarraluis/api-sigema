@@ -40,7 +40,7 @@ class MachineController extends Controller
         DB::beginTransaction();
         try {
 //          CREATE MACHINE
-            $machine = Machine::create($request->except(['articles', 'image']));
+            $machine = Machine::create($request->except(['articles', 'image','technical_sheet']));
             $this->addImage($machine, $request->image);
             $this->addTechnicalSheet($machine, $request->technical_sheet);
 

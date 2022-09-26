@@ -163,6 +163,8 @@ class ArticleControllerTest extends TestCase
                     'brand',
                     'model',
                     'quantity',
+                    'image',
+                    'technical_sheet',
                     'article_type' => [
                         'id',
                         'name'

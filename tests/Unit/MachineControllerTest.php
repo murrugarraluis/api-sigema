@@ -154,6 +154,7 @@ class MachineControllerTest extends TestCase
                     'brand',
                     'model',
                     'image',
+                    'technical_sheet',
                     'maximum_working_time',
                     'articles' => [
                         '*' => [

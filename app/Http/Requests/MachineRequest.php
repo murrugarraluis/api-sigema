@@ -29,6 +29,7 @@ class MachineRequest extends FormRequest
             'brand' => ['bail','required','string'],
             'model' => ['bail','required','string'],
             'image' => ['bail','nullable','string'],
+            'technical_sheet' => ['bail','nullable','string'],
             'maximum_working_time' =>['bail','required','integer'],
             'articles' => ['bail','required','array'],
             'articles.*.id' => ['bail','required','uuid','exists:articles,id'],
