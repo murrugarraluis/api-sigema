@@ -40,17 +40,19 @@ class MachineController extends Controller
         DB::beginTransaction();
         try {
 //          CREATE MACHINE
-            $machine = Machine::create($request->except(['articles', 'image','technical_sheet']));
+            $machine = Machine::create($request->except(['articles', 'image', 'technical_sheet']));
             $this->addImage($machine, $request->image);
             $this->addTechnicalSheet($machine, $request->technical_sheet);
 
 //            ATTACH ARTICLES
-            $articles = [];
-            array_map(function ($article) use (&$articles) {
-                $article_id = $article['id'];
-                $articles[] = $article_id;
-            }, $request->articles);
-            $machine->articles()->attach($articles);
+            if ($request->articles) {
+                $articles = [];
+                array_map(function ($article) use (&$articles) {
+                    $article_id = $article['id'];
+                    $articles[] = $article_id;
+                }, $request->articles);
+                $machine->articles()->attach($articles);
+            }
             DB::commit();
             return (new MachinetDetailResource($machine))
                 ->additional(['message' => 'Machine created.'])
@@ -69,6 +71,7 @@ class MachineController extends Controller
         $machine->image()->create(['path' => $path]);
 
     }
+
     public function addTechnicalSheet(Machine $machine, $path)
     {
         if (!$path) return;
@@ -87,6 +90,7 @@ class MachineController extends Controller
         if (Storage::exists("public/" . $machine->image->path)) Storage::delete("public/" . $machine->image->path);
         $machine->image()->update(['path' => $path]);
     }
+
     public function updateTechnicalSheet(Machine $machine, $path)
     {
         if (!$path) return;
@@ -127,12 +131,14 @@ class MachineController extends Controller
             $this->updateImage($machine, $request->image);
             $this->updateTechnicalSheet($machine, $request->technical_sheet);
 //            ATTACH ARTICLES
-            $articles = [];
-            array_map(function ($article) use (&$articles) {
-                $article_id = $article['id'];
-                $articles[] = $article_id;
-            }, $request->articles);
-            $machine->articles()->sync($articles);
+            if ($request->articles) {
+                $articles = [];
+                array_map(function ($article) use (&$articles) {
+                    $article_id = $article['id'];
+                    $articles[] = $article_id;
+                }, $request->articles);
+                $machine->articles()->sync($articles);
+            }
             $machine = Machine::find($machine->id);
             DB::commit();
             return (new MachinetDetailResource($machine))->additional(['message' => 'Machine updated.']);

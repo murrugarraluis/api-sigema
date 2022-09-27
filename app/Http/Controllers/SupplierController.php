@@ -48,15 +48,17 @@ class SupplierController extends Controller
                 'document_type_id' => $request->document_type["id"],
             ]);
 //            ATTACH BANKS
-            $banks = [];
-            array_map(function ($bank) use (&$banks) {
-                $bank_id = $bank['id'];
-                $account_number = $bank['account_number'];
-                $interbank_account_number = $bank['interbank_account_number'];
-                $banks[$bank_id] = ["account_number" => $account_number, "interbank_account_number" => $interbank_account_number];
-            }, $request->banks);
+            if ($request->banks) {
+                $banks = [];
+                array_map(function ($bank) use (&$banks) {
+                    $bank_id = $bank['id'];
+                    $account_number = $bank['account_number'];
+                    $interbank_account_number = $bank['interbank_account_number'];
+                    $banks[$bank_id] = ["account_number" => $account_number, "interbank_account_number" => $interbank_account_number];
+                }, $request->banks);
 
-            $supplier->banks()->attach($banks);
+                $supplier->banks()->attach($banks);
+            }
             DB::commit();
             return (new SupplierDetailResource($supplier))
                 ->additional(['message' => 'Supplier created.'])
@@ -102,15 +104,16 @@ class SupplierController extends Controller
                 'document_type_id' => $request->document_type["id"],
             ]);
 //            ATTACH BANKS
-            $banks = [];
-            array_map(function ($bank) use (&$banks) {
-                $bank_id = $bank['id'];
-                $account_number = $bank['account_number'];
-                $interbank_account_number = $bank['interbank_account_number'];
-                $banks[$bank_id] = ["account_number" => $account_number, "interbank_account_number" => $interbank_account_number];
-            }, $request->banks);
-
-            $supplier->banks()->sync($banks);
+            if ($request->banks) {
+                $banks = [];
+                array_map(function ($bank) use (&$banks) {
+                    $bank_id = $bank['id'];
+                    $account_number = $bank['account_number'];
+                    $interbank_account_number = $bank['interbank_account_number'];
+                    $banks[$bank_id] = ["account_number" => $account_number, "interbank_account_number" => $interbank_account_number];
+                }, $request->banks);
+                $supplier->banks()->sync($banks);
+            }
             DB::commit();
             return (new SupplierDetailResource($supplier))->additional(['message' => 'Supplier updated.']);
         } catch (\Exception $e) {

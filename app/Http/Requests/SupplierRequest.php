@@ -33,7 +33,7 @@ class SupplierRequest extends FormRequest
             'supplier_type.id' => ['bail', 'required', 'uuid', 'exists:supplier_types,id'],
             'document_type' => ['bail', 'required', 'array'],
             'document_type.id' => ['bail', 'required', 'uuid', 'exists:document_types,id'],
-            'banks' => ['bail', 'required', 'array'],
+            'banks' => ['bail', 'nullable', 'array'],
             'banks.*.id' => ['bail', 'required', 'uuid', 'exists:banks,id'],
             'banks.*.account_number' => ['bail', 'required', 'string'],
             'banks.*.interbank_account_number' => ['bail', 'required', 'string'],

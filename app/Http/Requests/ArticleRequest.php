@@ -32,7 +32,7 @@ class ArticleRequest extends FormRequest
             'technical_sheet' => ['bail','nullable','string'],
             "article_type" => ['bail','required', 'array'],
             "article_type.id" => ['bail','required', 'uuid', 'exists:article_types,id'],
-            'suppliers' => ['bail','required', 'array'],
+            'suppliers' => ['bail','nullable', 'array'],
             'suppliers.*.id' => ['bail','required', 'uuid', 'exists:suppliers,id'],
             'suppliers.*.price' => ['bail','required', 'numeric', 'min:0'],
         ];

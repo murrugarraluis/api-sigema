@@ -50,14 +50,16 @@ class ArticleController extends Controller
             $this->addImage($article, $request->image);
             $this->addTechnicalSheet($article, $request->technical_sheet);
 //            ATTACH SUPPLIERS
-            $suppliers = [];
-            array_map(function ($supplier) use (&$suppliers) {
-                $supplier_id = $supplier['id'];
-                $price = $supplier['price'];
-                $suppliers[$supplier_id] = ["price" => $price];
-            }, $request->suppliers);
+            if ($request->suppliers) {
+                $suppliers = [];
+                array_map(function ($supplier) use (&$suppliers) {
+                    $supplier_id = $supplier['id'];
+                    $price = $supplier['price'];
+                    $suppliers[$supplier_id] = ["price" => $price];
+                }, $request->suppliers);
 
-            $article->suppliers()->attach($suppliers);
+                $article->suppliers()->attach($suppliers);
+            }
 
             DB::commit();
             return (new ArticleDetailResource($article))
@@ -95,6 +97,7 @@ class ArticleController extends Controller
         if (Storage::exists("public/" . $article->image->path)) Storage::delete("public/" . $article->image->path);
         $article->image()->update(['path' => $path]);
     }
+
     public function updateTechnicalSheet(Article $article, $path)
     {
         if (!$path) return;
@@ -141,14 +144,16 @@ class ArticleController extends Controller
             $this->updateTechnicalSheet($article, $request->technical_sheet);
 
 //            ATTACH SUPPLIERS
-            $suppliers = [];
-            array_map(function ($supplier) use (&$suppliers) {
-                $supplier_id = $supplier['id'];
-                $price = $supplier['price'];
-                $suppliers[$supplier_id] = ["price" => $price];
-            }, $request->suppliers);
+            if ($request->suppliers) {
+                $suppliers = [];
+                array_map(function ($supplier) use (&$suppliers) {
+                    $supplier_id = $supplier['id'];
+                    $price = $supplier['price'];
+                    $suppliers[$supplier_id] = ["price" => $price];
+                }, $request->suppliers);
 
-            $article->suppliers()->sync($suppliers);
+                $article->suppliers()->sync($suppliers);
+            }
             $article = Article::find($article->id);
 
             DB::commit();
