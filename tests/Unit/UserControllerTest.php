@@ -203,7 +203,7 @@ class UserControllerTest extends TestCase
             ->deleteJson("api/v1/$this->resource/$user->id");
 
         $response->assertStatus(200)
-            ->assertExactJson(['message' => 'User removed.']);
+            ->assertJsonStructure(['message']);
 
     }
 

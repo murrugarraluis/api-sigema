@@ -89,9 +89,14 @@ class UserController extends Controller
      * @param User $user
      * @return JsonResponse
      */
-    public function destroy(User $user): JsonResponse
+    public function destroy($user): JsonResponse
     {
+        $user = User::withTrashed()->find($user);
+        if ($user->deleted_at){
+            $user->restore();
+            return response()->json(['message' => 'User Unlocked.']);
+        }
         $user->delete();
-        return response()->json(['message' => 'User removed.'], 200);
+        return response()->json(['message' => 'User Locked.']);
     }
 }
