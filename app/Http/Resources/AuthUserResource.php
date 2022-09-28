@@ -6,12 +6,12 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class AuthUserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request): array
@@ -20,8 +20,7 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'email' => $this->email,
             'employee' => new EmployeeResource($this->employee),
-            'roles'=> RoleResource::collection($this->roles),
-            'isActive' => !$this->deleted_at
+            'permissions' => $this->roles->first() ? PermissionResource::collection($this->roles->first()->permissions) : null,
         ];
     }
 }

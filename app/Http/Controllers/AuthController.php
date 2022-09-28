@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
+use App\Http\Resources\AuthUserResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class AuthController extends Controller
             return response()->json(['message'=>'Invalid Credentials.'],401);
         }
         $token = $user->createToken($request->email)->plainTextToken;
-        return (new UserResource($user))->additional(['token' => $token]);
+        return (new AuthUserResource($user))->additional(['token' => $token]);
     }
     public function logout(Request $request): \Illuminate\Http\JsonResponse
     {

@@ -23,7 +23,7 @@ class UserController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $users = User::all()->sortByDesc('created_at');
+        $users = User::withTrashed()->get()->sortByDesc('created_at');
         return UserResource::collection($users);
     }
 

@@ -65,7 +65,8 @@ class UserControllerTest extends TestCase
                     'employee' => [
                         'id',
                     ],
-                    'permissions'=>[]
+                    'roles'=>[],
+                    'isActive'
                 ]
             ]]);
 
