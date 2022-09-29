@@ -51,6 +51,7 @@ class RoleControllerTest extends TestCase
                 '*' => [
                     'id',
                     'name',
+                    'permissions' => []
                 ]
             ]]);
 
@@ -125,6 +126,7 @@ class RoleControllerTest extends TestCase
             ]);
 
     }
+
     function test_update()
     {
 
@@ -165,6 +167,7 @@ class RoleControllerTest extends TestCase
             ]);
 
     }
+
     function test_destroy()
     {
 
