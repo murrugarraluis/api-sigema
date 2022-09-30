@@ -74,11 +74,11 @@ class EmployeeController extends Controller
      */
     public function generate_safe_credentials(Employee $employee): SafeCredentialsResource
     {
-        $username = substr(strtolower($employee->name), 0, 1) . strtolower($employee->lastname);
+        $username = trim(substr(strtolower($employee->name), 0, 1) . substr(strtolower($employee->name),0,strpos($employee->name," ")));
         $count_users = User::where('email', 'like', '%' . $username . '%')->count();
         if ($count_users > 0) $username = $username . $count_users;
 
-        $email = $username . "@jextecnologies.com";
+        $email = $username . "@jextechnologies.com";
         $password = $employee->document_number;
         $credentials = [
             "email" => $email,

@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
     {
         $notifications = Notification::all();
         $user = User::factory()->hasAttached($notifications)->create([
-            'email' => 'admin@jextecnologies.com',
+            'email' => 'admin@jextechnologies.com',
             'password' => bcrypt('123456')
         ]);
         $user->assignRole('Admin');
@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
         ]);
 
         $user = User::factory()->hasAttached($notifications)->create([
-            'email' => 'employee@jextecnologies.com',
+            'email' => 'employee@jextechnologies.com',
             'password' => bcrypt('123456')
         ]);
         $user->assignRole('Employee');
