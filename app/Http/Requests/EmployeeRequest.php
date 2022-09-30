@@ -34,6 +34,7 @@ class EmployeeRequest extends FormRequest
             'position.id' => ['bail', 'required', 'uuid', 'exists:positions,id'],
             'document_type' => ['bail', 'required', 'array'],
             'document_type.id' => ['bail', 'required', 'uuid', 'exists:document_types,id'],
+            'native_language' => ['bail', 'required', 'string'],
         ];
     }
 }

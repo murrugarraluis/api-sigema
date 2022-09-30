@@ -20,6 +20,7 @@ class Employee extends Model
         'address',
         'position_id',
         'document_type_id',
+        'native_language'
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
@@ -33,10 +34,12 @@ class Employee extends Model
     {
         return $this->belongsTo(User::class);
     }
+
     public function position(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Position::class);
     }
+
     public function document_type(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(DocumentType::class);

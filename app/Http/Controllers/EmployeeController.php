@@ -26,6 +26,7 @@ class EmployeeController extends Controller
         $employees = Employee::all()->sortByDesc('created_at');
         return EmployeeResource::collection($employees);
     }
+
     public function index_withoutuser(): AnonymousResourceCollection
     {
         $employees = Employee::doesntHave('user')->get()->sortByDesc('created_at');
@@ -52,6 +53,7 @@ class EmployeeController extends Controller
                 'address' => $request->address,
                 'position_id' => $request->position["id"],
                 'document_type_id' => $request->document_type["id"],
+                'native_language' => $request->native_language,
             ]);
             DB::commit();
             return (new EmployeeResource($employee))
@@ -119,6 +121,8 @@ class EmployeeController extends Controller
                 'address' => $request->address,
                 'position_id' => $request->position["id"],
                 'document_type_id' => $request->document_type["id"],
+                'native_language' => $request->native_language,
+
             ]);
             DB::commit();
             return (new EmployeeResource($employee))->additional(['message' => 'Employee updated.']);

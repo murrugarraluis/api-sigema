@@ -21,6 +21,7 @@ class CreateEmployeesTable extends Migration
             $table->string('personal_email');
             $table->string('phone');
             $table->string('address');
+            $table->string('native_language');
             $table->timestamps();
             $table->softDeletes();
 

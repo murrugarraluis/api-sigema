@@ -27,7 +27,8 @@ class EmployeeFactory extends Factory
             'address' => $this->faker->address(),
             'position_id' => $position,
             'document_type_id' => $document_type,
-            'user_id'=>User::factory()->create()
+            'native_language' => 'Spanish',
+            'user_id' => User::factory()->create()
         ];
     }
 }

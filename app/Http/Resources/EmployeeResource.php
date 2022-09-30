@@ -25,6 +25,7 @@ class EmployeeResource extends JsonResource
             "address" => $this->address,
             "position" => new PositionResource($this->position),
             "document_type" => new DocumentTypeResource($this->document_type),
+            "native_language" => $this->native_language
         ];
     }
 }
