@@ -26,6 +26,11 @@ class EmployeeController extends Controller
         $employees = Employee::all()->sortByDesc('created_at');
         return EmployeeResource::collection($employees);
     }
+    public function index_withoutuser(): AnonymousResourceCollection
+    {
+        $employees = Employee::doesntHave('user')->get()->sortByDesc('created_at');
+        return EmployeeResource::collection($employees);
+    }
 
     /**
      * Store a newly created resource in storage.

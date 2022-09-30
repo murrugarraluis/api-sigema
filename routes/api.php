@@ -53,6 +53,7 @@ Route::prefix('v1/')->group(function () {
         Route::group(['middleware' => ['permission:employees']], function () {
             //
             Route::get('employees', [EmployeeController::class, 'index']);
+            Route::get('employees/withoutUser', [EmployeeController::class, 'index_withoutuser']);
             Route::get('employees/{employee}', [EmployeeController::class, 'show']);
             Route::post('employees', [EmployeeController::class, 'store']);
             Route::put('employees/{employee}', [EmployeeController::class, 'update']);
