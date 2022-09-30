@@ -65,7 +65,7 @@ class UserControllerTest extends TestCase
                     'employee' => [
                         'id',
                     ],
-                    'roles'=>[],
+                    'roles' => [],
                     'isActive'
                 ]
             ]]);
@@ -97,6 +97,8 @@ class UserControllerTest extends TestCase
                 'employee' => [
                     'id',
                 ],
+                'roles' => [],
+                'isActive'
             ]]);
 
     }
@@ -156,13 +158,17 @@ class UserControllerTest extends TestCase
         ]);
         $this->seedData();
         $user->assignRole('Admin');
-
         $payload = [
             'email' => 'example@email.com',
             'password' => '123456',
             'employee' => [
                 'id' => (Employee::factory()->create(['user_id' => null]))->id
             ],
+            'roles' => [
+                [
+                    'id' => Role::limit(1)->first()->id
+                ]
+            ]
         ];
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->postJson("api/v1/$this->resource", $payload);
@@ -175,6 +181,8 @@ class UserControllerTest extends TestCase
                     'employee' => [
                         'id',
                     ],
+                    'roles' => [],
+                    'isActive'
                 ],
             ])->assertJson([
                 'message' => 'User created.',
@@ -182,7 +190,48 @@ class UserControllerTest extends TestCase
             ]);
 
     }
+    function test_update()
+    {
 
+//        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $this->seedData();
+        $user->assignRole('Admin');
+        $payload = [
+            'email' => 'example@email.com',
+            'password' => '123456',
+            'employee' => [
+                'id' => (Employee::factory()->create(['user_id' => null]))->id
+            ],
+            'roles' => [
+                [
+                    'id' => Role::limit(1)->first()->id
+                ]
+            ]
+        ];
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->putJson("api/v1/$this->resource/$user->id", $payload);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'email',
+                    'employee' => [
+                        'id',
+                    ],
+                    'roles' => [],
+                    'isActive'
+                ],
+            ])->assertJson([
+                'message' => 'User updated.',
+                'data' => []
+            ]);
+
+    }
     public
     function test_destroy()
     {

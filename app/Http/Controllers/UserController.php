@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\UserNotificationResource;
 use App\Http\Resources\UserResource;
 use App\Models\Employee;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class UserController extends Controller
@@ -42,6 +44,13 @@ class UserController extends Controller
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
             ]);
+            $role_ids = [];
+            array_map(function ($role) use (&$role_ids) {
+                $permission_id = $role['id'];
+                $role_ids[] = $permission_id;
+            }, $request->roles);
+            $roles = Role::whereIn('id', $role_ids)->get();
+            $user->assignRole($roles);
             $employee->user()->associate($user)->save();
             DB::commit();
             return (new UserResource($user))
@@ -74,13 +83,28 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param UserRequest $request
      * @param User $user
-     * @return Response
+     * @return UserResource
      */
-    public function update(Request $request, User $user)
+    public function update(UserUpdateRequest $request, User $user): UserResource
     {
-        //
+        DB::beginTransaction();
+        try {
+            $role_ids = [];
+            array_map(function ($role) use (&$role_ids) {
+                $permission_id = $role['id'];
+                $role_ids[] = $permission_id;
+            }, $request->roles);
+            $roles = Role::whereIn('id', $role_ids)->get();
+            $user->syncRoles($roles);
+            DB::commit();
+            return (new UserResource($user))
+                ->additional(['message' => 'User updated.']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new BadRequestException($e->getMessage());
+        }
     }
 
     /**

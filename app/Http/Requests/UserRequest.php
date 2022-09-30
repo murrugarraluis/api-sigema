@@ -33,6 +33,8 @@ class UserRequest extends FormRequest
             'employee.id' => ['bail', 'required', 'uuid', 'exists:employees,id',
                 new EmployeeHasUserRule()
             ],
+            'roles' => ['bail', 'required', 'array'],
+            'roles.*.id' => ['bail', 'required', 'numeric', 'exists:roles,id'],
         ];
     }
 }
