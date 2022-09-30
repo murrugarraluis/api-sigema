@@ -41,6 +41,7 @@ class ArticleController extends Controller
         try {
 //            CREATE ARTICLE
             $article = Article::create([
+                'serie_number' => $request->serie_number,
                 'name' => $request->name,
                 'brand' => $request->brand,
                 'model' => $request->model,
@@ -134,6 +135,7 @@ class ArticleController extends Controller
         try {
 //            UPDATE ARTICLE
             $article->update([
+                'serie_number' => $request->serie_number,
                 'name' => $request->name,
                 'brand' => $request->brand,
                 'model' => $request->model,

@@ -18,6 +18,7 @@ class ArticleFactory extends Factory
         $article_type = ArticleType::inRandomOrder()->limit(1)->first();
 
         return [
+            'serie_number' => "Serie - " . $this->faker->randomLetter() . $this->faker->randomNumber(5),
             'name'=>"Article ".$this->faker->randomLetter().$this->faker->randomNumber(3),
             'brand'=>"Brand ".$this->faker->randomLetter().$this->faker->randomNumber(3),
             'model'=>$this->faker->randomLetter()."-".$this->faker->randomNumber(3),

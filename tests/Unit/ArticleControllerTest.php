@@ -62,6 +62,7 @@ class ArticleControllerTest extends TestCase
             ->assertJsonStructure(['data' => [
                 '*' => [
                     'id',
+                    'serie_number',
                     'name',
                     'brand',
                     'model',
@@ -94,6 +95,7 @@ class ArticleControllerTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonStructure(['data' => [
                 'id',
+                'serie_number',
                 'name',
                 'brand',
                 'model',
@@ -140,6 +142,7 @@ class ArticleControllerTest extends TestCase
         $user->assignRole('Admin');
 
         $payload = [
+            'serie_number' => 'AAA',
             'name' => 'Article',
             'brand' => 'Brand',
             'model' => 'Model',
@@ -159,6 +162,7 @@ class ArticleControllerTest extends TestCase
             ->assertJsonStructure([
                 'data' => [
                     'id',
+                    'serie_number',
                     'name',
                     'brand',
                     'model',
@@ -198,6 +202,7 @@ class ArticleControllerTest extends TestCase
 
         $article = Article::limit(1)->first();
         $payload = [
+            'serie_number' => 'AAA',
             'name' => 'Article',
             'brand' => 'Brand',
             'model' => 'Model',
@@ -217,6 +222,7 @@ class ArticleControllerTest extends TestCase
             ->assertJsonStructure([
                 'data' => [
                     'id',
+                    'serie_number',
                     'name',
                     'brand',
                     'model',

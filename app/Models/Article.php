@@ -12,6 +12,7 @@ class Article extends Model
     use HasFactory, Uuids, SoftDeletes;
 
     protected $fillable = [
+        'serie_number',
         'name',
         'brand',
         'model',

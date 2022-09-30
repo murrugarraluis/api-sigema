@@ -24,6 +24,7 @@ class ArticleRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'serie_number' => ['bail', 'required', 'string'],
             "name" => ['bail','required', 'string'],
             "brand" => ['bail','required', 'string'],
             "model" => ['bail','required', 'string'],

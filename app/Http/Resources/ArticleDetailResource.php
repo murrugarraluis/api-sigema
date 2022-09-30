@@ -18,6 +18,7 @@ class ArticleDetailResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'serie_number' => $this->serie_number,
             'name' => $this->name,
             'brand' => $this->brand,
             'model' => $this->model,
