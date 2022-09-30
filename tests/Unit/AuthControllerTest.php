@@ -91,10 +91,12 @@ class AuthControllerTest extends TestCase
     public function test_logout()
     {
 //        $this->withoutExceptionHandling();
-        User::factory()->create([
+        $user = User::factory()->create([
             'email' => 'admin@jextecnologies.com',
             'password' => bcrypt('123456')
         ]);
+        $this->seedData();
+        $user->assignRole('Admin');
         $payload = new LoginRequest();
         $payload->merge([
             'email' => 'admin@jextecnologies.com',
