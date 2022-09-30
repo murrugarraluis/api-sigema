@@ -7,6 +7,7 @@ use App\Http\Requests\ArticleUpdateRequest;
 use App\Http\Resources\ArticleDetailResource;
 use App\Http\Resources\ArticleResource;
 use App\Models\Article;
+use App\Models\ArticleType;
 use App\Models\Machine;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use mysql_xdevapi\Collection;
+use PhpParser\Builder;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class ArticleController extends Controller
@@ -23,9 +25,13 @@ class ArticleController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
         $articles = Article::all()->sortByDesc('created_at');
+        if ($request->article_type) {
+            $article_type = ArticleType::where('name',$request->article_type)->first();
+            $articles = Article::whereBelongsTo($article_type,'article_type')->get()->sortByDesc('created_at');
+        }
         return ArticleResource::collection($articles);
     }
 

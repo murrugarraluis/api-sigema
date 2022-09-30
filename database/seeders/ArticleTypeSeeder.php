@@ -14,8 +14,8 @@ class ArticleTypeSeeder extends Seeder
      */
     public function run()
     {
-        ArticleType::factory()->create(['name'=>'Oficina']);
-        ArticleType::factory()->create(['name'=>'Repuesto']);
+        ArticleType::factory()->create(['name'=>'Office']);
+        ArticleType::factory()->create(['name'=>'Spare Part']);
         ArticleType::factory()->create(['name'=>'EPP']);
     }
 }
