@@ -24,6 +24,8 @@ class ArticleResource extends JsonResource
             'brand'=>$this->brand,
             'model'=>$this->model,
             'quantity'=>$this->quantity,
+            'image' => $this->image ? $this->image->path : null,
+            'technical_sheet' => $this->technical_sheet ? $this->technical_sheet->path : null,
             'article_type'=>$this->article_type,
         ];
     }
