@@ -41,7 +41,7 @@ class AttendanceSheetControllerTest extends TestCase
             ->hasAttached($employees, [
                 "check_in" => '10:00:00',
                 "check_out" => '15:00:00',
-                "attendance" => 'asistencia',
+                "attendance" => false,
             ])
             ->create();
     }
@@ -57,7 +57,7 @@ class AttendanceSheetControllerTest extends TestCase
         $this->seedData();
         $user->assignRole('Admin');
         Employee::factory()->create([
-            'user_id'=>$user
+            'user_id' => $user
         ]);
 
 //        $attendance_sheet = AttendanceSheet::limit(1)->first();
@@ -70,7 +70,7 @@ class AttendanceSheetControllerTest extends TestCase
                     'id',
                     'date',
                     'responsible',
-                    'status',
+                    'is_open',
                 ]
             ]]);
 
@@ -87,7 +87,7 @@ class AttendanceSheetControllerTest extends TestCase
         $this->seedData();
         $user->assignRole('Admin');
         Employee::factory()->create([
-            'user_id'=>$user
+            'user_id' => $user
         ]);
 
         $attendance_sheet = AttendanceSheet::limit(1)->first();
@@ -99,7 +99,7 @@ class AttendanceSheetControllerTest extends TestCase
                 'id',
                 'date',
                 'responsible',
-                'employee' => [
+                'employees' => [
                     '*' => [
                         'id',
                         'check_in',
@@ -111,7 +111,7 @@ class AttendanceSheetControllerTest extends TestCase
                         'attendance'
                     ]
                 ],
-                'status',
+                'is_open',
             ]]);
 
     }
@@ -140,7 +140,7 @@ class AttendanceSheetControllerTest extends TestCase
         $this->seedData();
         $user->assignRole('Admin');
         Employee::factory()->create([
-            'user_id'=>$user
+            'user_id' => $user
         ]);
 
         $response = $this->actingAs($user)->withSession(['banned' => false])
@@ -151,7 +151,7 @@ class AttendanceSheetControllerTest extends TestCase
                 'id',
                 'date',
                 'responsible',
-                'employee' => [
+                'employees' => [
                     '*' => [
                         'id',
                         'document_number',
@@ -163,25 +163,225 @@ class AttendanceSheetControllerTest extends TestCase
                         'status_working'
                     ]
                 ],
-                'status',
+                'is_open',
             ]]);
 
     }
 
-//    public function test_deleted()
-//    {
-//        $this->withoutExceptionHandling();
-//        $user = User::factory()->create([
-//            'email' => 'admin@jextecnologies.com',
-//            'password' => bcrypt('123456')
-//        ]);
-//        $this->seedData();
-//        $attendance_sheet = AttendanceSheet::limit(1)->first();
-//        $response = $this->actingAs($user)->withSession(['banned' => false])
-//            ->deleteJson("api/v1/$this->resource/$attendance_sheet->id");
-//
-//        $response->assertStatus(200)
-//            ->assertExactJson(['message' => 'Attendance Sheet removed.']);
-//
-//    }
+    function test_update_employees()
+    {
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $this->seedData();
+        $user->assignRole('Admin');
+        Employee::factory()->create([
+            'user_id' => $user
+        ]);
+        $employees = Employee::all();
+        $attendance_sheet = AttendanceSheet::factory(5)
+            ->hasAttached($employees, [
+                "check_in" => '10:00:00',
+                "check_out" => '15:00:00',
+                "attendance" => false,
+            ])
+            ->create([
+                'date' => date('Y-m-d'),
+                'responsible' => '',
+                'is_open' => true,
+            ]);
+        $payload = [
+            "employees" => [
+                [
+                    'id' => Employee::inRandomOrder()->limit(1)->first()->id,
+                    'check_in' => '07:04:30',
+                ],
+                [
+                    'id' => Employee::inRandomOrder()->limit(1)->first()->id,
+                    'check_in' => '07:07:10',
+                ]
+            ]
+        ];
+//        dd($attendance_sheet->first()->id);
+        $attendance_sheet_id = $attendance_sheet->first()->id;
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->putJson("api/v1/$this->resource/$attendance_sheet_id", $payload);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure(['data' => [
+                'id',
+                'date',
+                'responsible',
+                'employees' => [
+                    '*' => [
+                        'id',
+                        'document_number',
+                        'name',
+                        'lastname',
+                        'check_in',
+                        'check_out',
+                        'attendance',
+                        'status_working'
+                    ]
+                ],
+                'is_open',
+            ]])
+            ->assertJson([
+                'message' => 'Attendance Sheet updated.',
+                'data' => []
+            ]);;
+
+    }
+
+    function test_update_employees_sheet_without_range_date()
+    {
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $this->seedData();
+        $user->assignRole('Admin');
+        Employee::factory()->create([
+            'user_id' => $user
+        ]);
+        $employees = Employee::all();
+        $attendance_sheet = AttendanceSheet::factory(5)
+            ->hasAttached($employees, [
+                "check_in" => '10:00:00',
+                "check_out" => '15:00:00',
+                "attendance" => false,
+            ])
+            ->create([
+                'date' => '2022-05-05',
+                'responsible' => '',
+                'is_open' => true,
+            ]);
+        $payload = [
+            "employees" => [
+                [
+                    'id' => Employee::inRandomOrder()->limit(1)->first()->id,
+                    'check_in' => '07:04:30',
+                ],
+                [
+                    'id' => Employee::inRandomOrder()->limit(1)->first()->id,
+                    'check_in' => '07:07:10',
+                ]
+            ]
+        ];
+        $attendance_sheet_id = $attendance_sheet->first()->id;
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->putJson("api/v1/$this->resource/$attendance_sheet_id", $payload);
+
+        $response->assertStatus(400)
+            ->assertExactJson(['message' => 'cannot update a past attendance sheet.']);
+
+    }
+
+    function test_update_employees_sheet_closed()
+    {
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $this->seedData();
+        $user->assignRole('Admin');
+        Employee::factory()->create([
+            'user_id' => $user
+        ]);
+        $employees = Employee::all();
+        $attendance_sheet = AttendanceSheet::factory(5)
+            ->hasAttached($employees, [
+                "check_in" => '10:00:00',
+                "check_out" => '15:00:00',
+                "attendance" => false,
+            ])
+            ->create([
+                'date' => date('Y-m-d'),
+                'responsible' => '',
+                'is_open' => false,
+            ]);
+        $payload = [
+            "employees" => [
+                [
+                    'id' => Employee::inRandomOrder()->limit(1)->first()->id,
+                    'check_in' => '07:04:30',
+                ],
+                [
+                    'id' => Employee::inRandomOrder()->limit(1)->first()->id,
+                    'check_in' => '07:07:10',
+                ]
+            ]
+        ];
+        $attendance_sheet_id = $attendance_sheet->first()->id;
+
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->putJson("api/v1/$this->resource/$attendance_sheet_id", $payload);
+
+        $response->assertStatus(400)
+            ->assertExactJson(['message' => 'cannot update a closed attendance sheet.']);
+
+    }
+
+    function test_update_employees_status()
+    {
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $this->seedData();
+        $user->assignRole('Admin');
+        Employee::factory()->create([
+            'user_id' => $user
+        ]);
+        $employees = Employee::all();
+        $attendance_sheet = AttendanceSheet::factory(5)
+            ->hasAttached($employees, [
+                "check_in" => '10:00:00',
+                "check_out" => '15:00:00',
+                "attendance" => false,
+            ])
+            ->create([
+                'date' => date('Y-m-d'),
+                'responsible' => '',
+                'is_open' => true,
+            ]);
+        $payload = [
+            "is_open" => false
+        ];
+        $attendance_sheet_id = $attendance_sheet->first()->id;
+
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->putJson("api/v1/$this->resource/$attendance_sheet_id", $payload);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure(['data' => [
+                'id',
+                'date',
+                'responsible',
+                'employees' => [
+                    '*' => [
+                        'id',
+                        'document_number',
+                        'name',
+                        'lastname',
+                        'check_in',
+                        'check_out',
+                        'attendance',
+                        'status_working'
+                    ]
+                ],
+                'is_open',
+            ]])
+            ->assertJson([
+                'message' => 'Attendance Sheet updated.',
+                'data' => []
+            ]);;
+
+    }
+
 }

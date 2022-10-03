@@ -20,7 +20,7 @@ class CreateAttendanceSheetsTable extends Migration
 //            $table->time('time_start');
 //            $table->time('time_end');
             $table->string('responsible');
-            $table->boolean('status')->default(true); //  CLOSED=0; OPEN= 1
+            $table->boolean('is_open')->default(true);
             $table->timestamps();
             $table->softDeletes();
 

@@ -19,7 +19,7 @@ class AttendanceSheetFactory extends Factory
 //            'time_start' => '09:00:00',
 //            'time_end' => '18:00:00',
             'responsible' => $this->faker->name()." ".$this->faker->lastName(),
-//            'status' => 'Cerrado',
+            'is_open' => false,
         ];
     }
 }

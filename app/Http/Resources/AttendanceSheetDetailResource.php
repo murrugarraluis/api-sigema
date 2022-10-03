@@ -20,8 +20,8 @@ class AttendanceSheetDetailResource extends JsonResource
 //            'time_start' => $this->time_start,
 //            'time_end' => $this->time_end,
             'responsible' => $this->responsible,
-            'employee' => AttendanceEmployeeResource::collection($this->employees),
-            'status' => $this->status ? 'open' : 'closed',
+            'employees' => AttendanceEmployeeResource::collection($this->employees),
+            'is_open' => $this->is_open,
         ];
     }
 }

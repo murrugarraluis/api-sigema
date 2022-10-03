@@ -27,7 +27,7 @@ class AttendanceEmployeeResource extends JsonResource
 
             'check_in' => $this->pivot->check_in,
             'check_out' => $this->pivot->check_out,
-            'attendance' => $this->pivot->attendance ? 'attended' : 'missed',
+            'attendance' => $this->pivot->attendance,
             'status_working' => $this->status_working(),
 //            'attendance_number' => $this->attendance_sheets()->wherePivot('attendance','asistencia')->count(),
 //            'absences_number' => $this->attendance_sheets()->wherePivot('attendance','falta')->count(),

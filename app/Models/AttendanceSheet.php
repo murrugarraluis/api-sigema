@@ -14,7 +14,7 @@ class AttendanceSheet extends Model
     protected $fillable = [
         'date',
         'responsible',
-        'status'
+        'is_open'
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 

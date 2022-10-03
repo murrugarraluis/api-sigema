@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AttendanceUpdateRequest;
 use App\Http\Resources\AttendanceSheetDetailResource;
 use App\Http\Resources\AttendanceSheetResource;
 use App\Http\Resources\EmployeeResource;
@@ -41,7 +42,7 @@ class AttendanceSheetController extends Controller
             $attendance_sheet = AttendanceSheet::create([
                 'date' => date('Y-m-d'),
                 'responsible' => Auth()->user()->employee()->first()->name . " " . Auth()->user()->employee()->first()->lastname,
-                'status' => true,
+                'is_open' => true,
             ]);
             $employees = Employee::all();
             $attendance_sheet->employees()->attach($employees);
@@ -70,13 +71,37 @@ class AttendanceSheetController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param AttendanceUpdateRequest $request
      * @param AttendanceSheet $attendanceSheet
-     * @return Response
+     * @return AttendanceSheetDetailResource|JsonResponse|object
      */
-    public function update(Request $request, AttendanceSheet $attendanceSheet)
+    public function update(AttendanceUpdateRequest $request, AttendanceSheet $attendanceSheet)
     {
-        //
+        DB::beginTransaction();
+        try {
+            if ($attendanceSheet->date !== date('Y-m-d')) return response()->json(['message' => 'cannot update a past attendance sheet.'])->setStatusCode(400);
+            if (!$attendanceSheet->is_open) return response()->json(['message' => 'cannot update a closed attendance sheet.'])->setStatusCode(400);
+            if ($request->employees) {
+                $employees = [];
+                array_map(function ($employee) use (&$employees) {
+                    $employee_id = $employee['id'];
+                    $check_in = array_key_exists('check_in', $employee) ? $employee['check_in'] : null;
+                    $check_out = array_key_exists('check_out', $employee) ? $employee['check_out'] : null;
+                    $attendance = array_key_exists('check_in', $employee) && $employee['check_in'];
+                    $employees[$employee_id] = ["check_in" => $check_in, "check_out" => $check_out, "attendance" => $attendance];
+                }, $request->employees);
+                $attendanceSheet->employees()->sync($employees);
+            }
+            if ($request->has('is_open')) {
+                $attendanceSheet->update(['is_open' => $request->is_open]);
+            }
+            DB::commit();
+            return (new AttendanceSheetDetailResource($attendanceSheet))
+                ->additional(['message' => 'Attendance Sheet updated.']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new BadRequestException($e->getMessage());
+        }
     }
 
     /**

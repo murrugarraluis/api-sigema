@@ -14,6 +14,14 @@ class AttendanceSheetResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'date' => $this->date,
+//            'time_start' => $this->time_start,
+//            'time_end' => $this->time_end,
+            'responsible' => $this->responsible,
+//            'employee' => AttendanceEmployeeResource::collection($this->employees),
+            'is_open' => $this->is_open,
+        ];
     }
 }
