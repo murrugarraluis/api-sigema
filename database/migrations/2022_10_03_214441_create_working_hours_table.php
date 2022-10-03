@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWorkingSheetsTable extends Migration
+class CreateWorkingHoursTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateWorkingSheetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('working_sheets', function (Blueprint $table) {
+        Schema::create('working_hours', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->dateTime('date_start');
-            $table->dateTime('date_end');
-            $table->text('description');
-            $table->foreignUuid('machine_id')->constrained('machines');
-            $table->boolean('is_open')->default(true);
+            $table->foreignUuid('working_sheet_id')->constrained('working_sheets');
+            $table->time('time_start');
+            $table->time('time_end');
             $table->timestamps();
             $table->softDeletes();
 
@@ -33,6 +31,6 @@ class CreateWorkingSheetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('working_sheets');
+        Schema::dropIfExists('working_hours');
     }
 }

@@ -15,4 +15,8 @@ class WorkingSheet extends Model
     {
         return $this->belongsTo(Machine::class);
     }
+    public function working_hours(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(WorkingHour::class);
+    }
 }

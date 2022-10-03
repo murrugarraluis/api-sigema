@@ -109,7 +109,6 @@ class WorkingSheetControllerTest extends TestCase
     }
     public function test_destroy()
     {
-//        $this->withoutExceptionHandling();
         $user = User::factory()->create([
             'email' => 'admin@jextecnologies.com',
             'password' => bcrypt('123456')
