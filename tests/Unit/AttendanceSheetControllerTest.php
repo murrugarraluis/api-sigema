@@ -56,6 +56,9 @@ class AttendanceSheetControllerTest extends TestCase
         ]);
         $this->seedData();
         $user->assignRole('Admin');
+        Employee::factory()->create([
+            'user_id'=>$user
+        ]);
 
 //        $attendance_sheet = AttendanceSheet::limit(1)->first();
         $response = $this->actingAs($user)->withSession(['banned' => false])
@@ -83,6 +86,9 @@ class AttendanceSheetControllerTest extends TestCase
         ]);
         $this->seedData();
         $user->assignRole('Admin');
+        Employee::factory()->create([
+            'user_id'=>$user
+        ]);
 
         $attendance_sheet = AttendanceSheet::limit(1)->first();
         $response = $this->actingAs($user)->withSession(['banned' => false])
@@ -100,9 +106,9 @@ class AttendanceSheetControllerTest extends TestCase
                         'check_out',
                         'document_number',
                         'name',
-                        'attendance_number',
-                        'absences_number',
-                        'attedance'
+//                        'attendance_number',
+//                        'absences_number',
+                        'attendance'
                     ]
                 ],
                 'status',
@@ -122,6 +128,44 @@ class AttendanceSheetControllerTest extends TestCase
 
         $response->assertStatus(404)
             ->assertExactJson(['message' => "Unable to locate the attendance sheet you requested."]);
+    }
+
+    function test_store()
+    {
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+        $this->seedData();
+        $user->assignRole('Admin');
+        Employee::factory()->create([
+            'user_id'=>$user
+        ]);
+
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->postJson("api/v1/$this->resource");
+
+        $response->assertStatus(201)
+            ->assertJsonStructure(['data' => [
+                'id',
+                'date',
+                'responsible',
+                'employee' => [
+                    '*' => [
+                        'id',
+                        'document_number',
+                        'name',
+                        'lastname',
+                        'check_in',
+                        'check_out',
+                        'attendance',
+                        'status_working'
+                    ]
+                ],
+                'status',
+            ]]);
+
     }
 
 //    public function test_deleted()

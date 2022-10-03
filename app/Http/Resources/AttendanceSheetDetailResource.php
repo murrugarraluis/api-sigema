@@ -17,11 +17,11 @@ class AttendanceSheetDetailResource extends JsonResource
         return [
             'id' => $this->id,
             'date' => $this->date,
-            'time_start' => $this->time_start,
-            'time_end' => $this->time_end,
+//            'time_start' => $this->time_start,
+//            'time_end' => $this->time_end,
             'responsible' => $this->responsible,
             'employee' => AttendanceEmployeeResource::collection($this->employees),
-            'status' => $this->status,
+            'status' => $this->status ? 'open' : 'closed',
         ];
     }
 }

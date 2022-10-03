@@ -17,10 +17,10 @@ class AttendanceSheetSeeder extends Seeder
     {
         $employees = Employee::all();
         AttendanceSheet::factory(5)
-            ->hasAttached($employees,[
-                "check_in"=>'10:00:00',
-                "check_out"=>'15:00:00',
-                "attendance"=>'Asistencia',
+            ->hasAttached($employees, [
+                "check_in" => '10:00:00',
+                "check_out" => '15:00:00',
+                "attendance" => true,
             ])
             ->create();
     }
