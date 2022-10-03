@@ -66,8 +66,6 @@ class AttendanceSheetControllerTest extends TestCase
                 '*' => [
                     'id',
                     'date',
-                    'time_start',
-                    'time_end',
                     'responsible',
                     'status',
                 ]
@@ -94,8 +92,6 @@ class AttendanceSheetControllerTest extends TestCase
             ->assertJsonStructure(['data' => [
                 'id',
                 'date',
-                'time_start',
-                'time_end',
                 'responsible',
                 'employee' => [
                     '*' => [

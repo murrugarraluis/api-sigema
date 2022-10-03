@@ -18,7 +18,7 @@ class CreateAttendanceSheetEmployee extends Migration
             $table->foreignUuid('employee_id')->constrained('employees');
             $table->time('check_in');
             $table->time('check_out');
-            $table->string('attendance');
+            $table->string('attendance')->default(0);// missed=0 ; attended=1 ;
             $table->primary(['attendance_sheet_id', 'employee_id'],'attendance_sheet_employee_pk');
 
         });
