@@ -107,6 +107,9 @@ Route::prefix('v1/')->group(function () {
             Route::get('working-sheets', [WorkingSheetController::class, 'index']);
             Route::get('working-sheets/{workingSheet}', [WorkingSheetController::class, 'show']);
             Route::post('working-sheets/start', [WorkingSheetController::class, 'start']);
+            Route::put('working-sheets/{workingSheet}/pause', [WorkingSheetController::class, 'pause']);
+            Route::put('working-sheets/{workingSheet}/restart', [WorkingSheetController::class, 'restart']);
+            Route::put('working-sheets/{workingSheet}/stop', [WorkingSheetController::class, 'stop']);
             Route::delete('working-sheets/{workingSheet}', [WorkingSheetController::class, 'destroy']);
         });
 

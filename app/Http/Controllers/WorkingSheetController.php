@@ -43,18 +43,68 @@ class WorkingSheetController extends Controller
 //            CREATE SUPPLIER
             $working_sheet = WorkingSheet::create([
                 'machine_id' => $request->machine["id"],
-                'date_start' => date('Y-m-d'),
+                'date' => date('Y-m-d'),
                 'description' => $request->description,
                 'is_open' => true
             ]);
-            $working_sheet->working_hours()->create([
-                'date_time_start' => date('Y-m-d H:i:s')
-            ]);
+            $this->restart($working_sheet);
             DB::commit();
             return (new WorkingSheetDetailResource($working_sheet))
                 ->additional(['message' => 'Work started.'])
                 ->response()
                 ->setStatusCode(201);
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new BadRequestException($e->getMessage());
+        }
+    }
+
+    public function pause(WorkingSheet $workingSheet)
+    {
+        DB::beginTransaction();
+        try {
+            $last_working_hour = $workingSheet->working_hours()->orderBy('created_at', 'desc')->first();
+            if (!$last_working_hour->date_time_end) {
+                $last_working_hour->update([
+                    'date_time_end' => date('Y-m-d H:i:s')
+                ]);
+            }
+            DB::commit();
+            return (new WorkingSheetDetailResource($workingSheet))
+                ->additional(['message' => 'Work paused.']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new BadRequestException($e->getMessage());
+        }
+    }
+
+    public function restart(WorkingSheet $workingSheet)
+    {
+        DB::beginTransaction();
+        try {
+            $workingSheet->working_hours()->create([
+                'date_time_start' => date('Y-m-d H:i:s')
+            ]);
+            DB::commit();
+            return (new WorkingSheetDetailResource($workingSheet))
+                ->additional(['message' => 'Work restarted.']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new BadRequestException($e->getMessage());
+        }
+    }
+
+    public function stop(WorkingSheet $workingSheet)
+    {
+        DB::beginTransaction();
+        try {
+            $this->pause($workingSheet);
+            $workingSheet->update([
+                'is_open' => false
+            ]);
+            DB::commit();
+            return (new WorkingSheetDetailResource($workingSheet))
+                ->additional(['message' => 'Work stopped.']);
         } catch (\Exception $e) {
             DB::rollback();
             throw new BadRequestException($e->getMessage());

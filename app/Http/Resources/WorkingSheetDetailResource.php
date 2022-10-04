@@ -16,11 +16,11 @@ class WorkingSheetDetailResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'date_start' => $this->date_start,
-            'date_end' => $this->date_end,
+            'date' => $this->date,
             'description' => $this->description,
             'machine' => new WorkingSheetMachineResource($this->machine),
-            'working_hours' => WorkingHourResource::collection($this->working_hours)
+            'working_hours' => WorkingHourResource::collection($this->working_hours),
+            'is_open' => $this->is_open
         ];
     }
 }

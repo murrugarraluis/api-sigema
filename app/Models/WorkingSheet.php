@@ -13,8 +13,9 @@ class WorkingSheet extends Model
 
     protected $fillable = [
         'machine_id',
-        'date_start',
-        'description'
+        'date',
+        'description',
+        'is_open'
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 

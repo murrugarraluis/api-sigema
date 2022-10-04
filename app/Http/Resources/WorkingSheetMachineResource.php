@@ -16,8 +16,8 @@ class WorkingSheetMachineResource extends JsonResource
      */
     public function toArray($request): array
     {
-        $date_last_use = $this->working_sheets()->orderBy('date_end', 'desc')->first();
-        $date_last_maintenance = $this->maintenance_sheets()->orderBy('date', 'desc')->first();
+//        $date_last_use = $this->working_sheets()->orderBy('date_end', 'desc')->first();
+//        $date_last_maintenance = $this->maintenance_sheets()->orderBy('date', 'desc')->first();
         return [
             'id' => $this->id,
             'serie_number' => $this->serie_number,

@@ -16,8 +16,8 @@ class CreateWorkingSheetsTable extends Migration
         Schema::create('working_sheets', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('machine_id')->constrained('machines');
-            $table->dateTime('date_start')->nullable();
-            $table->dateTime('date_end')->nullable();
+            $table->date('date')->nullable();
+//            $table->date('date_end')->nullable();
             $table->text('description')->nullable();
             $table->boolean('is_open')->default(true);
             $table->timestamps();

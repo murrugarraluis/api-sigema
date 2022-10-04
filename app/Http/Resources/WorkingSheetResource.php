@@ -12,17 +12,19 @@ class WorkingSheetResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  Request  $request
+     * @param Request $request
      * @return array
      */
     public function toArray($request)
     {
         return [
-            'id'=>$this->id,
-            'date_start'=>$this->date_start,
-            'date_end'=>$this->date_end,
-            'description'=>$this->description,
-            'machine'=>new MachineResource($this->machine)
+            'id' => $this->id,
+            'date' => $this->date,
+//            'date_end' => $this->date_end,
+            'description' => $this->description,
+            'machine' => new MachineResource($this->machine),
+            'is_open' => $this->is_open
+
         ];
     }
 }

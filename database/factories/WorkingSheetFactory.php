@@ -17,8 +17,8 @@ class WorkingSheetFactory extends Factory
     {
         $machine = Machine::inRandomOrder()->limit(1)->first();
         return [
-            'date_start' => $this->faker->dateTimeBetween('-20 days', '-1 days'),
-            'date_end' => $this->faker->dateTimeBetween('-20 days', '-1 days'),
+            'date' => $this->faker->dateTimeBetween('-20 days', '-1 days'),
+//            'date_end' => $this->faker->dateTimeBetween('-20 days', '-1 days'),
             'description' => $this->faker->text(),
             'machine_id' => $machine,
         ];
