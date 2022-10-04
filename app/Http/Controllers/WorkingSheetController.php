@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\WorkStartRequest;
 use App\Http\Resources\WorkingSheetDetailResource;
 use App\Http\Resources\WorkingSheetResource;
 use App\Models\WorkingSheet;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class WorkingSheetController extends Controller
 {
@@ -25,12 +28,37 @@ class WorkingSheetController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         //
+    }
+
+    public function start(WorkStartRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+//            CREATE SUPPLIER
+            $working_sheet = WorkingSheet::create([
+                'machine_id' => $request->machine["id"],
+                'date_start' => date('Y-m-d'),
+                'description' => $request->description,
+                'is_open' => true
+            ]);
+            $working_sheet->working_hours()->create([
+                'date_time_start' => date('Y-m-d H:i:s')
+            ]);
+            DB::commit();
+            return (new WorkingSheetDetailResource($working_sheet))
+                ->additional(['message' => 'Work started.'])
+                ->response()
+                ->setStatusCode(201);
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new BadRequestException($e->getMessage());
+        }
     }
 
     /**
@@ -48,7 +76,7 @@ class WorkingSheetController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @param WorkingSheet $workingSheet
      * @return \Illuminate\Http\Response
      */
@@ -66,6 +94,6 @@ class WorkingSheetController extends Controller
     public function destroy(WorkingSheet $workingSheet): JsonResponse
     {
         $workingSheet->delete();
-        return response()->json(['message'=>'Working Sheet removed.'],200);
+        return response()->json(['message' => 'Working Sheet removed.'], 200);
     }
 }

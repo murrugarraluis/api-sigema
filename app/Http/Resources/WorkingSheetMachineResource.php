@@ -28,9 +28,9 @@ class WorkingSheetMachineResource extends JsonResource
             'maximum_working_time' => $this->maximum_working_time,
             'status' => $this->status,
 
-            'date_last_use' => $date_last_use ? date('Y-m-d',strtotime($date_last_use->date_end)) : null,
-            'total_hours_used' => $this->time_worked,
-            'date_last_maintenance' => $date_last_maintenance ? date('Y-m-d',strtotime($date_last_maintenance->date)) : null,
+//            'date_last_use' => $date_last_use ? date('Y-m-d',strtotime($date_last_use->date_end)) : null,
+//            'total_hours_used' => $this->time_worked,
+//            'date_last_maintenance' => $date_last_maintenance ? date('Y-m-d',strtotime($date_last_maintenance->date)) : null,
         ];
     }
 }

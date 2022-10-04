@@ -9,12 +9,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class WorkingSheet extends Model
 {
-    use HasFactory,Uuids,SoftDeletes;
-    protected $hidden = ['created_at', 'updated_at','deleted_at'];
+    use HasFactory, Uuids, SoftDeletes;
+
+    protected $fillable = [
+        'machine_id',
+        'date_start',
+        'description'
+    ];
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
     public function machine(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Machine::class);
     }
+
     public function working_hours(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(WorkingHour::class);

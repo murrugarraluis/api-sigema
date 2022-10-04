@@ -106,7 +106,7 @@ Route::prefix('v1/')->group(function () {
             //
             Route::get('working-sheets', [WorkingSheetController::class, 'index']);
             Route::get('working-sheets/{workingSheet}', [WorkingSheetController::class, 'show']);
-            Route::post('working-sheets', [WorkingSheetController::class, 'store']);
+            Route::post('working-sheets/start', [WorkingSheetController::class, 'start']);
             Route::delete('working-sheets/{workingSheet}', [WorkingSheetController::class, 'destroy']);
         });
 

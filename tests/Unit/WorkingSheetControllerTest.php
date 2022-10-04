@@ -92,9 +92,9 @@ class WorkingSheetControllerTest extends TestCase
                     'name',
                     'image',
                     'status',
-                    'date_last_use',
-                    'total_hours_used',
-                    'date_last_maintenance',
+//                    'date_last_use',
+//                    'total_hours_used',
+//                    'date_last_maintenance',
                 ],
                 'working_hours' => [
                     '*' => [
@@ -103,6 +103,54 @@ class WorkingSheetControllerTest extends TestCase
                     ]
                 ]
             ]]);
+
+    }
+
+    public function test_start()
+    {
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create([
+            'email' => 'admin@jextecnologies.com',
+            'password' => bcrypt('123456')
+        ]);
+
+        $this->seedData();
+        $user->assignRole('Admin');
+
+        $working_sheet = WorkingSheet::limit(1)->first();
+        $payload = [
+            "machine" => Machine::limit(1)->first(),
+            "description" => "My description"
+        ];
+        $response = $this->actingAs($user)->withSession(['banned' => false])
+            ->postJson("api/v1/$this->resource/start", $payload);
+
+        $response->assertStatus(201)
+            ->assertJsonStructure(['data' => [
+                'id',
+                'date_start',
+                'date_end',
+                'description',
+                'machine' => [
+                    'id',
+                    'name',
+                    'image',
+                    'status',
+//                    'date_last_use',
+//                    'total_hours_used',
+//                    'date_last_maintenance',
+                ],
+                'working_hours' => [
+                    '*' => [
+                        'date_time_start',
+                        'date_time_end'
+                    ]
+                ]
+            ]])
+            ->assertJson([
+                'message' => 'Work started.',
+                'data' => []
+            ]);;
 
     }
 
