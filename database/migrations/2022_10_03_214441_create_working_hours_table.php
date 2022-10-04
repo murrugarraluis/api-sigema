@@ -16,8 +16,8 @@ class CreateWorkingHoursTable extends Migration
         Schema::create('working_hours', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('working_sheet_id')->constrained('working_sheets');
-            $table->time('time_start');
-            $table->time('time_end');
+            $table->time('time_start')->nullable();
+            $table->time('time_end')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
