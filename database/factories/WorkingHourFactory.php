@@ -14,8 +14,8 @@ class WorkingHourFactory extends Factory
     public function definition()
     {
         return [
-            'time_start' => $this->faker->time('H:i:s'),
-            'time_end' => $this->faker->time('H:i:s'),
+            'date_time_start' => $this->faker->dateTimeBetween('-5 hours','now'),
+            'date_time_end' => $this->faker->dateTimeBetween('-3 hours','now'),
         ];
     }
 }
