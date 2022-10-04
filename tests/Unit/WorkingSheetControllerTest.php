@@ -13,7 +13,9 @@ use Tests\TestCase;
 class WorkingSheetControllerTest extends TestCase
 {
     use RefreshDatabase;
+
     private $resource = 'working-sheets';
+
     public function seedData()
     {
         $role = Role::create(['name' => 'Admin']);
@@ -34,6 +36,7 @@ class WorkingSheetControllerTest extends TestCase
         Machine::factory()->create();
         WorkingSheet::factory()->create();
     }
+
     public function test_index()
     {
         $this->withoutExceptionHandling();
@@ -55,13 +58,14 @@ class WorkingSheetControllerTest extends TestCase
                     'date_start',
                     'date_end',
                     'description',
-                    'machine'=>[
+                    'machine' => [
                         'name'
                     ],
                 ]
             ]]);
 
     }
+
     public function test_show()
     {
 //        $this->withoutExceptionHandling();
@@ -79,22 +83,29 @@ class WorkingSheetControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonStructure(['data' => [
+                'id',
+                'date_start',
+                'date_end',
+                'description',
+                'machine' => [
                     'id',
-                    'date_start',
-                    'date_end',
-                    'description',
-                    'machine'=>[
-                        'id',
-                        'name',
-                        'image',
-                        'status',
-                        'date_last_use',
-                        'total_hours_used',
-                        'date_last_maintenance',
-                    ],
+                    'name',
+                    'image',
+                    'status',
+                    'date_last_use',
+                    'total_hours_used',
+                    'date_last_maintenance',
+                ],
+                'working_hours' => [
+                    '*' => [
+                        'date_time_start',
+                        'date_time_end'
+                    ]
+                ]
             ]]);
 
     }
+
     public function test_show_not_found()
     {
         $user = User::factory()->create([
@@ -107,6 +118,7 @@ class WorkingSheetControllerTest extends TestCase
         $response->assertStatus(404)
             ->assertExactJson(['message' => "Unable to locate the working sheet you requested."]);
     }
+
     public function test_destroy()
     {
         $user = User::factory()->create([
