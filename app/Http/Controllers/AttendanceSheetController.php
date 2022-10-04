@@ -79,8 +79,11 @@ class AttendanceSheetController extends Controller
     {
         DB::beginTransaction();
         try {
-            if ($attendanceSheet->date !== date('Y-m-d')) return response()->json(['message' => 'cannot update a past attendance sheet.'])->setStatusCode(400);
             if (!$attendanceSheet->is_open) return response()->json(['message' => 'cannot update a closed attendance sheet.'])->setStatusCode(400);
+            if ($request->has('is_open')) {
+                $attendanceSheet->update(['is_open' => $request->is_open]);
+            }
+            if ($attendanceSheet->date !== date('Y-m-d')) return response()->json(['message' => 'cannot update a past attendance sheet.'])->setStatusCode(400);
             if ($request->employees) {
                 $employees = [];
                 array_map(function ($employee) use (&$employees) {
@@ -91,9 +94,6 @@ class AttendanceSheetController extends Controller
                     $employees[$employee_id] = ["check_in" => $check_in, "check_out" => $check_out, "attendance" => $attendance];
                 }, $request->employees);
                 $attendanceSheet->employees()->sync($employees);
-            }
-            if ($request->has('is_open')) {
-                $attendanceSheet->update(['is_open' => $request->is_open]);
             }
             DB::commit();
             return (new AttendanceSheetDetailResource($attendanceSheet))
