@@ -93,9 +93,9 @@ class WorkingSheetControllerTest extends TestCase
                     'name',
                     'image',
                     'status',
-//                    'date_last_use',
-//                    'total_hours_used',
-//                    'date_last_maintenance',
+                    'date_last_use',
+                    'total_hours_used',
+                    'date_last_maintenance',
                 ],
                 'working_hours' => [
                     '*' => [
@@ -138,9 +138,9 @@ class WorkingSheetControllerTest extends TestCase
                     'name',
                     'image',
                     'status',
-//                    'date_last_use',
-//                    'total_hours_used',
-//                    'date_last_maintenance',
+                    'date_last_use',
+                    'date_last_maintenance',
+                    'total_hours_used',
                 ],
                 'working_hours' => [
                     '*' => [
@@ -189,9 +189,9 @@ class WorkingSheetControllerTest extends TestCase
                     'name',
                     'image',
                     'status',
-//                    'date_last_use',
-//                    'total_hours_used',
-//                    'date_last_maintenance',
+                    'date_last_use',
+                    'date_last_maintenance',
+                    'total_hours_used',
                 ],
                 'working_hours' => [
                     '*' => [
@@ -240,9 +240,9 @@ class WorkingSheetControllerTest extends TestCase
                     'name',
                     'image',
                     'status',
-//                    'date_last_use',
-//                    'total_hours_used',
-//                    'date_last_maintenance',
+                    'date_last_use',
+                    'date_last_maintenance',
+                    'total_hours_used',
                 ],
                 'working_hours' => [
                     '*' => [
@@ -291,9 +291,9 @@ class WorkingSheetControllerTest extends TestCase
                     'name',
                     'image',
                     'status',
-//                    'date_last_use',
-//                    'total_hours_used',
-//                    'date_last_maintenance',
+                    'date_last_use',
+                    'date_last_maintenance',
+                    'total_hours_used',
                 ],
                 'working_hours' => [
                     '*' => [

@@ -98,6 +98,9 @@ class MachineControllerTest extends TestCase
                     ]
                 ],
                 'status',
+                'date_last_use',
+                'total_hours_used',
+                'date_last_maintenance',
             ]]);
 
     }
