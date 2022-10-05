@@ -121,7 +121,8 @@ class WorkingSheetControllerTest extends TestCase
         $working_sheet = WorkingSheet::limit(1)->first();
         $payload = [
             "machine" => Machine::limit(1)->first(),
-            "description" => "My description"
+            "description" => "My description",
+            "date" => date('Y-m-d H:i:s')
         ];
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->postJson("api/v1/$this->resource/start", $payload);
@@ -168,10 +169,12 @@ class WorkingSheetControllerTest extends TestCase
 
         $working_sheet = WorkingSheet::factory()
             ->has(WorkingHour::factory()->count(1)->state(function (array $attributes, WorkingSheet $ws) {
-                return ['date_time_start' => '2022-02-02 12:00:00','date_time_end' => null];
+                return ['date_time_start' => '2022-02-02 12:00:00', 'date_time_end' => null];
             }), 'working_hours')
             ->create();
-        $payload = [];
+        $payload = [
+            "date" => date('Y-m-d H:i:s')
+        ];
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->putJson("api/v1/$this->resource/$working_sheet->id/pause", $payload);
 
@@ -203,6 +206,7 @@ class WorkingSheetControllerTest extends TestCase
             ]);;
 
     }
+
     public function test_restart()
     {
         $this->withoutExceptionHandling();
@@ -216,10 +220,12 @@ class WorkingSheetControllerTest extends TestCase
 
         $working_sheet = WorkingSheet::factory()
             ->has(WorkingHour::factory()->count(1)->state(function (array $attributes, WorkingSheet $ws) {
-                return ['date_time_start' => '2022-02-02 12:00:00','date_time_end' => '2022-02-13:00:00'];
+                return ['date_time_start' => '2022-02-02 12:00:00', 'date_time_end' => '2022-02-13:00:00'];
             }), 'working_hours')
             ->create();
-        $payload = [];
+        $payload = [
+            "date" => date('Y-m-d H:i:s')
+        ];
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->putJson("api/v1/$this->resource/$working_sheet->id/restart", $payload);
 
@@ -251,6 +257,7 @@ class WorkingSheetControllerTest extends TestCase
             ]);;
 
     }
+
     public function test_stop()
     {
         $this->withoutExceptionHandling();
@@ -264,10 +271,12 @@ class WorkingSheetControllerTest extends TestCase
 
         $working_sheet = WorkingSheet::factory()
             ->has(WorkingHour::factory()->count(1)->state(function (array $attributes, WorkingSheet $ws) {
-                return ['date_time_start' => '2022-02-02 12:00:00','date_time_end' => '2022-02-13:00:00'];
+                return ['date_time_start' => '2022-02-02 12:00:00', 'date_time_end' => '2022-02-13:00:00'];
             }), 'working_hours')
             ->create();
-        $payload = [];
+        $payload = [
+            "date" => date('Y-m-d H:i:s')
+        ];
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->putJson("api/v1/$this->resource/$working_sheet->id/stop", $payload);
 

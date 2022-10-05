@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class WorkStartRequest extends FormRequest
+class WorkUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,6 @@ class WorkStartRequest extends FormRequest
     public function rules()
     {
         return [
-            "machine" => ['bail', 'required', 'array'],
-            "machine.id" => ['bail', 'required', 'uuid', 'exists:machines,id'],
-            "description" => ['bail', 'nullable', 'string'],
             "date" => ['bail', 'required', 'date_format:Y-m-d H:i:s'],
         ];
     }

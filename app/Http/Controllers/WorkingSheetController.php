@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\WorkStartRequest;
+use App\Http\Requests\WorkUpdateRequest;
 use App\Http\Resources\WorkingSheetDetailResource;
 use App\Http\Resources\WorkingSheetResource;
 use App\Models\WorkingSheet;
@@ -40,14 +41,15 @@ class WorkingSheetController extends Controller
     {
         DB::beginTransaction();
         try {
-//            CREATE SUPPLIER
             $working_sheet = WorkingSheet::create([
                 'machine_id' => $request->machine["id"],
-                'date' => date('Y-m-d'),
+                'date' => date('Y-m-d', strtotime($request->date)),
                 'description' => $request->description,
                 'is_open' => true
             ]);
-            $this->restart($working_sheet);
+            $request_restart = new WorkUpdateRequest();
+            $request_restart->merge(['date' => $request->date]);
+            $this->restart($request_restart, $working_sheet);
             DB::commit();
             return (new WorkingSheetDetailResource($working_sheet))
                 ->additional(['message' => 'Work started.'])
@@ -59,14 +61,15 @@ class WorkingSheetController extends Controller
         }
     }
 
-    public function pause(WorkingSheet $workingSheet)
+    public function pause(WorkUpdateRequest $request, WorkingSheet $workingSheet)
     {
         DB::beginTransaction();
         try {
+//            dd($request->date);
             $last_working_hour = $workingSheet->working_hours()->orderBy('created_at', 'desc')->first();
             if (!$last_working_hour->date_time_end) {
                 $last_working_hour->update([
-                    'date_time_end' => date('Y-m-d H:i:s')
+                    'date_time_end' => $request->date
                 ]);
             }
             DB::commit();
@@ -78,12 +81,13 @@ class WorkingSheetController extends Controller
         }
     }
 
-    public function restart(WorkingSheet $workingSheet)
+    public function restart(WorkUpdateRequest $request, WorkingSheet $workingSheet)
     {
+//        dd($request->date);
         DB::beginTransaction();
         try {
             $workingSheet->working_hours()->create([
-                'date_time_start' => date('Y-m-d H:i:s')
+                'date_time_start' => $request->date
             ]);
             DB::commit();
             return (new WorkingSheetDetailResource($workingSheet))
@@ -94,11 +98,11 @@ class WorkingSheetController extends Controller
         }
     }
 
-    public function stop(WorkingSheet $workingSheet)
+    public function stop(WorkUpdateRequest $request, WorkingSheet $workingSheet)
     {
         DB::beginTransaction();
         try {
-            $this->pause($workingSheet);
+            $this->pause($request, $workingSheet);
             $workingSheet->update([
                 'is_open' => false
             ]);
