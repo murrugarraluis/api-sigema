@@ -17,7 +17,18 @@ class WorkingSheet extends Model
         'description',
         'is_open'
     ];
+//    protected $attributes = [
+//        'code' => uniqid()
+//    ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function save(array $options = array())
+    {
+        if (empty($this->id)) {
+            $this->code = strtoupper(uniqid('WS-'));
+        }
+        return parent::save($options);
+    }
 
     public function machine(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

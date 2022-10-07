@@ -20,6 +20,7 @@ class WorkingSheetResource extends JsonResource
         return [
             'id' => $this->id,
             'date' => $this->date,
+            'code' => $this->code,
 //            'date_end' => $this->date_end,
             'description' => $this->description,
             'machine' => new MachineResource($this->machine),
