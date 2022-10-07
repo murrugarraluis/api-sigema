@@ -20,7 +20,8 @@ class WorkingSheetDetailResource extends JsonResource
             'description' => $this->description,
             'machine' => new WorkingSheetMachineResource($this->machine),
             'working_hours' => WorkingHourResource::collection($this->working_hours),
-            'is_open' => $this->is_open
+            'is_open' => $this->is_open,
+            'is_pause' => ($this->working_hours()->orderBy('created_at', 'desc')->first()->date_time_end && $this->is_open)
         ];
     }
 }
