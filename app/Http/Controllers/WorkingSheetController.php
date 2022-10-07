@@ -20,9 +20,13 @@ class WorkingSheetController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
         $working_sheets = WorkingSheet::all()->sortByDesc('created_at');
+        if ($request->start_date && $request->end_date) {
+            $working_sheets = WorkingSheet::whereBetween('date', [$request->start_date, $request->end_date])
+                ->get()->sortByDesc('created_at');
+        }
         return WorkingSheetResource::collection($working_sheets);
     }
 
