@@ -17,6 +17,7 @@ class MachineResource extends JsonResource
      */
     public function toArray($request): array
     {
+//        dd($this->working_sheets);
         return [
             'id' => $this->id,
             'serie_number' => $this->serie_number,
