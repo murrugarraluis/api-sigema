@@ -18,6 +18,7 @@ class Machine extends Model
         'model',
         'image',
         'maximum_working_time',
+        'maximum_working_time_per_day',
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 

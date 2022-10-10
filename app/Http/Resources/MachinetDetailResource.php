@@ -26,6 +26,7 @@ class MachinetDetailResource extends JsonResource
             'image' => $this->image ? $this->image->path : null,
             'technical_sheet' => $this->technical_sheet ? $this->technical_sheet->path : null,
             'maximum_working_time' => $this->maximum_working_time,
+            'maximum_working_time_per_day' => $this->maximum_working_time_per_day,
             'articles' => ArticleResource::collection($this->articles),
             'status' => $this->status,
             'date_last_use' => $this->get_date_last_use(),

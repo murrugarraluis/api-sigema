@@ -20,7 +20,8 @@ class CreateMachinesTable extends Migration
             $table->string('model');
             $table->string('brand');
             $table->integer('maximum_working_time');
-            $table->integer('time_worked')->default(0);
+            $table->integer('maximum_working_time_per_day');
+//            $table->integer('time_worked')->default(0);
             $table->timestamps();
             $table->softDeletes();
 
