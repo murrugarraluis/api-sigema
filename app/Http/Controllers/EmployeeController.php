@@ -21,9 +21,18 @@ class EmployeeController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
+
         $employees = Employee::all()->sortByDesc('created_at');
+        if ($request->type) {
+            $employees = Employee::where('type', $request->type)->get()->sortByDesc('created_at');
+        }
+        if ($request->type && $request->turn) {
+            $employees = Employee::where('type', $request->type)
+                ->where('turn', $request->turn)
+                ->get()->sortByDesc('created_at');
+        }
         return EmployeeResource::collection($employees);
     }
 
@@ -76,7 +85,7 @@ class EmployeeController extends Controller
      */
     public function generate_safe_credentials(Employee $employee): SafeCredentialsResource
     {
-        $username = trim(substr(strtolower($employee->name), 0, 1) . substr(strtolower($employee->lastname),0,strpos($employee->lastname," ")));
+        $username = trim(substr(strtolower($employee->name), 0, 1) . substr(strtolower($employee->lastname), 0, strpos($employee->lastname, " ")));
         $count_users = User::where('email', 'like', '%' . $username . '%')->count();
         if ($count_users > 0) $username = $username . $count_users;
 
