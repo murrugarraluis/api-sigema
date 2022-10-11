@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AttendanceStoreRequest;
 use App\Http\Requests\AttendanceUpdateRequest;
 use App\Http\Resources\AttendanceSheetDetailResource;
 use App\Http\Resources\AttendanceSheetResource;
@@ -38,7 +39,7 @@ class AttendanceSheetController extends Controller
      * @param Request $request
      * @return JsonResponse|object
      */
-    public function store(Request $request)
+    public function store(AttendanceStoreRequest $request)
     {
         DB::beginTransaction();
         try {
@@ -48,8 +49,13 @@ class AttendanceSheetController extends Controller
                 'responsible' => Auth()->user()->employee()->first()->name . " " . Auth()->user()->employee()->first()->lastname,
                 'is_open' => true,
             ]);
-            $employees = Employee::all();
+
+            $employees = [];
+            array_map(function ($employee) use (&$employees) {
+                $employees[] = $employee['id'];
+            }, $request->employees);
             $attendance_sheet->employees()->attach($employees);
+
             DB::commit();
             return (new AttendanceSheetDetailResource($attendance_sheet))
                 ->additional(['message' => 'Attendance Sheet created.'])
