@@ -21,13 +21,15 @@ class EmployeeFactory extends Factory
         return [
             'document_number' => $this->faker->randomNumber('8'),
             'name' => $this->faker->name(),
-            'lastname' => $this->faker->lastName()." ".$this->faker->lastName(),
+            'lastname' => $this->faker->lastName() . " " . $this->faker->lastName(),
             'personal_email' => $this->faker->email(),
             'phone' => $this->faker->randomNumber(9),
             'address' => $this->faker->address(),
             'position_id' => $position,
             'document_type_id' => $document_type,
-            'native_language' => 'Spanish',
+            'native_language' => 'spanish',
+            'type' => $this->faker->randomElement(array('permanent', 'relay')),
+            'turn' => $this->faker->randomElement(array('day', 'night')),
             'user_id' => User::factory()->create()
         ];
     }

@@ -20,6 +20,8 @@ class Employee extends Model
         'address',
         'position_id',
         'document_type_id',
+        'type',
+        'turn',
         'native_language'
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];

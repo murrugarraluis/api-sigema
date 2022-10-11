@@ -53,6 +53,8 @@ class EmployeeController extends Controller
                 'address' => $request->address,
                 'position_id' => $request->position["id"],
                 'document_type_id' => $request->document_type["id"],
+                'type' => $request->type,
+                'turn' => $request->turn,
                 'native_language' => $request->native_language,
             ]);
             DB::commit();
@@ -121,6 +123,8 @@ class EmployeeController extends Controller
                 'address' => $request->address,
                 'position_id' => $request->position["id"],
                 'document_type_id' => $request->document_type["id"],
+                'type' => $request->type,
+                'turn' => $request->turn,
                 'native_language' => $request->native_language,
 
             ]);
