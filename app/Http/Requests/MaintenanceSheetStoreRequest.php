@@ -34,6 +34,7 @@ class MaintenanceSheetStoreRequest extends FormRequest
             'supplier.id' => ['bail', 'required', 'uuid', 'exists:suppliers,id'],
             'machine' => ['bail', 'nullable', 'array'],
             'machine.id' => ['bail', 'required', 'uuid', 'exists:machines,id'],
+            'maximum_working_time' => ['bail', 'required', 'integer'],
 
             "detail" => ['bail', 'required', 'array'],
             "detail.*.article" => ['bail', 'nullable', 'array'],

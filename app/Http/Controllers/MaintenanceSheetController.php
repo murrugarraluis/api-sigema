@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\MaintenanceSheetStoreRequest;
 use App\Http\Resources\MaintenanceSheetDetailResource;
 use App\Http\Resources\MaintenanceSheetResource;
+use App\Models\Machine;
 use App\Models\MaintenanceSheet;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -61,6 +62,8 @@ class MaintenanceSheetController extends Controller
             }, $request->detail);
             $maintenance_sheet->maintenance_sheet_details()->createMany($details);
 
+            $machine = Machine::find($request->machine["id"]);
+            $machine->update($request->only(['maximum_working_time']));
             DB::commit();
             return (new MaintenanceSheetDetailResource($maintenance_sheet))
                 ->additional(['message' => 'Maintenance Sheet created.'])
