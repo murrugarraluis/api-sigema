@@ -32,9 +32,18 @@ class Article extends Model
         return $this->belongsToMany(Machine::class);
     }
 
-    public function maintenance_sheets(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+//    public function maintenance_sheets(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+//    {
+//        return $this->belongsToMany(MaintenanceSheet::class);
+//    }
+//    public function maintenance_sheet_details(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+//    {
+//        return $this->belongsToMany(MaintenanceSheetDetail::class,'maintenance_sheet_details')
+//            ->withPivot('quantity','price','description');
+//    }
+    public function maintenance_sheet_details(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->belongsToMany(MaintenanceSheet::class);
+        return $this->hasMany(MaintenanceSheetDetail::class);
     }
 
     public function article_type(): \Illuminate\Database\Eloquent\Relations\BelongsTo
