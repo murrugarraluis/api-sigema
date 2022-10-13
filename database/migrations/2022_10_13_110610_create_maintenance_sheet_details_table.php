@@ -14,7 +14,7 @@ class CreateMaintenanceSheetDetailsTable extends Migration
     public function up()
     {
         Schema::create('maintenance_sheet_details', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->uuid('id')->primary();
             $table->foreignUuid('article_id')->nullable()->constrained('articles');
             $table->foreignUuid('maintenance_sheet_id')->constrained('maintenance_sheets');
             $table->integer('quantity');
