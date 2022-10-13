@@ -23,7 +23,7 @@ class MaintenanceSheetDetailResource extends JsonResource
             'maintenance_type'=>new MaintenanceTypeResource($this->maintenance_type),
             'supplier'=>new SupplierResource($this->supplier),
             'machine'=>new MachineResource($this->machine),
-            'articles'=>MaintenanceSheetArticlesResource::collection($this->articles)
+            'detail'=>MaintenanceSheetArticlesResource::collection($this->maintenance_sheet_details)
         ];
     }
 }

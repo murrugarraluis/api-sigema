@@ -9,19 +9,18 @@ class MaintenanceSheetArticlesResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
+//        dd($this);
         return [
-            'id'=>$this->id,
-            'name'=>$this->name,
-            'article_type'=>$this->article_type,
-
-            'description'=>$this->pivot->description,
-            'price'=>$this->pivot->price,
-            'quantity'=>$this->pivot->quantity,
+            'id' => $this->id,
+            'article' => $this->article ? new ArticleResource($this->article) : null,
+            'description' => $this->description,
+            'price' => $this->price,
+            'quantity' => $this->quantity,
         ];
     }
 }
