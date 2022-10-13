@@ -46,7 +46,7 @@ class MaintenanceSheet extends Model
 
     public function supplier(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(Supplier::class)->withTrashed();
     }
 
     public function maintenance_type(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -56,6 +56,6 @@ class MaintenanceSheet extends Model
 
     public function machine(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Machine::class);
+        return $this->belongsTo(Machine::class)->withTrashed();
     }
 }

@@ -32,7 +32,7 @@ class WorkingSheet extends Model
 
     public function machine(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Machine::class);
+        return $this->belongsTo(Machine::class)->withTrashed();
     }
 
     public function working_hours(): \Illuminate\Database\Eloquent\Relations\HasMany

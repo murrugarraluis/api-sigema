@@ -24,12 +24,13 @@ class Article extends Model
     public function suppliers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Supplier::class)
+            ->withTrashed()
             ->withPivot('price');
     }
 
     public function machines(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Machine::class);
+        return $this->belongsToMany(Machine::class)->withTrashed();
     }
 
 //    public function maintenance_sheets(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

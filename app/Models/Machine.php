@@ -25,7 +25,7 @@ class Machine extends Model
 
     public function articles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Article::class);
+        return $this->belongsToMany(Article::class)->withTrashed();
     }
 
     public function image(): \Illuminate\Database\Eloquent\Relations\MorphOne

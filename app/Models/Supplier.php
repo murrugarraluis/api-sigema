@@ -30,7 +30,7 @@ class Supplier extends Model
 
     public function articles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Article::class);
+        return $this->belongsToMany(Article::class)->withTrashed();
     }
 
     public function maintenance_sheets(): \Illuminate\Database\Eloquent\Relations\HasMany

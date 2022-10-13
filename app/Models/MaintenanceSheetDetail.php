@@ -25,6 +25,6 @@ class MaintenanceSheetDetail extends Model
 
     public function article(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Article::class);
+        return $this->belongsTo(Article::class)->withTrashed();
     }
 }
