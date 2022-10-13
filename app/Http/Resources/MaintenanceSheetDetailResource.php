@@ -16,6 +16,7 @@ class MaintenanceSheetDetailResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'code'=>$this->code,
             'date' => $this->date,
             'responsible' => $this->responsible,
             'technical' => $this->technical,

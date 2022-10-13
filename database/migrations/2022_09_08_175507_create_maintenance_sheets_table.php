@@ -15,6 +15,7 @@ class CreateMaintenanceSheetsTable extends Migration
     {
         Schema::create('maintenance_sheets', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('code')->unique();
             $table->date('date');
             $table->string('responsible');
             $table->string('technical');

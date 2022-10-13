@@ -22,6 +22,13 @@ class MaintenanceSheet extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+    public function save(array $options = array())
+    {
+        if (empty($this->id)) {
+            $this->code = strtoupper(uniqid('MS-'));
+        }
+        return parent::save($options);
+    }
 //    public function articles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
 //    {
 //        return $this->belongsToMany(Article::class)
