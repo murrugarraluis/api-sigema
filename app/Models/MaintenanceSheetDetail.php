@@ -11,7 +11,11 @@ class MaintenanceSheetDetail extends Model
     use HasFactory, Uuids;
 
     protected $fillable = [
-        'quantity'
+        'quantity',
+        'price',
+        'description',
+        'article_id',
+        'item'
     ];
 
     public function maintenance_sheet(): \Illuminate\Database\Eloquent\Relations\BelongsTo

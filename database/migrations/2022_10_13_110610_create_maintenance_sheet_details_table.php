@@ -20,6 +20,7 @@ class CreateMaintenanceSheetDetailsTable extends Migration
             $table->integer('quantity');
             $table->double('price');
             $table->text('description')->nullable();
+            $table->integer('item')->nullable();
             $table->timestamps();
 //            $table->primary(['article_id', 'maintenance_sheet_id'],'article_maintenance_sheet_pk');
         });

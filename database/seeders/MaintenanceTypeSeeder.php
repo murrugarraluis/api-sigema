@@ -14,8 +14,8 @@ class MaintenanceTypeSeeder extends Seeder
      */
     public function run()
     {
-        MaintenanceType::factory()->create(['name'=>'Preventivo']);
-        MaintenanceType::factory()->create(['name'=>'Correctivo']);
-        MaintenanceType::factory()->create(['name'=>'Predictivo']);
+        MaintenanceType::factory()->create(['name'=>'Preventive']);
+        MaintenanceType::factory()->create(['name'=>'Corrective']);
+        MaintenanceType::factory()->create(['name'=>'Predictive']);
     }
 }

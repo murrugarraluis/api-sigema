@@ -21,6 +21,7 @@ class MaintenanceSheetArticlesResource extends JsonResource
             'description' => $this->description,
             'price' => $this->price,
             'quantity' => $this->quantity,
+            'item' => $this->item,
         ];
     }
 }

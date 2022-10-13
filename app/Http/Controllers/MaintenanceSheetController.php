@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MaintenanceSheetStoreRequest;
 use App\Http\Resources\MaintenanceSheetDetailResource;
 use App\Http\Resources\MaintenanceSheetResource;
 use App\Models\MaintenanceSheet;
@@ -9,6 +10,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class MaintenanceSheetController extends Controller
 {
@@ -27,11 +30,46 @@ class MaintenanceSheetController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @return Response
+     * @return JsonResponse|Response|object
      */
-    public function store(Request $request)
+    public function store(MaintenanceSheetStoreRequest $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+//          CREATE
+            $maintenance_sheet = MaintenanceSheet::create([
+                "date" => $request->date,
+                "responsible" => $request->responsible,
+                "technical" => $request->technical,
+                "description" => $request->description,
+                'supplier_id' => $request->supplier["id"],
+                'maintenance_type_id' => $request->maintenance_type["id"],
+                'machine_id' => $request->machine["id"],
+            ]);
+            $details = [];
+            $item = 1;
+            array_map(function ($detail) use (&$details, &$item) {
+                $new = [
+                    "article_id" => array_key_exists('article', $detail) ? $detail['article']['id'] : null,
+                    "description" => $detail['description'],
+                    "price" => $detail['price'],
+                    "quantity" => $detail['quantity'],
+                    "item" => $item,
+                ];
+                $details[] = $new;
+                $item++;
+            }, $request->detail);
+            $maintenance_sheet->maintenance_sheet_details()->createMany($details);
+
+            DB::commit();
+            return (new MaintenanceSheetDetailResource($maintenance_sheet))
+                ->additional(['message' => 'Maintenance Sheet created.'])
+                ->response()
+                ->setStatusCode(201);
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new BadRequestException($e->getMessage());
+        }
     }
 
     /**
@@ -68,6 +106,6 @@ class MaintenanceSheetController extends Controller
     public function destroy(MaintenanceSheet $maintenanceSheet): JsonResponse
     {
         $maintenanceSheet->delete();
-        return response()->json(['message'=>'Maintenance Sheet removed.'],200);
+        return response()->json(['message' => 'Maintenance Sheet removed.'], 200);
     }
 }

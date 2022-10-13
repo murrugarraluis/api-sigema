@@ -11,6 +11,16 @@ class MaintenanceSheet extends Model
 {
     use HasFactory, Uuids, SoftDeletes;
 
+    protected $fillable = [
+        "date",
+        "responsible",
+        "technical",
+        "description",
+        'supplier_id',
+        'maintenance_type_id',
+        'machine_id',
+    ];
+
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 //    public function articles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
 //    {
