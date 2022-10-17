@@ -47,7 +47,7 @@ class AttendanceSheetController extends Controller
         try {
 //          CREATE
             $count_attendance_sheet = AttendanceSheet::whereDate('date', date('Y-m-d'))->get()->count();
-            if ($count_attendance_sheet > 2) return response()->json(['message' => 'cannot create more than two records per day.'])->setStatusCode(400);
+            if ($count_attendance_sheet > 1) return response()->json(['message' => 'cannot create more than two records per day.'])->setStatusCode(400);
             $attendance_sheet = AttendanceSheet::create([
                 'date' => date('Y-m-d H:i:s'),
                 'responsible' => Auth()->user()->employee()->first()->name . " " . Auth()->user()->employee()->first()->lastname,
