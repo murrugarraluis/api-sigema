@@ -27,7 +27,9 @@ class AttendanceSheetController extends Controller
     {
         $attendance_sheets = AttendanceSheet::all()->sortByDesc('created_at');
         if ($request->start_date && $request->end_date) {
-            $attendance_sheets = AttendanceSheet::whereBetween('date', [$request->start_date, $request->end_date])
+//            $attendance_sheets = AttendanceSheet::whereDateBetween('date', [$request->start_date, $request->end_date])
+//                ->get()->sortByDesc('created_at');
+            $attendance_sheets = AttendanceSheet::whereDate('date', '>=', $request->start_date)->whereDate('date', '<=', $request->end_date)
                 ->get()->sortByDesc('created_at');
         }
         return AttendanceSheetResource::collection($attendance_sheets);
@@ -96,7 +98,7 @@ class AttendanceSheetController extends Controller
                 $attendanceSheet->update(['is_open' => $request->is_open]);
             }
             if ($request->employees) {
-                if ($attendanceSheet->date !== date('Y-m-d')) return response()->json(['message' => 'cannot update a past attendance sheet.'])->setStatusCode(400);
+                if (date('Y-m-d', strtotime($attendanceSheet->date)) !== date('Y-m-d')) return response()->json(['message' => 'cannot update a past attendance sheet.'])->setStatusCode(400);
                 $employees = [];
                 array_map(function ($employee) use (&$employees) {
                     $employee_id = $employee['id'];
