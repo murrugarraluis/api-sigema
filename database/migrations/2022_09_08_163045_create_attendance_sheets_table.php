@@ -16,7 +16,7 @@ class CreateAttendanceSheetsTable extends Migration
         Schema::create('attendance_sheets', function (Blueprint $table) {
             $table->uuid('id')->primary();
 //            $table->string('registration_number');
-            $table->date('date');
+            $table->dateTime('date');
 //            $table->time('time_start');
 //            $table->time('time_end');
             $table->string('responsible');

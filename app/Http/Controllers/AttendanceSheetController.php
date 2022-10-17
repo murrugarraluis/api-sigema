@@ -45,7 +45,7 @@ class AttendanceSheetController extends Controller
         try {
 //          CREATE
             $attendance_sheet = AttendanceSheet::create([
-                'date' => date('Y-m-d'),
+                'date' => date('Y-m-d H:i:s'),
                 'responsible' => Auth()->user()->employee()->first()->name . " " . Auth()->user()->employee()->first()->lastname,
                 'is_open' => true,
             ]);
