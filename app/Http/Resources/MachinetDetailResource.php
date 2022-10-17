@@ -39,7 +39,7 @@ class MachinetDetailResource extends JsonResource
     function get_date_last_use()
     {
         $date_last_use = $this->working_sheets()->orderBy('date', 'desc')->first();
-        return $date_last_use ? date('Y-m-d', strtotime($date_last_use->date_end)) : null;
+        return $date_last_use ? date('Y-m-d', strtotime($date_last_use->date)) : null;
     }
 
     function get_date_last_maintenance()
