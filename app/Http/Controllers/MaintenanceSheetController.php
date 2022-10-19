@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\MaintenanceSheetStoreRequest;
 use App\Http\Resources\MaintenanceSheetDetailResource;
 use App\Http\Resources\MaintenanceSheetResource;
+use App\Models\Article;
 use App\Models\Machine;
 use App\Models\MaintenanceSheet;
 use Illuminate\Http\JsonResponse;
@@ -54,9 +55,16 @@ class MaintenanceSheetController extends Controller
             $details = [];
             $item = 1;
             array_map(function ($detail) use (&$details, &$item) {
+                if (array_key_exists('article', $detail)) {
+                    $article = Article::find($detail['article']['id']);
+//                    dd($article->quantity);
+                    $article->update([
+                        "quantity" => ($article->quantity - $detail['quantity'])
+                    ]);
+                }
                 $new = [
                     "article_id" => array_key_exists('article', $detail) ? $detail['article']['id'] : null,
-                    "description" => $detail['description'],
+                    "description" => array_key_exists('description', $detail) ? $detail['description'] : null,
                     "price" => $detail['price'],
                     "quantity" => $detail['quantity'],
                     "item" => $item,
@@ -67,7 +75,9 @@ class MaintenanceSheetController extends Controller
             $maintenance_sheet->maintenance_sheet_details()->createMany($details);
 
             $machine = Machine::find($request->machine["id"]);
-            $machine->update($request->only(['maximum_working_time']));
+            $machine->update([
+                "maximum_working_time" => $request->machine["maximum_working_time"]
+            ]);
             DB::commit();
             return (new MaintenanceSheetDetailResource($maintenance_sheet))
                 ->additional(['message' => 'Maintenance Sheet created.'])
