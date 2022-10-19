@@ -20,7 +20,7 @@ class CreateMaintenanceSheetsTable extends Migration
             $table->string('responsible');
             $table->string('technical');
             $table->text('description');
-
+            $table->string('ref_invoice_number')->nullable();
             $table->foreignUuid('maintenance_type_id')->constrained('maintenance_types');
             $table->foreignUuid('supplier_id')->constrained('suppliers');
             $table->foreignUuid('machine_id')->constrained('machines');

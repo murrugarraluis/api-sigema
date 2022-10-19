@@ -51,6 +51,7 @@ class MaintenanceSheetController extends Controller
                 'supplier_id' => $request->supplier["id"],
                 'maintenance_type_id' => $request->maintenance_type["id"],
                 'machine_id' => $request->machine["id"],
+                'ref_invoice_number'=> $request->ref_invoice_number
             ]);
             $details = [];
             $item = 1;

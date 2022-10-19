@@ -19,6 +19,7 @@ class MaintenanceSheet extends Model
         'supplier_id',
         'maintenance_type_id',
         'machine_id',
+        'ref_invoice_number'
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];

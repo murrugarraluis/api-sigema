@@ -24,6 +24,7 @@ class MaintenanceSheetDetailResource extends JsonResource
             'maintenance_type' => new MaintenanceTypeResource($this->maintenance_type),
             'supplier' => new SupplierResource($this->supplier),
             'machine' => new MachineResource($this->machine),
+            'ref_invoice_number'=> $request->ref_invoice_number,
             'detail' => MaintenanceSheetArticlesResource::collection($this->maintenance_sheet_details->sortBy('item'))
         ];
     }
