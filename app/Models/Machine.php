@@ -91,14 +91,16 @@ class Machine extends Model
 
     private function getTimeWorking()
     {
-        $date_last_maintenance = $this->get_date_last_maintenance();
+//        $date_last_maintenance = $this->get_date_last_maintenance();
+        $date_last_maintenance = $this->maintenance_sheets()->orderBy('date', 'desc')->first();
+        $date_last_maintenance = $date_last_maintenance ? date('Y-m-d H:i:s', strtotime($date_last_maintenance->date)) : null;
         if ($date_last_maintenance) {
             $sum_working_hours_in_seconds = WorkingSheet::join(DB::raw('(SELECT working_sheet_id,
                             SUM(TIMESTAMPDIFF(SECOND, date_time_start, date_time_end)) AS total_seconds
                      from working_hours
                      GROUP BY working_sheet_id) AS wh '),
                 function ($join) {
-                    $join->on('wh.working_sheet_id', '=', 'working_sheets.id');
+                    $join->on('wh.working_sheet_id', '=', 'workinog_sheets.id');
                 })
                 ->where('machine_id', $this->id)
                 ->where('date', '>=', $date_last_maintenance)

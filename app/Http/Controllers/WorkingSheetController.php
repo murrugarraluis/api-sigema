@@ -47,7 +47,7 @@ class WorkingSheetController extends Controller
         try {
             $working_sheet = WorkingSheet::create([
                 'machine_id' => $request->machine["id"],
-                'date' => date('Y-m-d', strtotime($request->date)),
+                'date' => $request->date,
                 'description' => $request->description,
                 'is_open' => true
             ]);
