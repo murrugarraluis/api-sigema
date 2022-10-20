@@ -51,7 +51,8 @@ class MaintenanceSheetController extends Controller
                 'supplier_id' => $request->supplier["id"],
                 'maintenance_type_id' => $request->maintenance_type["id"],
                 'machine_id' => $request->machine["id"],
-                'ref_invoice_number'=> $request->ref_invoice_number
+                'ref_invoice_number'=> $request->ref_invoice_number,
+                "maximum_working_time" => $request->maximum_working_time
             ]);
             $details = [];
             $item = 1;
@@ -77,7 +78,7 @@ class MaintenanceSheetController extends Controller
 
             $machine = Machine::find($request->machine["id"]);
             $machine->update([
-                "maximum_working_time" => $request->machine["maximum_working_time"]
+                "maximum_working_time" => $request->maximum_working_time
             ]);
             DB::commit();
             return (new MaintenanceSheetDetailResource($maintenance_sheet))
