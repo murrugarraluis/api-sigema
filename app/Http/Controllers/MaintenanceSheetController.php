@@ -40,6 +40,7 @@ class MaintenanceSheetController extends Controller
      */
     public function store(MaintenanceSheetStoreRequest $request)
     {
+//        dd($request->date);
         DB::beginTransaction();
         try {
 //          CREATE
@@ -81,6 +82,7 @@ class MaintenanceSheetController extends Controller
                 "maximum_working_time" => $request->maximum_working_time
             ]);
             DB::commit();
+//            dd($maintenance_sheet);
             return (new MaintenanceSheetDetailResource($maintenance_sheet))
                 ->additional(['message' => 'Maintenance Sheet created.'])
                 ->response()

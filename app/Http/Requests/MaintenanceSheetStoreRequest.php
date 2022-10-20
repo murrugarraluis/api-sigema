@@ -24,7 +24,7 @@ class MaintenanceSheetStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            "date" => ['bail', 'required', 'date_format:Y-m-d'],
+            "date" => ['bail', 'required', 'date_format:Y-m-d H:i:s'],
             "responsible" => ['bail', 'required', 'string'],
             "technical" => ['bail', 'required', 'string'],
             "description" => ['bail', 'nullable', 'string'],

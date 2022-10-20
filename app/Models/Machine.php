@@ -94,6 +94,7 @@ class Machine extends Model
 //        $date_last_maintenance = $this->get_date_last_maintenance();
         $date_last_maintenance = $this->maintenance_sheets()->orderBy('date', 'desc')->first();
         $date_last_maintenance = $date_last_maintenance ? date('Y-m-d H:i:s', strtotime($date_last_maintenance->date)) : null;
+//        dd($date_last_maintenance);
         if ($date_last_maintenance) {
             $sum_working_hours_in_seconds = WorkingSheet::join(DB::raw('(SELECT working_sheet_id,
                             SUM(TIMESTAMPDIFF(SECOND, date_time_start, date_time_end)) AS total_seconds
@@ -104,7 +105,9 @@ class Machine extends Model
                 })
                 ->where('machine_id', $this->id)
                 ->where('date', '>=', $date_last_maintenance)
+//                ->get();
                 ->sum('total_seconds');
+//            dd($sum_working_hours_in_seconds);
         } else {
             $sum_working_hours_in_seconds = WorkingSheet::join(DB::raw('(SELECT working_sheet_id,
                             SUM(TIMESTAMPDIFF(SECOND, date_time_start, date_time_end)) AS total_seconds
@@ -119,7 +122,7 @@ class Machine extends Model
         return $sum_working_hours_in_seconds;
     }
 
-    private function getIsWorking()
+    private function getIsWorking(): bool
     {
         return ($this->working_sheets()->where('is_open', true)->count() > 0);
     }
