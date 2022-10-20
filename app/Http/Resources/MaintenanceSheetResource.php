@@ -27,7 +27,8 @@ class MaintenanceSheetResource extends JsonResource
             'maintenance_type'=>new MaintenanceTypeResource($this->maintenance_type),
             'supplier'=>new SupplierResource($this->supplier),
             'machine'=>new MachineResource($this->machine),
-            'ref_invoice_number'=> $request->ref_invoice_number
+            'ref_invoice_number'=> $this->ref_invoice_number,
+            "maximum_working_time" => $this->maximum_working_time,
         ];
     }
 }

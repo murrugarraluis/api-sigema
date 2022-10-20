@@ -100,7 +100,9 @@ class MaintenanceSheetController extends Controller
     public function show(MaintenanceSheet $maintenanceSheet): MaintenanceSheetDetailResource
     {
 //        dd(new MaintenanceSheetResource($maintenanceSheet));
+//        dd($maintenanceSheet);
         return new MaintenanceSheetDetailResource($maintenanceSheet);
+
 
     }
 
