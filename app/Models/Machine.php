@@ -84,7 +84,7 @@ class Machine extends Model
                 $join->on('wh.working_sheet_id', '=', 'working_sheets.id');
             })
             ->where('machine_id', $this->id)
-            ->where('date', '>=', date('Y-m-d'))
+            ->whereDate('date', '>=', date('Y-m-d'))
             ->sum('total_seconds');
         return $sum_working_hours_in_seconds;
     }
@@ -100,7 +100,7 @@ class Machine extends Model
                      from working_hours
                      GROUP BY working_sheet_id) AS wh '),
                 function ($join) {
-                    $join->on('wh.working_sheet_id', '=', 'workinog_sheets.id');
+                    $join->on('wh.working_sheet_id', '=', 'working_sheets.id');
                 })
                 ->where('machine_id', $this->id)
                 ->where('date', '>=', $date_last_maintenance)
