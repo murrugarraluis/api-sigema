@@ -29,6 +29,9 @@ class MaintenanceSheetResource extends JsonResource
             'machine'=>new MachineResource($this->machine),
             'ref_invoice_number'=> $this->ref_invoice_number,
             "maximum_working_time" => $this->maximum_working_time,
+            "amount"=> $this->maintenance_sheet_details->sum(function($detail){
+                return ($detail->price * $detail->quantity);
+            })
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MaintenancePDFRequest;
 use App\Http\Requests\MaintenanceSheetStoreRequest;
+use App\Http\Resources\MachinesDetailPDFResource;
 use App\Http\Resources\MachinesResumenPDFResource;
 use App\Http\Resources\MaintenanceSheetDetailResource;
 use App\Http\Resources\MaintenanceSheetResource;
@@ -41,7 +42,31 @@ class MaintenanceSheetController extends Controller
             $query->whereDate('maintenance_sheets.date', '>=', $request->start_date)
                 ->whereDate('maintenance_sheets.date', '<=', $request->end_date);
         })->get();
-        return MachinesResumenPDFResource::collection($machines);
+        if ($request->type == "resumen") {
+            return MachinesResumenPDFResource::collection($machines)->additional([
+                "total_machines" => MachinesResumenPDFResource::collection($machines)->count(),
+                "total_amount" => (MachinesResumenPDFResource::collection($machines))->sum(function($item){
+                    return $item->maintenance_sheets->sum(function ($sheet) {
+                        return $sheet->maintenance_sheet_details->sum(function($detail){
+                            return ($detail->price * $detail->quantity);
+                        });
+                    });
+                })
+            ]);
+
+        } else {
+            return MachinesDetailPDFResource::collection($machines)->additional([
+                "total_machines" => MachinesResumenPDFResource::collection($machines)->count(),
+                "total_amount" => (MachinesResumenPDFResource::collection($machines))->sum(function($item){
+                    return $item->maintenance_sheets->sum(function ($sheet) {
+                        return $sheet->maintenance_sheet_details->sum(function($detail){
+                            return ($detail->price * $detail->quantity);
+                        });
+                    });
+                })
+            ]);;
+
+        }
     }
 
     /**
