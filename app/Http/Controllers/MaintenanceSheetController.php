@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MaintenancePDFRequest;
 use App\Http\Requests\MaintenanceSheetStoreRequest;
+use App\Http\Resources\MachinesResumenPDFResource;
 use App\Http\Resources\MaintenanceSheetDetailResource;
 use App\Http\Resources\MaintenanceSheetResource;
 use App\Models\Article;
 use App\Models\Machine;
 use App\Models\MaintenanceSheet;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -32,6 +35,15 @@ class MaintenanceSheetController extends Controller
         return MaintenanceSheetResource::collection($maintenance_sheets);
     }
 
+    public function index_pdf(MaintenancePDFRequest $request): AnonymousResourceCollection
+    {
+        $machines = Machine::whereHas('maintenance_sheets', function (Builder $query) use ($request) {
+            $query->whereDate('maintenance_sheets.date', '>=', $request->start_date)
+                ->whereDate('maintenance_sheets.date', '<=', $request->end_date);
+        })->get();
+        return MachinesResumenPDFResource::collection($machines);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -52,7 +64,7 @@ class MaintenanceSheetController extends Controller
                 'supplier_id' => $request->supplier["id"],
                 'maintenance_type_id' => $request->maintenance_type["id"],
                 'machine_id' => $request->machine["id"],
-                'ref_invoice_number'=> $request->ref_invoice_number,
+                'ref_invoice_number' => $request->ref_invoice_number,
                 "maximum_working_time" => $request->maximum_working_time
             ]);
             $details = [];

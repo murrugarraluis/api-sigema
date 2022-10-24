@@ -42,6 +42,8 @@ Route::prefix('v1/')->group(function () {
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
 
+        Route::Post('maintenance-sheets/pdf', [MaintenanceSheetController::class, 'index_pdf']);
+
         Route::group(['middleware' => ['permission:users']], function () {
             Route::get('users', [UserController::class, 'index']);
             Route::get('users/{user}', [UserController::class, 'show']);
