@@ -11,6 +11,7 @@ use App\Http\Resources\MaintenanceSheetResource;
 use App\Models\Article;
 use App\Models\Machine;
 use App\Models\MaintenanceSheet;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -50,11 +51,16 @@ class MaintenanceSheetController extends Controller
         if ($request->order_by == "asc") $report = $report->sortBy($request->sort_by)->values();
         else $report = $report->sortByDesc($request->sort_by)->values();
 
-        return [
+        $data = [
             "data" => $report,
             "total_machines" => MachinesResumenPDFResource::collection($machines)->count(),
-            "total_amount" => $machines->sum('amount')
+            "total_amount" => $machines->sum('amount'),
+            "type"=>$request->type
         ];
+//        return $data;
+        $pdf = \PDF::loadView('example', compact('data'));
+        $pdf->setPaper('A3', 'landscape');
+        return $pdf->download('ejemplo.pdf');
     }
 
     /**

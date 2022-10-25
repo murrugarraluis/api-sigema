@@ -24,6 +24,7 @@ class MaintenanceSheet extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
     public function save(array $options = array())
     {
         if (empty($this->id)) {
@@ -59,5 +60,12 @@ class MaintenanceSheet extends Model
     public function machine(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Machine::class)->withTrashed();
+    }
+
+    function getAmountAttribute()
+    {
+        return $this->maintenance_sheet_details->sum(function ($detail) {
+            return ($detail->price * $detail->quantity);
+        });
     }
 }

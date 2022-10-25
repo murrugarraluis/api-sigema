@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <!-- CSS only -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+</head>
+<body>
+<h1>Titulo de prueba</h1>
+<hr>
+<div class="contenido">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            {{--            <th scope="col">#</th>--}}
+            @if($data["type"] == "resumen")
+                <th scope="col">serie_number</th>
+                <th scope="col">name</th>
+                <th scope="col">brand</th>
+                <th scope="col">model</th>
+                <th scope="col">maintenance_count</th>
+                <th scope="col">amount</th>
+            @else
+                <th scope="col">serie_number</th>
+                <th scope="col">name</th>
+                <th scope="col">brand</th>
+                <th scope="col">model</th>
+                <th scope="col">code</th>
+                <th scope="col">date</th>
+                <th scope="col">type</th>
+                <th scope="col">supplier</th>
+                <th scope="col">responsible</th>
+                <th scope="col">amount</th>
+            @endif
+
+
+        </tr>
+        </thead>
+        <tbody>
+        @if($data["type"] == "resumen")
+            @foreach($data["data"] as $item)
+                <tr>
+                    {{--                <th scope="row">{{$key}}</th>--}}
+                    <td>{{$item["serie_number"]}}</td>
+                    <td>{{$item["name"]}}</td>
+                    <td>{{$item["brand"]}}
+                    <td>{{$item["model"]}}</td>
+                    <td>{{$item["maintenance_count"]}}</td>
+                    <td>{{$item["amount"]}}</td>
+                </tr>
+            @endforeach
+        @else
+            @foreach($data["data"] as $item)
+                {{$flat=true}}
+                @foreach($item["maintenance_sheets"] as $item2)
+                    <tr>
+                        @if($flat)
+                            <td rowspan="{{count($item["maintenance_sheets"])}}">{{$item["serie_number"]}}</td>
+                            <td rowspan="{{count($item["maintenance_sheets"])}}">{{$item["name"]}}</td>
+                            <td rowspan="{{count($item["maintenance_sheets"])}}">{{$item["brand"]}}
+                            <td rowspan="{{count($item["maintenance_sheets"])}}">{{$item["model"]}}</td>
+                            {{$flat=false}}
+                        @endif
+                        <td>{{$item2["code"]}}</td>
+                        <td>{{$item2["date"]}}</td>
+                        <td>{{$item2["maintenance_type"]["name"]}}</td>
+                        <td>{{$item2["supplier"]["name"]}}</td>
+                        <td>{{$item2["responsible"]}}</td>
+                        <td>{{$item2["amount"]}}</td>
+                    </tr>
+                @endforeach
+                <tr>
+                    <td colspan="9">Number Maintenance {{count($item["maintenance_sheets"])}}</td>
+                    <td>{{$item["amount"]}}</td>
+                </tr>
+            @endforeach
+        @endif
+        <tr>
+            <td colspan="{{$data["type"] == "resumen"?5:9}}">Total</td>
+            <td>{{$data["total_amount"]}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
