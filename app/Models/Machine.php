@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Attribute;
 
 class Machine extends Model
 {
@@ -132,4 +133,24 @@ class Machine extends Model
         $date_last_maintenance = $this->maintenance_sheets()->orderBy('date', 'desc')->first();
         return $date_last_maintenance ? date('Y-m-d', strtotime($date_last_maintenance->date)) : null;
     }
+
+    function getAmountAttribute()
+    {
+        return $this->maintenance_sheets->sum(function ($sheet) {
+            return $sheet->maintenance_sheet_details->sum(function ($detail) {
+                return ($detail->price * $detail->quantity);
+            });
+        });
+    }
+    function getmaintenanceCountAttribute()
+    {
+        return $this->maintenance_sheets()->count();
+    }
+//
+//    protected function amountTotal(): Attribute
+//    {
+//        return Attribute::make(
+//            get: fn($value) => ucfirst("Hola"),
+//        );
+//    }
 }

@@ -26,7 +26,8 @@ class MaintenancePDFRequest extends FormRequest
         return [
             "start_date" => ['bail', 'required', 'date_format:Y-m-d'],
             "end_date" => ['bail', 'required', 'date_format:Y-m-d'],
-            'order_by' => ['bail', 'required', 'string', "in:serie_number,machine,amount,maintenance_numbers"],
+            'sort_by' => ['bail', 'required', 'string', "in:serie_number,name,amount,maintenance_count"],
+            'order_by' => ['bail', 'required', 'string', "in:asc,desc"],
             "type" => ['bail', 'required', "in:resumen,detail"],
         ];
     }

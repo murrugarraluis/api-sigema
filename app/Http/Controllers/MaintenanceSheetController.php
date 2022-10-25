@@ -36,37 +36,25 @@ class MaintenanceSheetController extends Controller
         return MaintenanceSheetResource::collection($maintenance_sheets);
     }
 
-    public function index_pdf(MaintenancePDFRequest $request): AnonymousResourceCollection
+    public function index_pdf(MaintenancePDFRequest $request)
     {
-        $machines = Machine::whereHas('maintenance_sheets', function (Builder $query) use ($request) {
-            $query->whereDate('maintenance_sheets.date', '>=', $request->start_date)
-                ->whereDate('maintenance_sheets.date', '<=', $request->end_date);
-        })->get();
-        if ($request->type == "resumen") {
-            return MachinesResumenPDFResource::collection($machines)->additional([
-                "total_machines" => MachinesResumenPDFResource::collection($machines)->count(),
-                "total_amount" => (MachinesResumenPDFResource::collection($machines))->sum(function($item){
-                    return $item->maintenance_sheets->sum(function ($sheet) {
-                        return $sheet->maintenance_sheet_details->sum(function($detail){
-                            return ($detail->price * $detail->quantity);
-                        });
-                    });
-                })
-            ]);
+        $machines = Machine::withCount('maintenance_sheets')
+            ->whereHas('maintenance_sheets', function (Builder $query) use ($request) {
+                $query->whereDate('maintenance_sheets.date', '>=', $request->start_date)
+                    ->whereDate('maintenance_sheets.date', '<=', $request->end_date);
+            })->get();
 
-        } else {
-            return MachinesDetailPDFResource::collection($machines)->additional([
-                "total_machines" => MachinesResumenPDFResource::collection($machines)->count(),
-                "total_amount" => (MachinesResumenPDFResource::collection($machines))->sum(function($item){
-                    return $item->maintenance_sheets->sum(function ($sheet) {
-                        return $sheet->maintenance_sheet_details->sum(function($detail){
-                            return ($detail->price * $detail->quantity);
-                        });
-                    });
-                })
-            ]);;
+        if ($request->type == "resumen") $report = MachinesResumenPDFResource::collection($machines);
+        else $report = MachinesDetailPDFResource::collection($machines);
 
-        }
+        if ($request->order_by == "asc") $report = $report->sortBy($request->sort_by)->values();
+        else $report = $report->sortByDesc($request->sort_by)->values();
+
+        return [
+            "data" => $report,
+            "total_machines" => MachinesResumenPDFResource::collection($machines)->count(),
+            "total_amount" => $machines->sum('amount')
+        ];
     }
 
     /**
