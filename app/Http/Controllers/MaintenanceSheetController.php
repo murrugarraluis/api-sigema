@@ -18,6 +18,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class MaintenanceSheetController extends Controller
@@ -55,12 +57,20 @@ class MaintenanceSheetController extends Controller
             "data" => $report,
             "total_machines" => MachinesResumenPDFResource::collection($machines)->count(),
             "total_amount" => $machines->sum('amount'),
-            "type"=>$request->type
+            "type" => $request->type
         ];
-//        return $data;
+
         $pdf = \PDF::loadView('example', compact('data'));
         $pdf->setPaper('A3', 'landscape');
-        return $pdf->download('ejemplo.pdf');
+
+        $name_file = Str::uuid()->toString();
+        $path = 'public/reports/' . $name_file . '.pdf';
+        Storage::put($path, $pdf->output());
+        $path = (substr($path, 7, strlen($path)));
+
+        return [
+            'path' => $path
+        ];
     }
 
     /**
