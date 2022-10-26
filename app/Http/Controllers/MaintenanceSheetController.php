@@ -57,11 +57,18 @@ class MaintenanceSheetController extends Controller
             "data" => $report,
             "total_machines" => MachinesResumenPDFResource::collection($machines)->count(),
             "total_amount" => $machines->sum('amount'),
+            "start_date"=>$request->start_date,
+            "end_date"=>$request->end_date,
             "type" => $request->type
         ];
 
         $pdf = \PDF::loadView('example', compact('data'));
-        $pdf->setPaper('A3', 'landscape');
+        $pdf->setPaper('A4', 'landscape');
+//        $font = $pdf->getFontMetrics()->get_font("helvetica", "bold");
+//        $pdf->getCanvas()->page_text(72, 18, "Header: {PAGE_NUM} of {PAGE_COUNT}", $font, 10, array(0,0,0));
+
+
+//        return $pdf->download();
 
         $name_file = Str::uuid()->toString();
         $path = 'public/reports/' . $name_file . '.pdf';
