@@ -1,29 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Document</title>
-    <!-- CSS only -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
-          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    @include('includes.head')
 </head>
 <body>
 <header>
-    <table class="table table-borderless">
-        <thead>
-        <tr>
-            <th scope="col">
-                <img src="{{ public_path('images/JEX24.png') }}" style="width: 150px; height: 70px">
-            </th>
-            <th scope="col" class="w-75 text-center">
-                <h2>Maintenance Sheets</h2>
-            </th>
-            <th scope="col">
-                <img src="{{ public_path('images/logo_reportes.jpg') }}" style="width: 150px; height: 70px">
-            </th>
-        </tr>
-        </thead>
-    </table>
+    @include('includes.header')
 </header>
 <div>
     <table class="table table-sm">
@@ -43,18 +25,14 @@
         <thead>
         <tr>
             {{--            <th scope="col">#</th>--}}
+            <th scope="col">serie_number</th>
+            <th scope="col">name</th>
+            <th scope="col">brand</th>
+            <th scope="col">model</th>
             @if($data["type"] == "resumen")
-                <th scope="col">serie_number</th>
-                <th scope="col">name</th>
-                <th scope="col">brand</th>
-                <th scope="col">model</th>
                 <th scope="col">maintenance_count</th>
                 <th scope="col">amount</th>
             @else
-                <th scope="col">serie_number</th>
-                <th scope="col">name</th>
-                <th scope="col">brand</th>
-                <th scope="col">model</th>
                 <th scope="col">code</th>
                 <th scope="col">date</th>
                 <th scope="col">type</th>
