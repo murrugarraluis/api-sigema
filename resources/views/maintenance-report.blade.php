@@ -38,7 +38,7 @@
                 <th scope="col">type</th>
                 <th scope="col">supplier</th>
                 <th scope="col">responsible</th>
-                <th scope="col">amount</th>
+                <th scope="col" class="text-right">amount</th>
             @endif
 
 
@@ -54,7 +54,7 @@
                     <td>{{$item["brand"]}}
                     <td>{{$item["model"]}}</td>
                     <td>{{$item["maintenance_count"]}}</td>
-                    <td>{{$item["amount"]}}</td>
+                    <td class="text-right">{{number_format((float)$item["amount"], 2, '.', '')}}</td>
                 </tr>
             @endforeach
         @else
@@ -62,28 +62,28 @@
                 @foreach($item["maintenance_sheets"] as $key => $item2)
                     <tr>
                         @if($key == 0)
-                            <td rowspan="{{count($item["maintenance_sheets"])}}">{{$item["serie_number"]}}</td>
-                            <td rowspan="{{count($item["maintenance_sheets"])}}">{{$item["name"]}}</td>
-                            <td rowspan="{{count($item["maintenance_sheets"])}}">{{$item["brand"]}}
-                            <td rowspan="{{count($item["maintenance_sheets"])}}">{{$item["model"]}}</td>
+                            <td rowspan="{{count($item["maintenance_sheets"])}}" class="align-middle">{{$item["serie_number"]}}</td>
+                            <td rowspan="{{count($item["maintenance_sheets"])}}" class="align-middle">{{$item["name"]}}</td>
+                            <td rowspan="{{count($item["maintenance_sheets"])}}" class="align-middle">{{$item["brand"]}}
+                            <td rowspan="{{count($item["maintenance_sheets"])}}" class="align-middle">{{$item["model"]}}</td>
                         @endif
                         <td>{{$item2["code"]}}</td>
                         <td>{{$item2["date"]}}</td>
                         <td>{{$item2["maintenance_type"]["name"]}}</td>
                         <td>{{$item2["supplier"]["name"]}}</td>
                         <td>{{$item2["responsible"]}}</td>
-                        <td>{{$item2["amount"]}}</td>
+                        <td class="text-right">{{number_format((float)$item2["amount"], 2, '.', '')}}</td>
                     </tr>
                 @endforeach
                 <tr>
                     <td colspan="9"><strong>Number Maintenance: {{count($item["maintenance_sheets"])}}</strong></td>
-                    <td><strong>{{$item["amount"]}}</strong></td>
+                    <td class="text-right"><strong>{{number_format((float)$item["amount"], 2, '.', '')}}</strong></td>
                 </tr>
             @endforeach
         @endif
         <tr>
             <td colspan="{{$data["type"] == "resumen"?5:9}}"><strong>Total</strong></td>
-            <td><strong>{{$data["total_amount"]}}</strong></td>
+            <td><strong>{{number_format((float)$data["total_amount"], 2, '.', '')}}</strong></td>
         </tr>
         </tbody>
     </table>
