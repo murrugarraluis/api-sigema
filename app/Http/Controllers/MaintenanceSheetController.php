@@ -68,7 +68,7 @@ class MaintenanceSheetController extends Controller
 //        $pdf->getCanvas()->page_text(72, 18, "Header: {PAGE_NUM} of {PAGE_COUNT}", $font, 10, array(0,0,0));
 
 
-        return $pdf->download();
+//        return $pdf->download();
 
         $name_file = Str::uuid()->toString();
         $path = 'public/reports/' . $name_file . '.pdf';
@@ -149,11 +149,26 @@ class MaintenanceSheetController extends Controller
      */
     public function show(MaintenanceSheet $maintenanceSheet): MaintenanceSheetDetailResource
     {
-//        dd(new MaintenanceSheetResource($maintenanceSheet));
-//        dd($maintenanceSheet);
         return new MaintenanceSheetDetailResource($maintenanceSheet);
 
 
+    }
+    public function show_pdf(MaintenanceSheet $maintenanceSheet)
+    {
+        $data = $this->show($maintenanceSheet)->jsonSerialize();
+        $pdf = \PDF::loadView('maintenance-one-report', compact('data'));
+        $pdf->setPaper('A4');
+
+        return $pdf->download();
+
+        $name_file = Str::uuid()->toString();
+        $path = 'public/reports/' . $name_file . '.pdf';
+        Storage::put($path, $pdf->output());
+        $path = (substr($path, 7, strlen($path)));
+
+        return [
+            'path' => $path
+        ];
     }
 
     /**
