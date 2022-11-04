@@ -11,6 +11,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class WorkingSheetController extends Controller
@@ -128,6 +130,24 @@ class WorkingSheetController extends Controller
     public function show(WorkingSheet $workingSheet): WorkingSheetDetailResource
     {
         return new WorkingSheetDetailResource($workingSheet);
+
+    }
+    public function show_pdf(WorkingSheet $workingSheet)
+    {
+        $data = $this->show($workingSheet)->jsonSerialize();
+//        dd($data);
+        $pdf = \PDF::loadView('work-one-report', compact('data'));
+        $pdf->setPaper('A4');
+        return $pdf->download();
+
+        $name_file = Str::uuid()->toString();
+        $path = 'public/reports/' . $name_file . '.pdf';
+        Storage::put($path, $pdf->output());
+        $path = (substr($path, 7, strlen($path)));
+
+        return [
+            'path' => $path
+        ];
 
     }
 
