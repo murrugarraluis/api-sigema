@@ -18,14 +18,8 @@
     <table class="w-100 mb-2">
         <tr>
             <td class="text-left">SUPPLIER: {{$data["supplier"]["name"]}}</td>
-            <td class="text-right">TECHNICAL: {{$data["technical"]}}</td>
-        </tr>
-    </table>
-    <table class="w-100 mb-2">
-        <tr>
-            <td class="text-left">MACHINE: {{$data["machine"]["name"]}}</td>
-            <td class="text-center">BRAND: {{$data["machine"]["brand"]}}</td>
-            <td class="text-right">MODEL: {{$data["machine"]["model"]}}</td>
+            <td class="text-left">TECHNICAL: {{$data["technical"]}}</td>
+            <td class="text-right">MACHINE: {{$data["machine"]["name"]}}</td>
         </tr>
     </table>
 </div>
@@ -37,9 +31,9 @@
             <th scope="col">#</th>
             <th scope="col">serie</th>
             <th scope="col">description</th>
-            <th scope="col">price</th>
-            <th scope="col">quantity</th>
-            <th scope="col">import</th>
+            <th scope="col" class="text-right">price</th>
+            <th scope="col" class="text-right">quantity</th>
+            <th scope="col" class="text-right">import</th>
         </tr>
         </thead>
         <tbody>
@@ -50,12 +44,12 @@
                 <td>{{$item["article"]?$item["article"]["name"]:$item["description"]}}</td>
                 <td class="text-right">{{number_format((float)$item["price"], 2, '.', '')}}
                 <td class="text-right">{{$item["quantity"]}}</td>
-                <td class="text-right">{{number_format((float)$item["price"]*$item["price"], 2, '.', '')}}</td>
+                <td class="text-right">{{number_format((float)$item["price"]*$item["quantity"], 2, '.', '')}}</td>
             </tr>
         @endforeach
         <tr>
-            {{--            <td colspan="{{$data["type"] == "resumen"?5:9}}"><strong>Total</strong></td>--}}
-            {{--            <td><strong>{{$data["total_amount"]}}</strong></td>--}}
+            <td colspan="5"><strong>Total</strong></td>
+            <td class="text-right"><strong>{{number_format((float)$data["amount"], 2, '.', '')}}</strong></td>
         </tr>
         </tbody>
     </table>

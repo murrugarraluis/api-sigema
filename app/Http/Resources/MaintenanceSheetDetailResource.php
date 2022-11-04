@@ -16,7 +16,7 @@ class MaintenanceSheetDetailResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'code'=>$this->code,
+            'code' => $this->code,
             'date' => $this->date,
             'responsible' => $this->responsible,
             'technical' => $this->technical,
@@ -24,9 +24,12 @@ class MaintenanceSheetDetailResource extends JsonResource
             'maintenance_type' => new MaintenanceTypeResource($this->maintenance_type),
             'supplier' => new SupplierResource($this->supplier),
             'machine' => new MachinetDetailResource($this->machine),
-            'ref_invoice_number'=> $this->ref_invoice_number,
+            'ref_invoice_number' => $this->ref_invoice_number,
             "maximum_working_time" => $this->maximum_working_time,
-            'detail' => MaintenanceSheetArticlesResource::collection($this->maintenance_sheet_details->sortBy('item'))
+            'detail' => MaintenanceSheetArticlesResource::collection($this->maintenance_sheet_details->sortBy('item')),
+            'amount' => $this->maintenance_sheet_details->sum(function ($detail) {
+                return ($detail->price * $detail->quantity);
+            })
         ];
     }
 }

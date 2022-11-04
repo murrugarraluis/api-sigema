@@ -158,7 +158,6 @@ class MaintenanceSheetController extends Controller
         $data = $this->show($maintenanceSheet)->jsonSerialize();
         $pdf = \PDF::loadView('maintenance-one-report', compact('data'));
         $pdf->setPaper('A4');
-
         return $pdf->download();
 
         $name_file = Str::uuid()->toString();
