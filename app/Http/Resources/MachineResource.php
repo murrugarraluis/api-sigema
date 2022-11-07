@@ -28,6 +28,7 @@ class MachineResource extends JsonResource
             'technical_sheet' => $this->technical_sheet ? $this->technical_sheet->path : null,
             'maximum_working_time' => $this->maximum_working_time,
             'maximum_working_time_per_day' => $this->maximum_working_time_per_day,
+						'recommendation' => $this->recommendation,
             'status' => $this->status,
         ];
     }

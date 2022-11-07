@@ -31,6 +31,7 @@ class MachineUpdateRequest extends FormRequest
             'image' => ['bail', 'nullable', 'string'],
             'maximum_working_time' => ['bail', 'required', 'integer'],
             'maximum_working_time_per_day' => ['bail', 'required', 'integer'],
+						'recommendation' => ['bail','nullable','string'],
             'articles' => ['bail', 'nullable', 'array'],
             'articles.*.id' => ['bail', 'required', 'uuid', 'exists:articles,id'],
             'status' => ['bail', 'nullable', 'string'],
