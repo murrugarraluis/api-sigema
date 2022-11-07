@@ -2,18 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AttendancePDFRequest;
 use App\Http\Requests\AttendanceStoreRequest;
 use App\Http\Requests\AttendanceUpdateRequest;
 use App\Http\Resources\AttendanceSheetDetailResource;
+use App\Http\Resources\AttendanceSheetPDFResource;
 use App\Http\Resources\AttendanceSheetResource;
 use App\Http\Resources\EmployeeResource;
+use App\Http\Resources\MachinesDetailPDFResource;
+use App\Http\Resources\MachinesResumenPDFResource;
 use App\Models\AttendanceSheet;
 use App\Models\Employee;
+use App\Models\Machine;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class AttendanceSheetController extends Controller
@@ -35,13 +43,64 @@ class AttendanceSheetController extends Controller
 		return AttendanceSheetResource::collection($attendance_sheets);
 	}
 
+	public function index_pdf(AttendancePDFRequest $request)
+	{
+//		$machines = Machine::withCount('maintenance_sheets')
+//			->whereHas('maintenance_sheets', function (Builder $query) use ($request) {
+//				$query->whereDate('maintenance_sheets.date', '>=', $request->start_date)
+//					->whereDate('maintenance_sheets.date', '<=', $request->end_date);
+//			})->get();
+		$employees = Employee::whereHas('attendance_sheets', function (Builder $query) use ($request) {
+			$query->whereDate('attendance_sheets.date', '>=', $request->start_date)
+				->whereDate('attendance_sheets.date', '<=', $request->end_date);
+		})->get();
+
+		$resource = AttendanceSheetPDFResource::collection($employees)->sortBy($request->sort_by)->values();
+		return ($resource);
+
+//
+//		if ($request->type == "resumen") $report = MachinesResumenPDFResource::collection($machines);
+//		else $report = MachinesDetailPDFResource::collection($machines);
+//
+//		if ($request->order_by == "asc") $report = $report->sortBy($request->sort_by)->values();
+//		else $report = $report->sortByDesc($request->sort_by)->values();
+//
+//		$data = [
+//			"data" => $report,
+//			"total_machines" => MachinesResumenPDFResource::collection($machines)->count(),
+//			"total_amount" => $machines->sum('amount'),
+//			"start_date" => $request->start_date,
+//			"end_date" => $request->end_date,
+//			"type" => $request->type
+//		];
+//
+//		$pdf = \PDF::loadView('maintenance-report', compact('data'));
+//		$pdf->setPaper('A4', 'landscape');
+//        $font = $pdf->getFontMetrics()->get_font("helvetica", "bold");
+//        $pdf->getCanvas()->page_text(72, 18, "Header: {PAGE_NUM} of {PAGE_COUNT}", $font, 10, array(0,0,0));
+
+
+//        return $pdf->download();
+//
+//		$name_file = Str::uuid()->toString();
+//		$path = 'public/reports/' . $name_file . '.pdf';
+//		Storage::put($path, $pdf->output());
+//		$path = (substr($path, 7, strlen($path)));
+//
+//		return [
+//			'path' => $path
+//		];
+
+	}
+
 	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @param Request $request
 	 * @return JsonResponse|object
 	 */
-	public function store(AttendanceStoreRequest $request)
+	public
+	function store(AttendanceStoreRequest $request)
 	{
 		DB::beginTransaction();
 		try {
@@ -77,7 +136,8 @@ class AttendanceSheetController extends Controller
 	 * @param AttendanceSheet $attendanceSheet
 	 * @return AttendanceSheetDetailResource
 	 */
-	public function show(AttendanceSheet $attendanceSheet): AttendanceSheetDetailResource
+	public
+	function show(AttendanceSheet $attendanceSheet): AttendanceSheetDetailResource
 	{
 		return new AttendanceSheetDetailResource($attendanceSheet);
 	}
@@ -89,7 +149,8 @@ class AttendanceSheetController extends Controller
 	 * @param AttendanceSheet $attendanceSheet
 	 * @return AttendanceSheetDetailResource|JsonResponse|object
 	 */
-	public function update(AttendanceUpdateRequest $request, AttendanceSheet $attendanceSheet)
+	public
+	function update(AttendanceUpdateRequest $request, AttendanceSheet $attendanceSheet)
 	{
 		DB::beginTransaction();
 		try {
@@ -134,7 +195,8 @@ class AttendanceSheetController extends Controller
 	 * @param AttendanceSheet $attendanceSheet
 	 * @return JsonResponse
 	 */
-	public function destroy(AttendanceSheet $attendanceSheet): JsonResponse
+	public
+	function destroy(AttendanceSheet $attendanceSheet): JsonResponse
 	{
 		$attendanceSheet->delete();
 		return response()->json(['message' => 'Attendance Sheet removed.'], 200);
