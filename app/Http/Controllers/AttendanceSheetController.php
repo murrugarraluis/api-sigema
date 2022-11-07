@@ -54,38 +54,48 @@ class AttendanceSheetController extends Controller
 		if ($request->order_by == "asc") {
 			$report = $employees->sortBy(function ($product) use ($request) {
 				return ($product->jsonSerialize()[$request->sort_by]);
-			})->values()->all();
+			})->values();
 		} else {
 			$report = $employees->sortByDesc(function ($product) use ($request) {
 				return ($product->jsonSerialize()[$request->sort_by]);
-			})->values()->all();
+			})->values();
 		}
 //
 		$data = [
-			"data" => $report,
+			"sort_by" => $request->sort_by,
+			"start_date" => $request->start_date,
+			"end_date" => $request->end_date,
+			"date_report" => date('Y-m-d'),
+			"employees" => $report,
 			"total_employees" => $employees->count(),
-			"total_attendances" => $employees->sum(function ($employee){return ($employee->jsonSerialize()['attendances']);}),
-			"total_absences" => $employees->sum(function ($employee){return ($employee->jsonSerialize()['absences']);}),
-			"total_justified_absences" => $employees->sum(function ($employee){return ($employee->jsonSerialize()['justified_absences']);}),
+			"total_attendances" => $employees->sum(function ($employee) {
+				return ($employee->jsonSerialize()['attendances']);
+			}),
+			"total_absences" => $employees->sum(function ($employee) {
+				return ($employee->jsonSerialize()['absences']);
+			}),
+			"total_justified_absences" => $employees->sum(function ($employee) {
+				return ($employee->jsonSerialize()['justified_absences']);
+			}),
 		];
-		return $data;
-//
-//		$pdf = \PDF::loadView('maintenance-report', compact('data'));
-//		$pdf->setPaper('A4', 'landscape');
+//		return $data;
+
+		$pdf = \PDF::loadView('attendance-report', compact('data'));
+		$pdf->setPaper('A4');
 //        $font = $pdf->getFontMetrics()->get_font("helvetica", "bold");
 //        $pdf->getCanvas()->page_text(72, 18, "Header: {PAGE_NUM} of {PAGE_COUNT}", $font, 10, array(0,0,0));
 
 
-//        return $pdf->download();
-//
-//		$name_file = Str::uuid()->toString();
-//		$path = 'public/reports/' . $name_file . '.pdf';
-//		Storage::put($path, $pdf->output());
-//		$path = (substr($path, 7, strlen($path)));
-//
-//		return [
-//			'path' => $path
-//		];
+//		return $pdf->download();
+
+		$name_file = Str::uuid()->toString();
+		$path = 'public/reports/' . $name_file . '.pdf';
+		Storage::put($path, $pdf->output());
+		$path = (substr($path, 7, strlen($path)));
+
+		return [
+			'path' => $path
+		];
 
 	}
 
