@@ -45,34 +45,30 @@ class AttendanceSheetController extends Controller
 
 	public function index_pdf(AttendancePDFRequest $request)
 	{
-//		$machines = Machine::withCount('maintenance_sheets')
-//			->whereHas('maintenance_sheets', function (Builder $query) use ($request) {
-//				$query->whereDate('maintenance_sheets.date', '>=', $request->start_date)
-//					->whereDate('maintenance_sheets.date', '<=', $request->end_date);
-//			})->get();
 		$employees = Employee::whereHas('attendance_sheets', function (Builder $query) use ($request) {
 			$query->whereDate('attendance_sheets.date', '>=', $request->start_date)
 				->whereDate('attendance_sheets.date', '<=', $request->end_date);
 		})->get();
 
-		$resource = AttendanceSheetPDFResource::collection($employees)->sortBy($request->sort_by)->values();
-		return ($resource);
-
+		$employees = AttendanceSheetPDFResource::collection($employees);
+		if ($request->order_by == "asc") {
+			$report = $employees->sortBy(function ($product) use ($request) {
+				return ($product->jsonSerialize()[$request->sort_by]);
+			})->values()->all();
+		} else {
+			$report = $employees->sortByDesc(function ($product) use ($request) {
+				return ($product->jsonSerialize()[$request->sort_by]);
+			})->values()->all();
+		}
 //
-//		if ($request->type == "resumen") $report = MachinesResumenPDFResource::collection($machines);
-//		else $report = MachinesDetailPDFResource::collection($machines);
-//
-//		if ($request->order_by == "asc") $report = $report->sortBy($request->sort_by)->values();
-//		else $report = $report->sortByDesc($request->sort_by)->values();
-//
-//		$data = [
-//			"data" => $report,
-//			"total_machines" => MachinesResumenPDFResource::collection($machines)->count(),
-//			"total_amount" => $machines->sum('amount'),
-//			"start_date" => $request->start_date,
-//			"end_date" => $request->end_date,
-//			"type" => $request->type
-//		];
+		$data = [
+			"data" => $report,
+			"total_employees" => $employees->count(),
+			"total_attendances" => $employees->sum(function ($employee){return ($employee->jsonSerialize()['attendances']);}),
+			"total_absences" => $employees->sum(function ($employee){return ($employee->jsonSerialize()['absences']);}),
+			"total_justified_absences" => $employees->sum(function ($employee){return ($employee->jsonSerialize()['justified_absences']);}),
+		];
+		return $data;
 //
 //		$pdf = \PDF::loadView('maintenance-report', compact('data'));
 //		$pdf->setPaper('A4', 'landscape');

@@ -27,6 +27,8 @@ class AttendancePDFRequest extends FormRequest
 			"start_date" => ['bail', 'required', 'date_format:Y-m-d'],
 			"end_date" => ['bail', 'required', 'date_format:Y-m-d'],
 			'sort_by' => ['bail', 'required', 'string', "in:lastname,name,attendances,absences"],
+//			'sort_by' => ['bail', 'required', 'string'],
+
 			'order_by' => ['bail', 'required', 'string', "in:asc,desc"],
 			"type" => ['bail', 'required', "in:attended,missed"],
 		];
