@@ -45,6 +45,9 @@ class AttendanceEmployeeResource extends JsonResource
 		if ($this->pivot->check_in && $this->pivot->check_out) {
 			return "finished work";
 		}
+		if (!$this->pivot->attendance && $this->pivot->missed_reason){
+			return "justified absence";
+		}
 		return "not working";
 	}
 }
