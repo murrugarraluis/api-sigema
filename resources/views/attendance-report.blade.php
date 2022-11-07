@@ -5,7 +5,7 @@
 </head>
 <body>
 <header>
-	@include('includes.header')
+	@include('includes.header',['title' => 'Attendance Sheet'])
 </header>
 <div>
 	<table class="w-100 mb-2">

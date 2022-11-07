@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    @include('includes.head')
+{{--    @include('includes.head')--}}
 </head>
 <body>
 <header>
-    @include('includes.header')
+	@include('includes.header',['title' => 'Work Sheet'])
 </header>
 <div>
     <table class="w-100 mb-2">

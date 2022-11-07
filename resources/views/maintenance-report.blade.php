@@ -5,7 +5,7 @@
 </head>
 <body>
 <header>
-    @include('includes.header')
+	@include('includes.header',['title' => 'Maintenance Sheet'])
 </header>
 <div>
     <table class="table table-sm">
