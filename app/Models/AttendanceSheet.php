@@ -22,6 +22,6 @@ class AttendanceSheet extends Model
     {
         return $this->belongsToMany(Employee::class)
             ->withTrashed()
-            ->withPivot('check_in', 'check_out', 'attendance');
+            ->withPivot('check_in', 'check_out', 'attendance','missed_reason','missed_description');
     }
 }

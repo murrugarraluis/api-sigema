@@ -19,6 +19,8 @@ class CreateAttendanceSheetEmployee extends Migration
             $table->time('check_in')->nullable();
             $table->time('check_out')->nullable();
             $table->boolean('attendance')->default(0);// missed=0 ; attended=1 ;
+            $table->string('missed_reason')->nullable();
+            $table->text('missed_description')->nullable();
             $table->primary(['attendance_sheet_id', 'employee_id'],'attendance_sheet_employee_pk');
 
         });
