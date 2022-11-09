@@ -96,6 +96,7 @@ class Machine extends Model
             ->where('machine_id', $this->id)
             ->whereDate('date', '>=', date('Y-m-d'))
             ->sum('total_seconds');
+//				TODO:ADD SECONDS DIFF IF LASTEST WORKING SHEET OPEN
         return $sum_working_hours_in_seconds;
     }
 
