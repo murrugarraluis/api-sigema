@@ -27,15 +27,15 @@ class WorkingHourResource extends JsonResource
 		$datetime1 = date_create($this->date_time_start);
 		$datetime2 = date_create($this->date_time_end);
 		$interval = date_diff($datetime2, $datetime1);
-		$seconds = (($interval->days * 24) * 60) + ($interval->h * 60 * 60) + ($interval->i * 60) + $interval->s;
+		$seconds = (($interval->days * 24) * 60 * 60) +($interval->h * 60 * 60)+  ($interval->i * 60) + $interval->s;
 		return $this->conversorSegundosHoras($seconds);
 	}
 
 	function conversorSegundosHoras($tiempo_en_segundos)
 	{
-		$horas = floor($tiempo_en_segundos / 3600);
-		$minutos = floor(($tiempo_en_segundos - ($horas * 3600)) / 60);
-		$segundos = $tiempo_en_segundos - ($horas * 3600) - ($minutos * 60);
+		$horas = strval(floor($tiempo_en_segundos / 3600));
+		$minutos = strval(floor(($tiempo_en_segundos - ($horas * 3600)) / 60));
+		$segundos = strval($tiempo_en_segundos - ($horas * 3600) - ($minutos * 60));
 		return [
 			'hours' => strlen($horas) > 1 ? $horas : "0" . $horas,
 			'minutes' => strlen($minutos) > 1 ? $minutos : "0" . $minutos,

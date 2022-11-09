@@ -38,7 +38,7 @@ class AttendanceSheetPDFResource extends JsonResource
 			$datetime1 = date_create($sheet->pivot->check_in);
 			$datetime2 = date_create($sheet->pivot->check_out);
 			$interval = date_diff($datetime2, $datetime1);
-			$seconds = (($interval->days * 24) * 60) +($interval->h * 60 * 60)+ ($interval->i * 60) + $interval->s;
+			$seconds = (($interval->days * 24) * 60 * 60) +($interval->h * 60 * 60)+  ($interval->i * 60) + $interval->s;
 			$dteDiff += $seconds;
 		});
 		return ($this->conversorSegundosHoras($dteDiff));

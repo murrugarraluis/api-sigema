@@ -36,7 +36,7 @@ class WorkingSheetDetailResource extends JsonResource
 			$datetime1 = date_create($item["date_time_start"]);
 			$datetime2 = date_create($item["date_time_end"]);
 			$interval = date_diff($datetime2, $datetime1);
-			$seconds = (($interval->days * 24) * 60) + ($interval->i * 60) + $interval->s;
+			$seconds = (($interval->days * 24) * 60 * 60) +($interval->h * 60 * 60)+  ($interval->i * 60) + $interval->s;
 			$dteDiff += $seconds;
 		}, $working_hours->jsonSerialize());
 		return $this->conversorSegundosHoras($dteDiff);
