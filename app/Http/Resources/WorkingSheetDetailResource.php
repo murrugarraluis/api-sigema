@@ -14,13 +14,14 @@ class WorkingSheetDetailResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
+//		dd($this->working_hours);
 		$working_hours = WorkingHourResource::collection($this->working_hours)->sortByDesc('created_at');
 		return [
 			'id' => $this->id,
 			'code' => $this->code,
 			'date' => $this->date,
 			'description' => $this->description,
-			'machine' => new WorkingSheetMachineResource($this->machine),
+			'machine' => new MachinetDetailResource($this->machine),
 			'working_hours' => $working_hours,
 			'working_hours_total' => $this->get_working_hours_total($working_hours),
 			'is_open' => $this->is_open,

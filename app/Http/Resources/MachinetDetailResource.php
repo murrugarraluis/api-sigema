@@ -52,79 +52,63 @@ class MachinetDetailResource extends JsonResource
 
 	function get_total_time_used()
 	{
-//        $date_last_maintenance = $this->get_date_last_maintenance();
+		$addtional_second = 0;
 		$date_last_maintenance = $this->maintenance_sheets()->orderBy('date', 'desc')->first();
 		$date_last_maintenance = $date_last_maintenance ? date('Y-m-d H:i:s', strtotime($date_last_maintenance->date)) : null;
-//        dd($date_last_maintenance);
 		if ($date_last_maintenance) {
-			$sum_working_hours_in_seconds = WorkingSheet::join(DB::raw('(SELECT working_sheet_id,
-                            SUM(TIMESTAMPDIFF(SECOND, date_time_start, date_time_end)) AS total_seconds
-                     from working_hours
-                     GROUP BY working_sheet_id) AS wh '),
-				function ($join) {
-					$join->on('wh.working_sheet_id', '=', 'working_sheets.id');
-				})
-				->where('machine_id', $this->id)
+			$this->working_sheets
 				->where('date', '>=', $date_last_maintenance)
-//                ->get();
-				->sum('total_seconds');
-//            dd($sum_working_hours_in_seconds);
+				->map(function ($ws) use (&$addtional_second) {
+					$a = $this->get_working_hours_total($ws->working_hours);
+					$addtional_second += $a;
+				});
 		} else {
-			$sum_working_hours_in_seconds = WorkingSheet::join(DB::raw('(SELECT working_sheet_id,
-                            SUM(TIMESTAMPDIFF(SECOND, date_time_start, date_time_end)) AS total_seconds
-                     from working_hours
-                     GROUP BY working_sheet_id) AS wh '),
-				function ($join) {
-					$join->on('wh.working_sheet_id', '=', 'working_sheets.id');
-				})
-				->where('machine_id', $this->id)
-				->sum('total_seconds');
+			$this->working_sheets->map(function ($ws) use (&$addtional_second) {
+				$a = $this->get_working_hours_total($ws->working_hours);
+				$addtional_second += $a;
+			});
 		}
-//        return $sum_working_hours_in_seconds;
-
-		[$hours, $minutes, $seconds] = $this->converterSecondsInTime($sum_working_hours_in_seconds);
+		[$hours, $minutes, $seconds] = $this->converterSecondsInTime($addtional_second);
 		return [
 			'hours' => $hours,
 			'minutes' => $minutes,
 			'seconds' => $seconds,
 		];
 	}
+
+	function get_working_hours_total($working_hours)
+	{
+//        $dteDiff = date_create("0000-00-00 00:00:00");
+		$dteDiff = 0;
+		array_map(function ($item) use (&$dteDiff) {
+			$datetime1 = date_create($item["date_time_start"]);
+			$datetime2 = date_create($item["date_time_end"]);
+			$interval = date_diff($datetime2, $datetime1);
+			$seconds = (($interval->days * 24) * 60 * 60) + ($interval->h * 60 * 60) + ($interval->i * 60) + $interval->s;
+			$dteDiff += $seconds;
+		}, $working_hours->jsonSerialize());
+		return $dteDiff;
+//		return $this->conversorSegundosHoras($dteDiff);
+	}
+
 	function get_total_time_used_today()
 	{
-//        $date_last_maintenance = $this->get_date_last_maintenance();
-		$today = date('Y-m-d H:i:s');
+		$addtional_second = 0;
+		$today = date('Y-m-d');
 		$date_last_maintenance = $this->maintenance_sheets()->orderBy('date', 'desc')->first();
 		$date_last_maintenance = $date_last_maintenance ? date('Y-m-d H:i:s', strtotime($date_last_maintenance->date)) : null;
-//        dd($date_last_maintenance);
 		if ($date_last_maintenance) {
-			$sum_working_hours_in_seconds = WorkingSheet::join(DB::raw('(SELECT working_sheet_id,
-                            SUM(TIMESTAMPDIFF(SECOND, date_time_start, date_time_end)) AS total_seconds
-                     from working_hours
-                     GROUP BY working_sheet_id) AS wh '),
-				function ($join) {
-					$join->on('wh.working_sheet_id', '=', 'working_sheets.id');
-				})
-				->where('machine_id', $this->id)
-				->where('date', '>=', $date_last_maintenance)
-				->where('date', '>=', $today)
-//                ->get();
-				->sum('total_seconds');
-//            dd($sum_working_hours_in_seconds);
+			$this->working_sheets->where('date', '>=', $date_last_maintenance)->where('date', '>=', $today)->map(function ($ws) use (&$addtional_second) {
+				$a = $this->get_working_hours_total($ws->working_hours);
+				$addtional_second += $a;
+			});
 		} else {
-			$sum_working_hours_in_seconds = WorkingSheet::join(DB::raw('(SELECT working_sheet_id,
-                            SUM(TIMESTAMPDIFF(SECOND, date_time_start, date_time_end)) AS total_seconds
-                     from working_hours
-                     GROUP BY working_sheet_id) AS wh '),
-				function ($join) {
-					$join->on('wh.working_sheet_id', '=', 'working_sheets.id');
-				})
-				->where('machine_id', $this->id)
-				->where('date', '>=', $today)
-				->sum('total_seconds');
+			$this->working_sheets->where('date', '>=', $today)->map(function ($ws) use (&$addtional_second) {
+				$a = $this->get_working_hours_total($ws->working_hours);
+				$addtional_second += $a;
+			});
 		}
-//        return $sum_working_hours_in_seconds;
-
-		[$hours, $minutes, $seconds] = $this->converterSecondsInTime($sum_working_hours_in_seconds);
+		[$hours, $minutes, $seconds] = $this->converterSecondsInTime($addtional_second);
 		return [
 			'hours' => $hours,
 			'minutes' => $minutes,
