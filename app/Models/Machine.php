@@ -49,6 +49,14 @@ class Machine extends Model
     {
         return $this->hasMany(WorkingSheet::class);
     }
+		public function notifications(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+
+
+
 
     private function converterHourInSeconds($hour)
     {

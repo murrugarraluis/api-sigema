@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notification extends Model
 {
-    use HasFactory, Uuids;
-//    protected $hidden = ['created_at', 'updated_at','deleted_at'];
-    public function employees(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
-    {
-        return $this->belongsToMany(User::class);
-    }
+	use HasFactory, Uuids;
+	protected $fillable = ["machine_id","content","date_send_notification"];
+	public function machine(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+	{
+			return $this->belongsTo(Machine::class);
+	}
 }
