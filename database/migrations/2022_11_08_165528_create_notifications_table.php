@@ -18,6 +18,7 @@ class CreateNotificationsTable extends Migration
 			$table->foreignUuid('machine_id')->constrained('machines');
 			$table->string('message');
 			$table->dateTime('date_send_notification');
+			$table->boolean('is_send')->default(0);
 			$table->timestamps();
 		});
 	}

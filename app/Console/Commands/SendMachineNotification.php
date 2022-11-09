@@ -41,10 +41,10 @@ class SendMachineNotification extends Command
 	public function handle()
 	{
 		$now = date('Y-m-d H:i:s');
-		$notifications = Notification::where('date_send_notification','<=',$now)->get();
+		$notifications = Notification::where('date_send_notification','<=',$now)->where('is_send',0)->get();
 		$notifications->map(function ($notification){
 			event(new NewNotification($notification->message));
-			$notification->delete();
+			$notification->update(['is_send'=>true]);
 		});
 		return 0;
 	}
