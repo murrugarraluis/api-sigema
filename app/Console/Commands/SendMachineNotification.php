@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Events\NewNotification;
+use App\Models\Notification;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
@@ -39,7 +40,12 @@ class SendMachineNotification extends Command
 	 */
 	public function handle()
 	{
-		event(new NewNotification('Hola Mundo'));
+		$now = date('Y-m-d H:i:s');
+		$notifications = Notification::where('date_send_notification','<=',$now)->get();
+		$notifications->map(function ($notification){
+			event(new NewNotification($notification->message));
+			$notification->delete();
+		});
 		return 0;
 	}
 }
