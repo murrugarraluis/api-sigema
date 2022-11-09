@@ -16,7 +16,7 @@ class CreateNotificationsTable extends Migration
 		Schema::create('notifications', function (Blueprint $table) {
 			$table->uuid('id')->primary();
 			$table->foreignUuid('machine_id')->constrained('machines');
-			$table->json('content');
+			$table->string('message');
 			$table->dateTime('date_send_notification');
 			$table->timestamps();
 		});

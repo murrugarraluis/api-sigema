@@ -94,12 +94,12 @@ class WorkingSheetController extends Controller
 
 		Notification::create([
 			"machine_id" =>$machine_id,
-			"content"=> json_encode(array("message"=>"Notification 1")),
+			"message"=> "Notification 1",
 			"date_send_notification"=> $date_limit_global
 		]);
 		Notification::create([
 			"machine_id" =>$machine_id,
-			"content"=> json_encode(array("message"=>"Notification 2")),
+			"message"=> "Notification 2",
 			"date_send_notification"=> $date_limit_per_day
 		]);
 //		dd($date_limit_global,$date_limit_per_day);
