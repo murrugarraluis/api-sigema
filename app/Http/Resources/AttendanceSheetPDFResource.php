@@ -14,35 +14,51 @@ class AttendanceSheetPDFResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
+//		dd($this->get_total_absences()->jsonSerialize());
 		return [
 			"lastname" => $this->lastname,
 			"name" => $this->name,
 			"attendances" => $this->get_attendances(),
 			"absences" => $this->get_absences(),
+			"get_total_absences" => $this->get_total_absences(),
 			"justified_absences" => $this->get_justified_absences(),
 			"working_hours" => $this->get_working_hours_total(),
 		];
 	}
-	function get_attendances(){
-		return $this->attendance_sheets()->where('attendance',1)->count();
+
+	function get_attendances()
+	{
+		return $this->attendance_sheets()->where('attendance', 1)->count();
 	}
-	function get_absences(){
-		return $this->attendance_sheets()->where('attendance',0)->whereNull('missed_reason')->count();
+
+	function get_absences()
+	{
+		return $this->attendance_sheets()->where('attendance', 0)->whereNull('missed_reason')->count();
 	}
-	function get_justified_absences(){
-		return $this->attendance_sheets()->where('attendance',0)->whereNotNull('missed_reason')->count();
+
+	function get_justified_absences()
+	{
+		return $this->attendance_sheets()->where('attendance', 0)->whereNotNull('missed_reason')->count();
 	}
-	function get_working_hours_total(){
+
+	function get_total_absences()
+	{
+		return $this->attendance_sheets()->where('attendance', 0)->orderBy('date','desc')->get();
+	}
+
+	function get_working_hours_total()
+	{
 		$dteDiff = 0;
-		$this->attendance_sheets()->where('attendance',1)->get()->map(function ($sheet) use(&$dteDiff){
+		$this->attendance_sheets()->where('attendance', 1)->get()->map(function ($sheet) use (&$dteDiff) {
 			$datetime1 = date_create($sheet->pivot->check_in);
 			$datetime2 = date_create($sheet->pivot->check_out);
 			$interval = date_diff($datetime2, $datetime1);
-			$seconds = (($interval->days * 24) * 60 * 60) +($interval->h * 60 * 60)+  ($interval->i * 60) + $interval->s;
+			$seconds = (($interval->days * 24) * 60 * 60) + ($interval->h * 60 * 60) + ($interval->i * 60) + $interval->s;
 			$dteDiff += $seconds;
 		});
 		return ($this->conversorSegundosHoras($dteDiff));
 	}
+
 	function conversorSegundosHoras($tiempo_en_segundos)
 	{
 		$horas = floor($tiempo_en_segundos / 3600);

@@ -45,12 +45,16 @@ class AttendanceSheetController extends Controller
 
 	public function index_pdf(AttendancePDFRequest $request)
 	{
-		$employees = Employee::whereHas('attendance_sheets', function (Builder $query) use ($request) {
+		$employees = Employee::with('attendance_sheets')->whereHas('attendance_sheets', function (Builder $query) use ($request) {
 			$query->whereDate('attendance_sheets.date', '>=', $request->start_date)
 				->whereDate('attendance_sheets.date', '<=', $request->end_date);
 		})->get();
-
 		$employees = AttendanceSheetPDFResource::collection($employees);
+//		dd($employees->jsonSerialize());
+
+
+
+
 		if ($request->order_by == "asc") {
 			$report = $employees->sortBy(function ($product) use ($request) {
 				return ($product->jsonSerialize()[$request->sort_by]);
@@ -62,6 +66,7 @@ class AttendanceSheetController extends Controller
 		}
 //
 		$data = [
+			"type"=>$request->type,
 			"sort_by" => $request->sort_by,
 			"start_date" => $request->start_date,
 			"end_date" => $request->end_date,
