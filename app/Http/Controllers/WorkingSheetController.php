@@ -87,35 +87,42 @@ class WorkingSheetController extends Controller
 		$maximum_working_time_per_day = $this->converterTimeSeconds($maximum_working_time_per_day, 0, 0);
 
 //		CALCULATE DATE NOTIFICATION
-		$time_limit_global_48 = ($maximum_working_time - $total_time_used)- $this->converterTimeSeconds(48,0,0);
-		$time_limit_global_6 = ($maximum_working_time - $total_time_used) - $this->converterTimeSeconds(6,0,0);
-		$time_limit_per_day_1 = ($maximum_working_time_per_day - $total_time_used_today) - $this->converterTimeSeconds(1,0,0);
+		$time_limit_global_48 = ($maximum_working_time - $total_time_used) - $this->converterTimeSeconds(48, 0, 0);
+		$time_limit_global_6 = ($maximum_working_time - $total_time_used) - $this->converterTimeSeconds(6, 0, 0);
+		$time_limit_per_day_1 = ($maximum_working_time_per_day - $total_time_used_today) - $this->converterTimeSeconds(1, 0, 0);
 
 
 		$date_limit_global_48 = date('Y-m-d H:i:s', (time() + $time_limit_global_48));;
 		$date_limit_global_6 = date('Y-m-d H:i:s', (time() + $time_limit_global_6));;
 		$date_limit_per_day_1 = date('Y-m-d H:i:s', (time() + $time_limit_per_day_1));;;
 
+		$now = date('Y-m-d H:i:s');
 //		notify 48 hours before the limit is reached
-		Notification::create([
-			"machine_id" => $machine_id,
-			"message" => "this machine has 48 hours of working time left",
-			"date_send_notification" => $date_limit_global_48
-		]);
+		if ($date_limit_global_48 >= $now) {
+			Notification::create([
+				"machine_id" => $machine_id,
+				"message" => "this machine has 48 hours of working time left",
+				"date_send_notification" => $date_limit_global_48
+			]);
+		}
 //		notify 6 hours before the limit is reached
 
-		Notification::create([
-			"machine_id" => $machine_id,
-			"message" => "this machine has 6 hours of working time left",
-			"date_send_notification" => $date_limit_global_6
-		]);
+		if ($date_limit_global_6 >= $now) {
+			Notification::create([
+				"machine_id" => $machine_id,
+				"message" => "this machine has 6 hours of working time left",
+				"date_send_notification" => $date_limit_global_6
+			]);
+		}
 
 //		notify 1 hours before the limit is reached
-		Notification::create([
-			"machine_id" => $machine_id,
-			"message" => "this machine has 1 hours of working time left",
-			"date_send_notification" => $date_limit_per_day_1
-		]);
+		if ($date_limit_per_day_1 >= $now) {
+			Notification::create([
+				"machine_id" => $machine_id,
+				"message" => "this machine has 1 hours of working time left",
+				"date_send_notification" => $date_limit_per_day_1
+			]);
+		}
 //		dd($date_limit_global,$date_limit_per_day);
 	}
 
