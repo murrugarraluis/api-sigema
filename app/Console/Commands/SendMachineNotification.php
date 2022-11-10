@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Events\NewNotification;
+use App\Http\Resources\NotificationResource;
 use App\Models\Notification;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
@@ -50,7 +52,8 @@ class SendMachineNotification extends Command
 				if ($count == 0) {
 					Notification::where('is_send', false)->where('machine_id', $notification->machine->id)->delete();
 				}else{
-					event(new NewNotification($notification->message));
+					$data = new NotificationResource($notification);
+					event(new NewNotification($data));
 					$notification->update(['is_send' => true]);
 				}
 			});
