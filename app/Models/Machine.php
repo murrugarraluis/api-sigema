@@ -24,7 +24,7 @@ class Machine extends Model
 		'recommendation'
 	];
 	protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
-	protected $with = ['image', 'working_sheets','maintenance_sheets'];
+	protected $with = ['image', 'working_sheets', 'working_sheets.working_hours', 'maintenance_sheets', 'technical_sheet'];
 
 	public function articles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	{
@@ -85,48 +85,48 @@ class Machine extends Model
 
 	private function getTimeWorkingToday()
 	{
-		$sum_working_hours_in_seconds = WorkingSheet::join(DB::raw('(SELECT working_sheet_id,
-                            SUM(TIMESTAMPDIFF(SECOND, date_time_start, date_time_end)) AS total_seconds
-                     from working_hours
-                     GROUP BY working_sheet_id) AS wh '),
-			function ($join) {
-				$join->on('wh.working_sheet_id', '=', 'working_sheets.id');
-			})
-			->where('machine_id', $this->id)
-			->whereDate('date', '>=', date('Y-m-d'))
-			->sum('total_seconds');
-//				TODO:ADD SECONDS DIFF IF LASTEST WORKING SHEET OPEN
+		$sum_working_hours_in_seconds = $this->working_sheets
+			->where('date', '>=', date('Y-m-d'))
+			->sum(function ($ws) {
+				return $ws->working_hours->sum(function ($wh) {
+					$datetime1 = date_create($wh["date_time_start"]);
+					$datetime2 = date_create($wh["date_time_end"]);
+					$interval = date_diff($datetime2, $datetime1);
+					$seconds = (($interval->days * 24) * 60 * 60) + ($interval->h * 60 * 60) + ($interval->i * 60) + $interval->s;
+					return $seconds;
+				});
+			});
 		return $sum_working_hours_in_seconds;
 	}
 
 	private function getTimeWorking()
 	{
-//        $date_last_maintenance = $this->get_date_last_maintenance();
 		$date_last_maintenance = $this->maintenance_sheets->sortByDesc('date')->first();
 		$date_last_maintenance = $date_last_maintenance ? date('Y-m-d H:i:s', strtotime($date_last_maintenance->date)) : null;
-//        dd($date_last_maintenance);
 		if ($date_last_maintenance) {
-			$sum_working_hours_in_seconds = WorkingSheet::join(DB::raw('(SELECT working_sheet_id,
-                            SUM(TIMESTAMPDIFF(SECOND, date_time_start, date_time_end)) AS total_seconds
-                     from working_hours
-                     GROUP BY working_sheet_id) AS wh '),
-				function ($join) {
-					$join->on('wh.working_sheet_id', '=', 'working_sheets.id');
-				})
-				->where('machine_id', $this->id)
+			$sum_working_hours_in_seconds = $this->working_sheets
 				->where('date', '>=', $date_last_maintenance)
-				->sum('total_seconds');
-//            dd($sum_working_hours_in_seconds);
+				->sum(function ($ws) {
+					return $ws->working_hours->sum(function ($wh) {
+						$datetime1 = date_create($wh["date_time_start"]);
+						$datetime2 = date_create($wh["date_time_end"]);
+						$interval = date_diff($datetime2, $datetime1);
+						$seconds = (($interval->days * 24) * 60 * 60) + ($interval->h * 60 * 60) + ($interval->i * 60) + $interval->s;
+						return $seconds;
+					});
+				});
 		} else {
-			$sum_working_hours_in_seconds = WorkingSheet::join(DB::raw('(SELECT working_sheet_id,
-                            SUM(TIMESTAMPDIFF(SECOND, date_time_start, date_time_end)) AS total_seconds
-                     from working_hours
-                     GROUP BY working_sheet_id) AS wh '),
-				function ($join) {
-					$join->on('wh.working_sheet_id', '=', 'working_sheets.id');
-				})
-				->where('machine_id', $this->id)
-				->sum('total_seconds');
+			$sum_working_hours_in_seconds = $this->working_sheets
+				->sum(function ($ws) {
+					return $ws->working_hours->sum(function ($wh) {
+						$datetime1 = date_create($wh["date_time_start"]);
+						$datetime2 = date_create($wh["date_time_end"]);
+						$interval = date_diff($datetime2, $datetime1);
+						$seconds = (($interval->days * 24) * 60 * 60) + ($interval->h * 60 * 60) + ($interval->i * 60) + $interval->s;
+						return $seconds;
+					});
+				});
+
 		}
 		return $sum_working_hours_in_seconds;
 	}
