@@ -38,36 +38,10 @@
 				<th scope="col" class="text-center">Date</th>
 				<th scope="col" class="text-center">Reason</th>
 				<th scope="col" class="text-center">Description</th>
-
-				{{--					<td class="text-center">{{$item["missed_reason"]}}</td>--}}
-				{{--					<td class="text-center">{{$item["missed_description"]}}</td>--}}
 			@endif
-			{{--			<th scope="col" class="text-right">Diff</th>--}}
 		</tr>
 		</thead>
 		<tbody>
-		{{--				@foreach($data["employees"]->jsonSerialize() as $key=>$item)--}}
-		{{--					<tr>--}}
-		{{--						<th scope="row">{{$key+1}}</th>--}}
-		{{--						<td>{{$item["lastname"]}}</td>--}}
-		{{--						<td>{{$item["name"]}}</td>--}}
-		{{--						@if ($data["type"] == 'attended')--}}
-		{{--							<td class="text-center">{{$item["attendances"]}}</td>--}}
-		{{--							<td class="text-center">{{$item["absences"]}}</td>--}}
-		{{--							<td class="text-center">{{$item["justified_absences"]}}</td>--}}
-		{{--							<td class="text-center">{{$item["working_hours"]}}</td>--}}
-		{{--						@else--}}
-		{{--							@foreach($item["get_total_absences"]->jsonSerialize() as $key2=>$item2)--}}
-		{{--								<td class="text-center">{{$item2["date"]}}</td>--}}
-		{{--								<td class="text-center">{{$item2["pivot"]["missed_reason"]}}</td>--}}
-		{{--								<td class="text-center">{{$item2["pivot"]["missed_description"]}}</td>--}}
-		{{--							@endforeach--}}
-		{{--							<td class="text-center">{{$item["missed_reason"]}}</td>--}}
-		{{--							<td class="text-center">{{$item["missed_description"]}}</td>--}}
-		{{--						@endif--}}
-
-		{{--					</tr>--}}
-		{{--				@endforeach--}}
 		@if($data["type"] == "attended")
 			@foreach($data["employees"]->jsonSerialize() as $key=>$item)
 				<tr>
@@ -89,7 +63,7 @@
 			</tr>
 		@else
 			@php
-			  $number_employee = 0;
+				$number_employee = 0;
 			@endphp
 			@foreach($data["employees"]->jsonSerialize() as $key=>$item)
 				@if ($item["get_total_absences"]->jsonSerialize())
@@ -109,7 +83,7 @@
 							<td>{{$item2["pivot"]["missed_description"]}}</td>
 					@endforeach
 					<tr>
-						<td colspan="2" ><strong>Total Justified Absences: {{$item["justified_absences"]}}</strong></td>
+						<td colspan="2"><strong>Total Justified Absences: {{$item["justified_absences"]}}</strong></td>
 						<td colspan="2"><strong>Total Unexcused Absences: {{$item["absences"]}}</strong>
 						</td>
 						<td colspan="2"><strong>Total Absences: {{$item["absences"] + $item["justified_absences"]}}</strong></td>
@@ -118,10 +92,10 @@
 			@endforeach
 			<tr>
 				<td colspan="6"><strong>Total Employees {{$number_employee}}</strong></td>
-{{--				<td class="text-center"><strong>{{$data["total_attendances"]}}</strong></td>--}}
-{{--				<td class="text-center"><strong>{{$data["total_absences"]}}</strong></td>--}}
-{{--				<td class="text-center"><strong>{{$data["total_justified_absences"]}}</strong></td>--}}
-{{--				<td class="text-center"></td>--}}
+				{{--				<td class="text-center"><strong>{{$data["total_attendances"]}}</strong></td>--}}
+				{{--				<td class="text-center"><strong>{{$data["total_absences"]}}</strong></td>--}}
+				{{--				<td class="text-center"><strong>{{$data["total_justified_absences"]}}</strong></td>--}}
+				{{--				<td class="text-center"></td>--}}
 			</tr>
 		@endif
 		</tbody>
