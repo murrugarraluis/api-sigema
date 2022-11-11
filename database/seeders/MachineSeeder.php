@@ -18,7 +18,7 @@ class MachineSeeder extends Seeder
 
 
         $articles = Article::inRandomOrder()->limit(5)->get();
-        Machine::factory(200)
+        Machine::factory(50)
             ->hasAttached($articles)
             ->create();
     }

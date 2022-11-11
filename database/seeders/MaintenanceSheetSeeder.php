@@ -24,7 +24,7 @@ class MaintenanceSheetSeeder extends Seeder
 //                'price' => 40.5
 //            ], 'maintenance_sheet_details')
 //            ->create();
-        MaintenanceSheet::factory(2000)
+        MaintenanceSheet::factory(50)
             ->has(MaintenanceSheetDetail::factory()
                 ->count(3)
                 ->state(function (array $attributes, MaintenanceSheet $maintenanceSheet) {
