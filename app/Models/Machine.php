@@ -152,10 +152,10 @@ class Machine extends Model
             });
         });
     }
-    function getmaintenanceCountAttribute()
-    {
-        return $this->maintenance_sheets()->count();
-    }
+//    function getmaintenanceCountAttribute()
+//    {
+//        return $this->maintenance_sheets()->count();
+//    }
 //
 //    protected function amountTotal(): Attribute
 //    {

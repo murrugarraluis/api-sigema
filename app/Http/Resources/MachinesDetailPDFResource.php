@@ -22,13 +22,17 @@ class MachinesDetailPDFResource extends JsonResource
             "name" => $this->name,
             "brand" => $this->brand,
             "model" => $this->model,
-            "maintenance_sheets"=> MaintenanceSheetResource::collection($this->maintenance_sheets)->sortByDesc('date'),
-            "maintenance_number" => $this->maintenance_sheets()->count(),
-            "amount" => $this->maintenance_sheets->sum(function ($sheet) {
-                return $sheet->maintenance_sheet_details->sum(function($detail){
-                    return ($detail->price * $detail->quantity);
-                });
-            })
+            "maintenance_sheets"=> MaintenanceSheetDetailReportResource::collection($this->maintenance_sheets)->sortByDesc('date')->values(),
+            "maintenance_number" => $this->maintenance_sheets->count(),
+            "amount" => $this->get_amount()
         ];
     }
+	function get_amount()
+	{
+		return $this->maintenance_sheets->sum(function ($sheet) {
+			return $sheet->maintenance_sheet_details->sum(function ($detail) {
+				return ($detail->price * $detail->quantity);
+			});
+		});
+	}
 }
