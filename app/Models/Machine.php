@@ -24,7 +24,7 @@ class Machine extends Model
 		'recommendation'
 	];
 	protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
-	protected $with = ['image', 'working_sheets', 'working_sheets.working_hours', 'maintenance_sheets', 'technical_sheet'];
+	protected $with = ['image', 'working_sheets', 'working_sheets.working_hours', 'maintenance_sheets', 'technical_sheet','articles'];
 
 	public function articles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	{

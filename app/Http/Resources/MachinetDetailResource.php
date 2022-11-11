@@ -29,6 +29,7 @@ class MachinetDetailResource extends JsonResource
 			'maximum_working_time_per_day' => $this->maximum_working_time_per_day,
 			'recommendation' => $this->recommendation,
 			'articles' => ArticleResource::collection($this->articles),
+//			'articles' => ($this->articles),
 			'status' => $this->status,
 			'date_last_use' => $this->get_date_last_use(),
 			'date_last_maintenance' => $this->get_date_last_maintenance(),
@@ -40,20 +41,20 @@ class MachinetDetailResource extends JsonResource
 
 	function get_date_last_use()
 	{
-		$date_last_use = $this->working_sheets()->orderBy('date', 'desc')->first();
+		$date_last_use = $this->working_sheets->sortByDesc('date')->first();
 		return $date_last_use ? date('Y-m-d', strtotime($date_last_use->date)) : null;
 	}
 
 	function get_date_last_maintenance()
 	{
-		$date_last_maintenance = $this->maintenance_sheets()->orderBy('date', 'desc')->first();
+		$date_last_maintenance = $this->maintenance_sheets->sortByDesc('date')->first();
 		return $date_last_maintenance ? date('Y-m-d', strtotime($date_last_maintenance->date)) : null;
 	}
 
 	function get_total_time_used()
 	{
 		$addtional_second = 0;
-		$date_last_maintenance = $this->maintenance_sheets()->orderBy('date', 'desc')->first();
+		$date_last_maintenance = $this->maintenance_sheets->sortByDesc('date')->first();
 		$date_last_maintenance = $date_last_maintenance ? date('Y-m-d H:i:s', strtotime($date_last_maintenance->date)) : null;
 		if ($date_last_maintenance) {
 			$this->working_sheets
@@ -95,7 +96,7 @@ class MachinetDetailResource extends JsonResource
 	{
 		$addtional_second = 0;
 		$today = date('Y-m-d');
-		$date_last_maintenance = $this->maintenance_sheets()->orderBy('date', 'desc')->first();
+		$date_last_maintenance = $this->maintenance_sheets->sortByDesc('date')->first();
 		$date_last_maintenance = $date_last_maintenance ? date('Y-m-d H:i:s', strtotime($date_last_maintenance->date)) : null;
 		if ($date_last_maintenance) {
 			$this->working_sheets->where('date', '>=', $date_last_maintenance)->where('date', '>=', $today)->map(function ($ws) use (&$addtional_second) {
