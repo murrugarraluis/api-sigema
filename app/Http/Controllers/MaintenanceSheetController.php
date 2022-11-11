@@ -31,7 +31,16 @@ class MaintenanceSheetController extends Controller
 	 */
 	public function index(Request $request): AnonymousResourceCollection
 	{
-		$maintenance_sheets = MaintenanceSheet::all()->sortByDesc('created_at');
+		$maintenance_sheets = MaintenanceSheet::with([
+			'maintenance_sheet_details',
+			'maintenance_type',
+			'supplier',
+//			'supplier.supplier_type',
+//			'supplier.document_type',
+			'machine.technical_sheet',
+		])
+			->take(300)
+			->get()->sortByDesc('created_at');
 		if ($request->start_date && $request->end_date) {
 			$maintenance_sheets = MaintenanceSheet::whereDate('date', '>=', $request->start_date)->whereDate('date', '<=', $request->end_date)
 				->get()->sortByDesc('created_at');

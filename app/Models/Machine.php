@@ -11,147 +11,145 @@ use PhpParser\Node\Attribute;
 
 class Machine extends Model
 {
-    use HasFactory, Uuids, SoftDeletes;
+	use HasFactory, Uuids, SoftDeletes;
 
-    protected $fillable = [
-        'serie_number',
-        'name',
-        'brand',
-        'model',
-        'image',
-        'maximum_working_time',
-        'maximum_working_time_per_day',
-				'recommendation'
-    ];
-    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+	protected $fillable = [
+		'serie_number',
+		'name',
+		'brand',
+		'model',
+		'image',
+		'maximum_working_time',
+		'maximum_working_time_per_day',
+		'recommendation'
+	];
+	protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+	protected $with = ['image', 'working_sheets','maintenance_sheets'];
 
-    public function articles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
-    {
-        return $this->belongsToMany(Article::class)->withTrashed();
-    }
+	public function articles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+	{
+		return $this->belongsToMany(Article::class)->withTrashed();
+	}
 
-    public function image(): \Illuminate\Database\Eloquent\Relations\MorphOne
-    {
-        return $this->morphOne(Image::class, 'imageable');
-    }
+	public function image(): \Illuminate\Database\Eloquent\Relations\MorphOne
+	{
+		return $this->morphOne(Image::class, 'imageable');
+	}
 
-    public function technical_sheet(): \Illuminate\Database\Eloquent\Relations\MorphOne
-    {
-        return $this->morphOne(TechnicalSheet::class, 'technical_sheetable');
-    }
+	public function technical_sheet(): \Illuminate\Database\Eloquent\Relations\MorphOne
+	{
+		return $this->morphOne(TechnicalSheet::class, 'technical_sheetable');
+	}
 
-    public function maintenance_sheets(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(MaintenanceSheet::class);
-    }
+	public function maintenance_sheets(): \Illuminate\Database\Eloquent\Relations\HasMany
+	{
+		return $this->hasMany(MaintenanceSheet::class);
+	}
 
-    public function working_sheets(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(WorkingSheet::class);
-    }
-		public function notifications(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(Notification::class);
-    }
+	public function working_sheets(): \Illuminate\Database\Eloquent\Relations\HasMany
+	{
+		return $this->hasMany(WorkingSheet::class);
+	}
 
-
-
+	public function notifications(): \Illuminate\Database\Eloquent\Relations\HasMany
+	{
+		return $this->hasMany(Notification::class);
+	}
 
 
-    private function converterHourInSeconds($hour)
-    {
-        return $hour * 3600;
-    }
+	private function converterHourInSeconds($hour)
+	{
+		return $hour * 3600;
+	}
 
-    public function getStatusAttribute(): string
-    {
-        $status = ["available", "operating", "not available"];
+	public function getStatusAttribute(): string
+	{
+		$status = ["available", "operating", "not available"];
 
-        $time_working_today = $this->getTimeWorkingToday();
-        $time_working = $this->getTimeWorking();
-        if (
-            $time_working_today + $this->converterHourInSeconds(1) >= $this->converterHourInSeconds($this->maximum_working_time_per_day) ||
-            $time_working + $this->converterHourInSeconds(6) >= $this->converterHourInSeconds($this->maximum_working_time)
-        ) {
-            return $status[2];
-        }
+		$time_working_today = $this->getTimeWorkingToday();
+		$time_working = $this->getTimeWorking();
+		if (
+			$time_working_today + $this->converterHourInSeconds(1) >= $this->converterHourInSeconds($this->maximum_working_time_per_day) ||
+			$time_working + $this->converterHourInSeconds(6) >= $this->converterHourInSeconds($this->maximum_working_time)
+		) {
+			return $status[2];
+		}
 
-        $is_working = $this->getIsWorking();
-        if ($is_working) {
-            return $status[1];
-        }
+		$is_working = $this->getIsWorking();
+		if ($is_working) {
+			return $status[1];
+		}
 
-        return $status[0];
-    }
+		return $status[0];
+	}
 
-    private function getTimeWorkingToday()
-    {
-        $sum_working_hours_in_seconds = WorkingSheet::join(DB::raw('(SELECT working_sheet_id,
+	private function getTimeWorkingToday()
+	{
+		$sum_working_hours_in_seconds = WorkingSheet::join(DB::raw('(SELECT working_sheet_id,
                             SUM(TIMESTAMPDIFF(SECOND, date_time_start, date_time_end)) AS total_seconds
                      from working_hours
                      GROUP BY working_sheet_id) AS wh '),
-            function ($join) {
-                $join->on('wh.working_sheet_id', '=', 'working_sheets.id');
-            })
-            ->where('machine_id', $this->id)
-            ->whereDate('date', '>=', date('Y-m-d'))
-            ->sum('total_seconds');
+			function ($join) {
+				$join->on('wh.working_sheet_id', '=', 'working_sheets.id');
+			})
+			->where('machine_id', $this->id)
+			->whereDate('date', '>=', date('Y-m-d'))
+			->sum('total_seconds');
 //				TODO:ADD SECONDS DIFF IF LASTEST WORKING SHEET OPEN
-        return $sum_working_hours_in_seconds;
-    }
+		return $sum_working_hours_in_seconds;
+	}
 
-    private function getTimeWorking()
-    {
+	private function getTimeWorking()
+	{
 //        $date_last_maintenance = $this->get_date_last_maintenance();
-        $date_last_maintenance = $this->maintenance_sheets()->orderBy('date', 'desc')->first();
-        $date_last_maintenance = $date_last_maintenance ? date('Y-m-d H:i:s', strtotime($date_last_maintenance->date)) : null;
+		$date_last_maintenance = $this->maintenance_sheets->sortByDesc('date')->first();
+		$date_last_maintenance = $date_last_maintenance ? date('Y-m-d H:i:s', strtotime($date_last_maintenance->date)) : null;
 //        dd($date_last_maintenance);
-        if ($date_last_maintenance) {
-            $sum_working_hours_in_seconds = WorkingSheet::join(DB::raw('(SELECT working_sheet_id,
+		if ($date_last_maintenance) {
+			$sum_working_hours_in_seconds = WorkingSheet::join(DB::raw('(SELECT working_sheet_id,
                             SUM(TIMESTAMPDIFF(SECOND, date_time_start, date_time_end)) AS total_seconds
                      from working_hours
                      GROUP BY working_sheet_id) AS wh '),
-                function ($join) {
-                    $join->on('wh.working_sheet_id', '=', 'working_sheets.id');
-                })
-                ->where('machine_id', $this->id)
-                ->where('date', '>=', $date_last_maintenance)
-//                ->get();
-                ->sum('total_seconds');
+				function ($join) {
+					$join->on('wh.working_sheet_id', '=', 'working_sheets.id');
+				})
+				->where('machine_id', $this->id)
+				->where('date', '>=', $date_last_maintenance)
+				->sum('total_seconds');
 //            dd($sum_working_hours_in_seconds);
-        } else {
-            $sum_working_hours_in_seconds = WorkingSheet::join(DB::raw('(SELECT working_sheet_id,
+		} else {
+			$sum_working_hours_in_seconds = WorkingSheet::join(DB::raw('(SELECT working_sheet_id,
                             SUM(TIMESTAMPDIFF(SECOND, date_time_start, date_time_end)) AS total_seconds
                      from working_hours
                      GROUP BY working_sheet_id) AS wh '),
-                function ($join) {
-                    $join->on('wh.working_sheet_id', '=', 'working_sheets.id');
-                })
-                ->where('machine_id', $this->id)
-                ->sum('total_seconds');
-        }
-        return $sum_working_hours_in_seconds;
-    }
+				function ($join) {
+					$join->on('wh.working_sheet_id', '=', 'working_sheets.id');
+				})
+				->where('machine_id', $this->id)
+				->sum('total_seconds');
+		}
+		return $sum_working_hours_in_seconds;
+	}
 
-    private function getIsWorking(): bool
-    {
-        return ($this->working_sheets()->where('is_open', true)->count() > 0);
-    }
+	private function getIsWorking(): bool
+	{
+		return ($this->working_sheets->where('is_open', true)->count() > 0);
+	}
 
-    function get_date_last_maintenance()
-    {
-        $date_last_maintenance = $this->maintenance_sheets()->orderBy('date', 'desc')->first();
-        return $date_last_maintenance ? date('Y-m-d', strtotime($date_last_maintenance->date)) : null;
-    }
+	function get_date_last_maintenance()
+	{
+		$date_last_maintenance = $this->maintenance_sheets()->orderBy('date', 'desc')->first();
+		return $date_last_maintenance ? date('Y-m-d', strtotime($date_last_maintenance->date)) : null;
+	}
 
-    function getAmountAttribute()
-    {
-        return $this->maintenance_sheets->sum(function ($sheet) {
-            return $sheet->maintenance_sheet_details->sum(function ($detail) {
-                return ($detail->price * $detail->quantity);
-            });
-        });
-    }
+	function getAmountAttribute()
+	{
+		return $this->maintenance_sheets->sum(function ($sheet) {
+			return $sheet->maintenance_sheet_details->sum(function ($detail) {
+				return ($detail->price * $detail->quantity);
+			});
+		});
+	}
 //    function getmaintenanceCountAttribute()
 //    {
 //        return $this->maintenance_sheets()->count();
