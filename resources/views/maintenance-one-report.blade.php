@@ -8,14 +8,14 @@
 	@include('includes.header',['title' => 'Maintenance Sheet'])
 </header>
 <div>
-    <table class="w-100 mb-2">
+    <table class="table-info">
         <tr>
             <td class="text-left">DATE: {{$data["date"]}}</td>
             <td class="text-center">TYPE: {{$data["maintenance_type"]["name"]}}</td>
             <td class="text-right">RESPONSIBLE: {{$data["responsible"]}}</td>
         </tr>
     </table>
-    <table class="w-100 mb-2">
+    <table class="table-info">
         <tr>
             <td class="text-left">SUPPLIER: {{$data["supplier"]["name"]}}</td>
             <td class="text-left">TECHNICAL: {{$data["technical"]}}</td>
@@ -25,7 +25,7 @@
 </div>
 <hr>
 <div class="">
-    <table class="table table-bordered table-sm">
+    <table class="table-data">
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -39,7 +39,7 @@
         <tbody>
         @foreach($data["detail"]->jsonSerialize() as $key=>$item)
             <tr>
-                <th scope="row">{{$key+1}}</th>
+                <td scope="row">{{$key+1}}</td>
                 <td>{{$item["article"]?$item["article"]["serie_number"]:"XXXXXXXXXXXXX"}}</td>
                 <td>{{$item["article"]?$item["article"]["name"]:$item["description"]}}</td>
                 <td class="text-right">{{number_format((float)$item["price"], 2, '.', '')}}
