@@ -8,7 +8,7 @@
 	@include('includes.header',['title' => 'Maintenance Sheet'])
 </header>
 <div>
-    <table class="table table-sm">
+    <table class="table-info">
         <thead>
         <tr>
             <td scope="col">start date: {{$data["start_date"]}}</td>
@@ -21,7 +21,7 @@
 </div>
 <hr>
 <div class="">
-    <table class="table table-bordered table-sm">
+    <table class="table-data">
         <thead>
         <tr>
             {{--            <th scope="col">#</th>--}}

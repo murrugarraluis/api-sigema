@@ -69,7 +69,7 @@ class MaintenanceSheetController extends Controller
 		else $report = $report->sortByDesc($request->sort_by)->values();
 
 		$data = [
-			"data" => $report,
+			"data" => $report->jsonSerialize(),
 			"total_machines" => MachinesResumenPDFResource::collection($machines)->count(),
 			"total_amount" => $machines->sum('amount'),
 			"start_date" => $request->start_date,
@@ -175,7 +175,7 @@ class MaintenanceSheetController extends Controller
 		$data = $this->show($maintenanceSheet)->jsonSerialize();
 		$pdf = \PDF::loadView('maintenance-one-report', compact('data'));
 		$pdf->setPaper('A4');
-		return $pdf->download();
+//		return $pdf->download();
 
 		$name_file = Str::uuid()->toString();
 		$path = 'public/reports/' . $name_file . '.pdf';
