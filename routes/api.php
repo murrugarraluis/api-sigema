@@ -22,8 +22,8 @@ use App\Http\Controllers\{
 	WorkingSheetController,
 	RoleController,
 	PermissionController,
-	FileController
-
+	FileController,
+	DashboardController
 };
 
 /*
@@ -42,11 +42,9 @@ Route::prefix('v1/')->group(function () {
 	Route::middleware(['auth:sanctum'])->group(function () {
 		Route::post('logout', [AuthController::class, 'logout']);
 
-		Route::post('maintenance-sheets/pdf', [MaintenanceSheetController::class, 'index_pdf']);
-		Route::post('attendance-sheets/pdf', [AttendanceSheetController::class, 'index_pdf']);
-
-		Route::get('maintenance-sheets/{maintenanceSheet}/pdf', [MaintenanceSheetController::class, 'show_pdf']);
-		Route::get('working-sheets/{workingSheet}/pdf', [WorkingSheetController::class, 'show_pdf']);
+		Route::group(['middleware' => ['permission:dashboard']], function () {
+			Route::get('dashboard', [DashboardController::class, 'index']);
+		});
 
 		Route::group(['middleware' => ['permission:users']], function () {
 			Route::get('users', [UserController::class, 'index']);
@@ -71,6 +69,7 @@ Route::prefix('v1/')->group(function () {
 			Route::get('attendance-sheets/{attendanceSheet}', [AttendanceSheetController::class, 'show']);
 			Route::post('attendance-sheets', [AttendanceSheetController::class, 'store']);
 			Route::put('attendance-sheets/{attendanceSheet}', [AttendanceSheetController::class, 'update']);
+
 
 		});
 
@@ -105,6 +104,8 @@ Route::prefix('v1/')->group(function () {
 			Route::get('maintenance-sheets/{maintenanceSheet}', [MaintenanceSheetController::class, 'show']);
 			Route::post('maintenance-sheets', [MaintenanceSheetController::class, 'store']);
 			Route::delete('maintenance-sheets/{maintenanceSheet}', [MaintenanceSheetController::class, 'destroy']);
+			Route::get('maintenance-sheets/{maintenanceSheet}/pdf', [MaintenanceSheetController::class, 'show_pdf']);
+
 			//
 		});
 
@@ -117,6 +118,8 @@ Route::prefix('v1/')->group(function () {
 			Route::put('working-sheets/{workingSheet}/restart', [WorkingSheetController::class, 'restart']);
 			Route::put('working-sheets/{workingSheet}/stop', [WorkingSheetController::class, 'stop']);
 			Route::delete('working-sheets/{workingSheet}', [WorkingSheetController::class, 'destroy']);
+			Route::get('working-sheets/{workingSheet}/pdf', [WorkingSheetController::class, 'show_pdf']);
+
 		});
 
 
@@ -143,6 +146,12 @@ Route::prefix('v1/')->group(function () {
 		Route::get('banks', [BankController::class, 'index']);
 
 		Route::get('supplier-types', [SupplierTypeController::class, 'index']);
+
+
+		Route::group(['middleware' => ['permission:reports']], function () {
+			Route::post('maintenance-sheets/pdf', [MaintenanceSheetController::class, 'index_pdf']);
+			Route::post('attendance-sheets/pdf', [AttendanceSheetController::class, 'index_pdf']);
+		});
 
 		Route::group(['middleware' => ['permission:roles']], function () {
 			Route::get('roles', [RoleController::class, 'index']);
