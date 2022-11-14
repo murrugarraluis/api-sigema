@@ -43,7 +43,7 @@ Route::prefix('v1/')->group(function () {
 		Route::post('logout', [AuthController::class, 'logout']);
 
 		Route::post('maintenance-sheets/pdf', [MaintenanceSheetController::class, 'index_pdf']);
-		Route::get('attendance-sheets/pdf', [AttendanceSheetController::class, 'index_pdf']);
+		Route::post('attendance-sheets/pdf', [AttendanceSheetController::class, 'index_pdf']);
 
 		Route::get('maintenance-sheets/{maintenanceSheet}/pdf', [MaintenanceSheetController::class, 'show_pdf']);
 		Route::get('working-sheets/{workingSheet}/pdf', [WorkingSheetController::class, 'show_pdf']);
