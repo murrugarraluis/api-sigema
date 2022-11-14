@@ -8,12 +8,12 @@
 	@include('includes.header',['title' => 'Attendance Sheet'])
 </header>
 <div>
-	<table class="w-100 mb-2">
+	<table class="table-info">
 		<tr>
 			<td class="text-left">Sort By: {{$data["sort_by"]}}</td>
 		</tr>
 	</table>
-	<table class="w-100 mb-2">
+	<table class="table-info">
 		<tr>
 			<td class="text-left">Start Date: {{$data["start_date"]}}</td>
 			<td class="text-center">End Date: {{$data["end_date"]}}</td>
@@ -23,7 +23,7 @@
 </div>
 <hr>
 <div class="">
-	<table class="table table-bordered table-sm">
+	<table class="table-data">
 		<thead>
 		<tr>
 			<th scope="col">#</th>
@@ -45,7 +45,7 @@
 		@if($data["type"] == "attended")
 			@foreach($data["employees"]->jsonSerialize() as $key=>$item)
 				<tr>
-					<th scope="row">{{$key+1}}</th>
+					<td scope="row">{{$key+1}}</td>
 					<td>{{$item["lastname"]}}</td>
 					<td>{{$item["name"]}}</td>
 					<td class="text-center">{{$item["attendances"]}}</td>
