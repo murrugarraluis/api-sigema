@@ -16,7 +16,7 @@ class EmployeeSeeder extends Seeder
      */
     public function run()
     {
-        Employee::factory(10)->create();
+        Employee::factory(50)->create();
         Employee::factory()->create([
             'user_id' => null
         ]);

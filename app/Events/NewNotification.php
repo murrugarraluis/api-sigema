@@ -29,10 +29,10 @@ class NewNotification implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
+     * @return Channel
+		 */
     public function broadcastOn()
     {
-        return new Channel('notifications');
+        return new PrivateChannel('notifications');
     }
 }

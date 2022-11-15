@@ -44,7 +44,7 @@ class AttendanceSheetPDFResource extends JsonResource
 
 	function get_total_absences()
 	{
-		return $this->attendance_sheets->where('pivot.attendance', 0)->sortByDesc('date');
+		return $this->attendance_sheets->where('pivot.attendance', 0)->sortByDesc('date')->values();
 	}
 
 	function get_working_hours_total()
