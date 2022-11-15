@@ -30,6 +30,7 @@ class RoleSeeder extends Seeder
 		Permission::create(['name' => 'roles']);
 		Permission::create(['name' => 'dashboard']);
 		Permission::create(['name' => 'reports']);
+		Permission::create(['name' => 'notifications']);
 
 		$permissions = Permission::all();
 		$role_admin->syncPermissions($permissions);
