@@ -16,7 +16,7 @@ class NotificationController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $notifications = Notification::all();
+        $notifications = Notification::all()->sortByDesc('created_at')->values();
         return NotificationResource::collection($notifications);
     }
 

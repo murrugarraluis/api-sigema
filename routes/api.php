@@ -25,6 +25,7 @@ use App\Http\Controllers\{
 	FileController,
 	DashboardController
 };
+use Tests\Unit\NotificationControllerTest;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,9 @@ Route::prefix('v1/')->group(function () {
 
 		Route::group(['middleware' => ['permission:dashboard']], function () {
 			Route::get('dashboard', [DashboardController::class, 'index']);
+		});
+		Route::group(['middleware' => ['permission:notifications']], function () {
+			Route::get('notifications', [NotificationController::class, 'index']);
 		});
 
 		Route::group(['middleware' => ['permission:users']], function () {
