@@ -75,10 +75,10 @@
 						{{--							<td rowspan="{{count($item["get_total_absences"])}}" class="align-middle">{{$item["lastname"]}}</td>--}}
 						{{--							<td rowspan="{{count($item["get_total_absences"])}}" class="align-middle">{{$item["name"]}}</td>--}}
 						{{--						@endif--}}
-						<td class="align-middle">{{$key2 == 0 ?$number_employee : '--'}}
+						<td class="align-middle">{{$key2 == 0 ?$number_employee : ''}}
 						</td>
-						<td class="align-middle">{{$key2 == 0?$item["lastname"]: '--'}}</td>
-						<td class="align-middle">{{$key2 == 0?$item["name"]:'--'}}</td>
+						<td class="align-middle">{{$key2 == 0?$item["lastname"]: ''}}</td>
+						<td class="align-middle">{{$key2 == 0?$item["name"]:''}}</td>
 						<td>{{$item2["date"]}}</td>
 						<td>{{$item2["pivot"]["missed_reason"]}}</td>
 						<td>{{$item2["pivot"]["missed_description"]}}</td>
