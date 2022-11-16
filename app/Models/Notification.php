@@ -14,4 +14,9 @@ class Notification extends Model
 	{
 			return $this->belongsTo(Machine::class);
 	}
+	public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+	{
+		return $this->belongsToMany(User::class)
+			->withPivot('is_view','send');
+	}
 }

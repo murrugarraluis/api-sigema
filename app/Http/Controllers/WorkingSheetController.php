@@ -8,6 +8,7 @@ use App\Http\Resources\WorkingSheetDetailResource;
 use App\Http\Resources\WorkingSheetResource;
 use App\Models\Machine;
 use App\Models\Notification;
+use App\Models\User;
 use App\Models\WorkingSheet;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use PhpParser\Builder;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class WorkingSheetController extends Controller
@@ -97,31 +99,45 @@ class WorkingSheetController extends Controller
 		$date_limit_per_day_1 = date('Y-m-d H:i:s', (time() + $time_limit_per_day_1));;;
 
 		$now = date('Y-m-d H:i:s');
+		$users = User::select('id')->with(['roles','roles.permissions'])->whereHas('roles.permissions', function ($query){
+			$query->where('name','notifications');
+		})->get();
+		$user_ids = [];
+		$users->map(function($user) use (&$user_ids){
+			$user_ids[] = $user->id;
+		});
+//		$users = User::with(['roles','roles.permissions'])->get();
+
+//		dd($user_id);
 //		notify 48 hours before the limit is reached
 		if ($date_limit_global_48 >= $now) {
-			Notification::create([
+			$notification = Notification::create([
 				"machine_id" => $machine_id,
 				"message" => "this machine has 48 hours of working time left",
 				"date_send_notification" => $date_limit_global_48
 			]);
+			$notification->users()->attach($user_ids);
 		}
 //		notify 6 hours before the limit is reached
 
 		if ($date_limit_global_6 >= $now) {
-			Notification::create([
+			$notification=Notification::create([
 				"machine_id" => $machine_id,
 				"message" => "this machine has 6 hours of working time left",
 				"date_send_notification" => $date_limit_global_6
 			]);
+			$notification->users()->attach($user_ids);
+
 		}
 
 //		notify 1 hours before the limit is reached
 		if ($date_limit_per_day_1 >= $now) {
-			Notification::create([
+			$notification=Notification::create([
 				"machine_id" => $machine_id,
 				"message" => "this machine has 1 hours of working time left",
 				"date_send_notification" => $date_limit_per_day_1
 			]);
+			$notification->users()->attach($user_ids);
 		}
 //		dd($date_limit_global,$date_limit_per_day);
 	}
