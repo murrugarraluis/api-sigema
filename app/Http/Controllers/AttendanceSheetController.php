@@ -12,6 +12,7 @@ use App\Http\Resources\EmployeeResource;
 use App\Http\Resources\MachinesDetailPDFResource;
 use App\Http\Resources\MachinesResumenPDFResource;
 use App\Models\AttendanceSheet;
+use App\Models\Configuration;
 use App\Models\Employee;
 use App\Models\Machine;
 use Illuminate\Database\Eloquent\Builder;
@@ -181,7 +182,13 @@ class AttendanceSheetController extends Controller
 			if ($request->employees) {
 //				if (date('Y - m - d', strtotime($attendanceSheet->date)) !== date('Y - m - d')) return response()->json(['message' => 'cannot update a past attendance sheet . '])->setStatusCode(400);
 				$employees = [];
-				array_map(function ($employee) use (&$employees) {
+				$search = "time_turn_" . $attendanceSheet->turn;
+				$times = Configuration::where('name', 'like', '%' . $search . '%')->get();
+				$start_time_db = $times->where('name', 'start_' . $search)->first()->value;
+				$end_time_db = $times->where('name', 'end_' . $search)->first()->value;
+
+//				dd($start_time_db, "08:00:00", $start_time_db <= "07:00:00");
+				array_map(function ($employee) use (&$employees, $start_time_db, $end_time_db) {
 					$employee_id = $employee['id'];
 					$check_in = array_key_exists('check_in', $employee) ? $employee['check_in'] : null;
 					$check_out = array_key_exists('check_out', $employee) ? $employee['check_out'] : null;
@@ -190,8 +197,8 @@ class AttendanceSheetController extends Controller
 					$missed_description = array_key_exists('missed_description', $employee) ? $employee['missed_description'] : null;;
 
 					$employees[$employee_id] = [
-						"check_in" => $check_in,
-						"check_out" => $check_out,
+						"check_in" => $check_in <= $start_time_db ? $start_time_db : $check_in,
+						"check_out" => $check_out <= $end_time_db ? $check_out : $end_time_db,
 						"attendance" => $attendance,
 						"missed_reason" => $missed_reason,
 						"missed_description" => $missed_description,

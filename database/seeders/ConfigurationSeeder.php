@@ -14,11 +14,11 @@ class ConfigurationSeeder extends Seeder
 	 */
 	public function run()
 	{
-		Configuration::factory()->create(['name' => 'start_time_turn_one', "value" => '07:00:00']);
-		Configuration::factory()->create(['name' => 'end_time_turn_one', "value" => '19:00:00']);
+		Configuration::factory()->create(['name' => 'start_time_turn_day', "value" => '07:00:00']);
+		Configuration::factory()->create(['name' => 'end_time_turn_day', "value" => '19:00:00']);
 
-		Configuration::factory()->create(['name' => 'start_time_turn_two', "value" => '19:00:00']);
-		Configuration::factory()->create(['name' => 'end_time_turn_two', "value" => '07:00:00']);
+		Configuration::factory()->create(['name' => 'start_time_turn_night', "value" => '19:00:00']);
+		Configuration::factory()->create(['name' => 'end_time_turn_night', "value" => '07:00:00']);
 
 	}
 }
