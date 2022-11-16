@@ -178,7 +178,7 @@ class AttendanceSheetController extends Controller
 				$attendanceSheet->update(['is_open' => $request->is_open]);
 			}
 			if ($request->employees) {
-				if (date('Y-m-d', strtotime($attendanceSheet->date)) !== date('Y-m-d')) return response()->json(['message' => 'cannot update a past attendance sheet.'])->setStatusCode(400);
+//				if (date('Y-m-d', strtotime($attendanceSheet->date)) !== date('Y-m-d')) return response()->json(['message' => 'cannot update a past attendance sheet.'])->setStatusCode(400);
 				$employees = [];
 				array_map(function ($employee) use (&$employees) {
 					$employee_id = $employee['id'];
