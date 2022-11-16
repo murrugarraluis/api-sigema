@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Events\NewNotification;
 use App\Http\Resources\NotificationResource;
 use App\Models\Notification;
+use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
@@ -54,7 +55,19 @@ class SendMachineNotification extends Command
 				}else{
 					$data = new NotificationResource($notification);
 					event(new NewNotification($data));
+
+					$users = User::select('id')->with(['roles','roles.permissions'])->whereHas('roles.permissions', function ($query){
+						$query->where('name','notifications');
+					})->get();
+					$user_ids = [];
+					$users->map(function($user) use (&$user_ids){
+						$user_ids[] = $user->id;
+					});
+
 					$notification->update(['is_send' => true]);
+					$notification->users()->syncWithPivotValues($user_ids, [
+						'send' => true
+					]);
 				}
 			});
 		} catch (Exception $e) {
