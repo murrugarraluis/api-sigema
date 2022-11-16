@@ -54,7 +54,7 @@
 					<td>{{$item["brand"]}}
 					<td>{{$item["model"]}}</td>
 					<td>{{$item["maintenance_count"]}}</td>
-					<td class="text-right">{{number_format((float)$item["amount"], 2, '.', '')}}</td>
+					<td style="text-align: right">{{number_format((float)$item["amount"], 2, '.', '')}}</td>
 				</tr>
 			@endforeach
 		@else
@@ -77,18 +77,18 @@
 						<td>{{$item2["maintenance_type"]["name"]}}</td>
 						<td>{{$item2["supplier"]["name"]}}</td>
 						<td>{{$item2["responsible"]}}</td>
-						<td class="text-right">{{number_format((float)$item2["amount"], 2, '.', '')}}</td>
+						<td style="text-align: right">{{number_format((float)$item2["amount"], 2, '.', '')}}</td>
 					</tr>
 				@endforeach
 				<tr>
 					<td colspan="9"><strong>Number Maintenance: {{count($item["maintenance_sheets"])}}</strong></td>
-					<td class="text-right"><strong>{{number_format((float)$item["amount"], 2, '.', '')}}</strong></td>
+					<td style="text-align: right"><strong>{{number_format((float)$item["amount"], 2, '.', '')}}</strong></td>
 				</tr>
 			@endforeach
 		@endif
 		<tr>
 			<td colspan="{{$data["type"] == "resumen"?5:9}}"><strong>Total</strong></td>
-			<td class="text-right"><strong>{{number_format((float)$data["total_amount"], 2, '.', '')}}</strong></td>
+			<td style="text-align: right"><strong>{{number_format((float)$data["total_amount"], 2, '.', '')}}</strong></td>
 		</tr>
 		</tbody>
 	</table>

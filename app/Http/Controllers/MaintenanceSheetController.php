@@ -79,7 +79,8 @@ class MaintenanceSheetController extends Controller
 //		return $data;
 
 		$pdf = \PDF::loadView('maintenance-report', compact('data'));
-		$pdf->setPaper('A4', 'landscape');
+		$orientation = $request->type == 'resumen' ? 'portraint':'landscape';
+		$pdf->setPaper('A4', $orientation);
 //        $font = $pdf->getFontMetrics()->get_font("helvetica", "bold");
 //        $pdf->getCanvas()->page_text(72, 18, "Header: {PAGE_NUM} of {PAGE_COUNT}", $font, 10, array(0,0,0));
 
