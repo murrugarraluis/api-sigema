@@ -129,6 +129,7 @@ class AttendanceSheetController extends Controller
 			$attendance_sheet = AttendanceSheet::create([
 				'date' => date('Y-m-d H:i:s'),
 				'responsible' => Auth()->user()->employee()->first()->name . " " . Auth()->user()->employee()->first()->lastname,
+				'turn' => $count_attendance_sheet == 0 ? 'day' : 'night',
 				'is_open' => true,
 			]);
 
@@ -140,7 +141,7 @@ class AttendanceSheetController extends Controller
 
 			DB::commit();
 			return (new AttendanceSheetDetailResource($attendance_sheet))
-				->additional(['message' => 'Attendance Sheet created.'])
+				->additional(['message' => 'Attendance Sheet created . '])
 				->response()
 				->setStatusCode(201);
 		} catch (\Exception $e) {
@@ -173,12 +174,12 @@ class AttendanceSheetController extends Controller
 	{
 		DB::beginTransaction();
 		try {
-//			if (!$attendanceSheet->is_open) return response()->json(['message' => 'cannot update a closed attendance sheet.'])->setStatusCode(400);
+//			if (!$attendanceSheet->is_open) return response()->json(['message' => 'cannot update a closed attendance sheet . '])->setStatusCode(400);
 			if ($request->has('is_open')) {
 				$attendanceSheet->update(['is_open' => $request->is_open]);
 			}
 			if ($request->employees) {
-//				if (date('Y-m-d', strtotime($attendanceSheet->date)) !== date('Y-m-d')) return response()->json(['message' => 'cannot update a past attendance sheet.'])->setStatusCode(400);
+//				if (date('Y - m - d', strtotime($attendanceSheet->date)) !== date('Y - m - d')) return response()->json(['message' => 'cannot update a past attendance sheet . '])->setStatusCode(400);
 				$employees = [];
 				array_map(function ($employee) use (&$employees) {
 					$employee_id = $employee['id'];
@@ -201,7 +202,7 @@ class AttendanceSheetController extends Controller
 			}
 			DB::commit();
 			return (new AttendanceSheetDetailResource($attendanceSheet))
-				->additional(['message' => 'Attendance Sheet updated.']);
+				->additional(['message' => 'Attendance Sheet updated . ']);
 		} catch (\Exception $e) {
 			DB::rollback();
 			throw new BadRequestException($e->getMessage());
@@ -218,6 +219,6 @@ class AttendanceSheetController extends Controller
 	function destroy(AttendanceSheet $attendanceSheet): JsonResponse
 	{
 		$attendanceSheet->delete();
-		return response()->json(['message' => 'Attendance Sheet removed.'], 200);
+		return response()->json(['message' => 'Attendance Sheet removed . '], 200);
 	}
 }

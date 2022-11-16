@@ -21,6 +21,7 @@ class AttendanceSheetResource extends JsonResource
 //            'time_end' => $this->time_end,
             'responsible' => $this->responsible,
 //            'employee' => AttendanceEmployeeResource::collection($this->employees),
+						'turn'=> $this->turn,
             'is_open' => $this->is_open,
         ];
     }
