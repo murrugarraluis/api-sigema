@@ -173,7 +173,7 @@ class AttendanceSheetController extends Controller
 	{
 		DB::beginTransaction();
 		try {
-			if (!$attendanceSheet->is_open) return response()->json(['message' => 'cannot update a closed attendance sheet.'])->setStatusCode(400);
+//			if (!$attendanceSheet->is_open) return response()->json(['message' => 'cannot update a closed attendance sheet.'])->setStatusCode(400);
 			if ($request->has('is_open')) {
 				$attendanceSheet->update(['is_open' => $request->is_open]);
 			}
