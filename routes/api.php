@@ -48,12 +48,14 @@ Route::prefix('v1/')->group(function () {
 		});
 		Route::group(['middleware' => ['permission:notifications']], function () {
 			Route::get('notifications', [NotificationController::class, 'index']);
+			Route::put('notifications/check', [NotificationController::class, 'check']);
+
 		});
 
 		Route::group(['middleware' => ['permission:users']], function () {
 			Route::get('users', [UserController::class, 'index']);
 			Route::get('users/{user}', [UserController::class, 'show']);
-			Route::get('users/{user}/notifications', [UserController::class, 'show_notifications']);
+//			Route::get('users/{user}/notifications', [UserController::class, 'show_notifications']);
 			Route::post('users', [UserController::class, 'store']);
 			Route::put('users/{user}', [UserController::class, 'update']);
 			Route::delete('users/{user}', [UserController::class, 'destroy']);
