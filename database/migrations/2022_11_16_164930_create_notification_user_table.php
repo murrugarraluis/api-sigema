@@ -15,7 +15,7 @@ class CreateNotificationUserTable extends Migration
     {
         Schema::create('notification_user', function (Blueprint $table) {
 					$table->foreignUuid('notification_id')->constrained('notifications')->ondelete('cascade');
-					$table->foreignUuid('user_id')->constrained('users');
+					$table->foreignUuid('user_id')->constrained('users')->ondelete('cascade');
 					$table->boolean('is_view')->default(0);
 					$table->boolean('send')->default(0);
 					$table->primary(['notification_id', 'user_id'],'notification_user_pk');
