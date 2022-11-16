@@ -1,4 +1,4 @@
-<table class="w-100 mb-4">
+<table class="table-info">
 	<thead>
 	<tr class="container">
 		<th class="image">

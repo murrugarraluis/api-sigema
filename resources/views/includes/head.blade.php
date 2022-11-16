@@ -20,9 +20,19 @@
 	.container .title {
 		/*padding:10px 170px*/
 	}
+	.title{
+		/*float:center;*/
+		/*background:red;*/
+		/*text-align:center;*/
+		/*display:flex;*/
+		/*justify-content:center;*/
+    /*align-items:center;*/
+	}
 
 	.title h2 {
-		width: 380px;
+		/*background-color: blue;*/
+		width: 100%;
+		text-align: center;
 		/*background-color:red;*/
 		font-size: 25px;
 	}
