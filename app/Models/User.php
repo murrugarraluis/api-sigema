@@ -57,7 +57,8 @@ class User extends Authenticatable
 
 	public function notifications(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	{
-		return $this->belongsToMany(Notification::class);
+		return $this->belongsToMany(Notification::class)
+			->withPivot('is_view','send');
 	}
 
 	public function employee(): \Illuminate\Database\Eloquent\Relations\HasOne
