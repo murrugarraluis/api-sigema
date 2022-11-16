@@ -168,27 +168,21 @@ class AttendanceSheetController extends Controller
 	 *
 	 * @param AttendanceUpdateRequest $request
 	 * @param AttendanceSheet $attendanceSheet
-	 * @return AttendanceSheetDetailResource|JsonResponse|object
+	 * @return AttendanceSheetDetailResource
 	 */
 	public
-	function update(AttendanceUpdateRequest $request, AttendanceSheet $attendanceSheet)
+	function update(AttendanceUpdateRequest $request, AttendanceSheet $attendanceSheet): AttendanceSheetDetailResource
 	{
 		DB::beginTransaction();
 		try {
-//			if (!$attendanceSheet->is_open) return response()->json(['message' => 'cannot update a closed attendance sheet . '])->setStatusCode(400);
-			if ($request->has('is_open')) {
-				$attendanceSheet->update(['is_open' => $request->is_open]);
-			}
 			if ($request->employees) {
-//				if (date('Y - m - d', strtotime($attendanceSheet->date)) !== date('Y - m - d')) return response()->json(['message' => 'cannot update a past attendance sheet . '])->setStatusCode(400);
 				$employees = [];
 				$search = "time_turn_" . $attendanceSheet->turn;
 				$times = Configuration::where('name', 'like', '%' . $search . '%')->get();
 				$start_time_db = $times->where('name', 'start_' . $search)->first()->value;
 				$end_time_db = $times->where('name', 'end_' . $search)->first()->value;
 
-//				dd($start_time_db, "08:00:00", $start_time_db <= "07:00:00");
-				array_map(function ($employee) use (&$employees, $start_time_db, $end_time_db) {
+				array_map(function ($employee) use (&$employees, $start_time_db, $end_time_db, $request) {
 					$employee_id = $employee['id'];
 					$check_in = array_key_exists('check_in', $employee) ? $employee['check_in'] : null;
 					$check_out = array_key_exists('check_out', $employee) ? $employee['check_out'] : null;
@@ -196,16 +190,35 @@ class AttendanceSheetController extends Controller
 					$missed_reason = array_key_exists('missed_reason', $employee) ? $employee['missed_reason'] : null;;
 					$missed_description = array_key_exists('missed_description', $employee) ? $employee['missed_description'] : null;;
 
-					$employees[$employee_id] = [
-						"check_in" => $check_in <= $start_time_db ? $start_time_db : $check_in,
-						"check_out" => $check_out <= $end_time_db ? $check_out : $end_time_db,
-						"attendance" => $attendance,
-						"missed_reason" => $missed_reason,
-						"missed_description" => $missed_description,
+					if ($request->is_open) {
+						$employees[$employee_id] = [
+							"check_in" => $check_in <= $start_time_db ? $start_time_db : $check_in,
+							"check_out" => $check_out <= $end_time_db ? $check_out : $end_time_db,
+							"attendance" => $attendance,
+							"missed_reason" => $missed_reason,
+							"missed_description" => $missed_description,
+						];
+					} else {
+						if ($attendance && $check_in && !$check_out) {
+							$employees[$employee_id] = [
+								"check_out" => $end_time_db
+							];
+						}else{
+							$employees[$employee_id] = [
+								"check_in" => $check_in && $check_in <= $start_time_db ? $start_time_db : $check_in,
+								"check_out" => $check_out <= $end_time_db ? $check_out : $end_time_db,
+								"attendance" => $attendance,
+								"missed_reason" => $missed_reason,
+								"missed_description" => $missed_description,
+							];
+						}
+					}
 
-					];
 				}, $request->employees);
 				$attendanceSheet->employees()->sync($employees);
+			}
+			if ($request->has('is_open')) {
+				$attendanceSheet->update(['is_open' => $request->is_open]);
 			}
 			DB::commit();
 			return (new AttendanceSheetDetailResource($attendanceSheet))
