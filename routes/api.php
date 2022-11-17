@@ -48,7 +48,7 @@ Route::prefix('v1/')->group(function () {
 		});
 		Route::group(['middleware' => ['permission:notifications']], function () {
 			Route::get('notifications', [NotificationController::class, 'index']);
-			Route::put('notifications/check', [NotificationController::class, 'check']);
+			Route::get('notifications/check', [NotificationController::class, 'check']);
 
 		});
 

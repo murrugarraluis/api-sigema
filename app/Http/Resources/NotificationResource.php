@@ -19,7 +19,8 @@ class NotificationResource extends JsonResource
 				"name" => $this->machine->name,
 			],
 			"message" => $this->message,
-			"date_send_notification" => $this->date_send_notification
+			"date_send_notification" => $this->date_send_notification,
+			"is_view"=>0
 		];
 	}
 }

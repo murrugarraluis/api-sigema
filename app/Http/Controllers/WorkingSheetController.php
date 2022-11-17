@@ -113,33 +113,30 @@ class WorkingSheetController extends Controller
 		if ($date_limit_global_48 >= $now) {
 			$notification = Notification::create([
 				"machine_id" => $machine_id,
-				"message" => "this machine has 48 hours of working time left",
+				"message" => "has 48 hours of working time left",
 				"date_send_notification" => $date_limit_global_48
 			]);
 			$notification->users()->attach($user_ids);
 		}
 //		notify 6 hours before the limit is reached
-
 		if ($date_limit_global_6 >= $now) {
 			$notification=Notification::create([
 				"machine_id" => $machine_id,
-				"message" => "this machine has 6 hours of working time left",
+				"message" => "has 6 hours of working time left",
 				"date_send_notification" => $date_limit_global_6
 			]);
 			$notification->users()->attach($user_ids);
-
 		}
 
 //		notify 1 hours before the limit is reached
 		if ($date_limit_per_day_1 >= $now) {
 			$notification=Notification::create([
 				"machine_id" => $machine_id,
-				"message" => "this machine has 1 hours of working time left",
+				"message" => "has 1 hours of working time left today",
 				"date_send_notification" => $date_limit_per_day_1
 			]);
 			$notification->users()->attach($user_ids);
 		}
-//		dd($date_limit_global,$date_limit_per_day);
 	}
 
 	function converterTimeSeconds($hour, $minute, $second)

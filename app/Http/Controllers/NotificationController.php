@@ -18,7 +18,7 @@ class NotificationController extends Controller
 	public function index(): AnonymousResourceCollection
 	{
 
-		$notifications = Auth()->user()->notifications->where('pivot.send', true)->sortByDesc('created_at')->values();
+		$notifications = Auth()->user()->notifications->where('pivot.send', true)->sortByDesc('date_send_notification')->values();
 		return MyNotificationsResources::collection($notifications);
 	}
 
@@ -39,8 +39,8 @@ class NotificationController extends Controller
 		$notifications->map(function ($notification) {
 			$notification->users()->updateExistingPivot(Auth()->user()->id, ['is_view' => true]);
 		});
-		return response()->json(['status' =>'success']);
-
+		$notifications = Auth()->user()->notifications->where('pivot.send', true)->sortByDesc('date_send_notification')->values();
+		return MyNotificationsResources::collection($notifications);
 	}
 
 	/**
