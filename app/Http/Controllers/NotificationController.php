@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MyNotificationsResources;
 use App\Http\Resources\NotificationResource;
 use App\Models\Notification;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class NotificationController extends Controller
 	{
 
 		$notifications = Auth()->user()->notifications->where('pivot.send', true)->sortByDesc('created_at')->values();
-		return NotificationResource::collection($notifications);
+		return MyNotificationsResources::collection($notifications);
 	}
 
 	/**
