@@ -201,7 +201,7 @@ class AttendanceSheetController extends Controller
 					} else {
 						if ($attendance && $check_in && !$check_out) {
 							$employees[$employee_id] = [
-								"check_out" => $end_time_db
+								"check_out" => $check_out <= $end_time_db ? $check_out : $end_time_db,
 							];
 						}else{
 							$employees[$employee_id] = [
