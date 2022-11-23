@@ -130,7 +130,7 @@ class AttendanceSheetController extends Controller
 			$attendance_sheet = AttendanceSheet::create([
 				'date' => date('Y-m-d H:i:s'),
 				'responsible' => Auth()->user()->employee()->first()->name . " " . Auth()->user()->employee()->first()->lastname,
-				'turn' => $count_attendance_sheet == 0 ? 'day' : 'night',
+				'turn' => $request->turn,
 				'is_open' => true,
 			]);
 
