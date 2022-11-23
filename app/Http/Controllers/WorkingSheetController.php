@@ -138,6 +138,9 @@ class WorkingSheetController extends Controller
 			$notification->users()->attach($user_ids);
 		}
 	}
+	public function deleteNotifications($machine_id){
+		Notification::where('is_send', false)->where('machine_id',$machine_id)->delete();
+	}
 
 	function converterTimeSeconds($hour, $minute, $second)
 	{
@@ -159,6 +162,7 @@ class WorkingSheetController extends Controller
 					'date_time_end' => $request->date
 				]);
 			}
+			$this->deleteNotifications($workingSheet->machine->id);
 			DB::commit();
 			return (new WorkingSheetDetailResource($workingSheet))
 				->additional(['message' => 'Work paused.']);
