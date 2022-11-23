@@ -87,7 +87,10 @@
 			@endforeach
 		@endif
 		<tr>
-			<td colspan="{{$data["type"] == "resumen"?5:9}}"><strong>Total</strong></td>
+			<td colspan="{{$data["type"] == "resumen"?5:9}}">
+				<strong style="margin-right: 7px">Number Machines: {{$data["total_machines"]}} </strong>
+				<strong>Number Maintenances: {{$data["total_maintenances"]}} </strong>
+			</td>
 			<td style="text-align: right"><strong>{{number_format((float)$data["total_amount"], 2, '.', '')}}</strong></td>
 		</tr>
 		</tbody>

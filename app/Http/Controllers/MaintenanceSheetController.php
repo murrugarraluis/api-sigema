@@ -50,6 +50,7 @@ class MaintenanceSheetController extends Controller
 
 	public function index_pdf(MaintenancePDFRequest $request)
 	{
+//		$total_maintenances = 0;
 		$machines = Machine::with([
 			'maintenance_sheets',
 			'maintenance_sheets.maintenance_sheet_details',
@@ -65,12 +66,17 @@ class MaintenanceSheetController extends Controller
 		if ($request->type == "resumen") $report = MachinesResumenPDFResource::collection($machines);
 		else $report = MachinesDetailPDFResource::collection($machines);
 
+//		$total_maintenances = $report->count();
+
 		if ($request->order_by == "asc") $report = $report->sortBy($request->sort_by)->values();
 		else $report = $report->sortByDesc($request->sort_by)->values();
 
 		$data = [
 			"data" => $report->jsonSerialize(),
 			"total_machines" => MachinesResumenPDFResource::collection($machines)->count(),
+			"total_maintenances" => MachinesResumenPDFResource::collection($machines)->sum(function ($machine) {
+				return ($machine->jsonSerialize()['maintenance_count']);
+			}),
 			"total_amount" => $machines->sum('amount'),
 			"start_date" => $request->start_date,
 			"end_date" => $request->end_date,
@@ -79,11 +85,12 @@ class MaintenanceSheetController extends Controller
 //		return $data;
 
 		$pdf = \PDF::loadView('maintenance-report', compact('data'));
-		$orientation = $request->type == 'resumen' ? 'portraint':'landscape';
+		$orientation = $request->type == 'resumen' ? 'portraint' : 'landscape';
 		$pdf->setPaper('A4', $orientation);
 //        $font = $pdf->getFontMetrics()->get_font("helvetica", "bold");
 //        $pdf->getCanvas()->page_text(72, 18, "Header: {PAGE_NUM} of {PAGE_COUNT}", $font, 10, array(0,0,0));
 
+//		dd($data);
 
 //		return $pdf->download();
 
