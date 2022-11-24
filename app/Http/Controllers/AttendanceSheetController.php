@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AttendancePDFRequest;
 use App\Http\Requests\AttendanceStoreRequest;
+use App\Http\Requests\AttendanceUpdateCheckInRequest;
 use App\Http\Requests\AttendanceUpdateRequest;
 use App\Http\Resources\AttendanceSheetDetailResource;
 use App\Http\Resources\AttendanceSheetPDFResource;
@@ -203,7 +204,7 @@ class AttendanceSheetController extends Controller
 							$employees[$employee_id] = [
 								"check_out" => $check_out <= $end_time_db ? $check_out : $end_time_db,
 							];
-						}else{
+						} else {
 							$employees[$employee_id] = [
 								"check_in" => $check_in && $check_in <= $start_time_db ? $start_time_db : $check_in,
 								"check_out" => $check_out <= $end_time_db ? $check_out : $end_time_db,
@@ -223,6 +224,43 @@ class AttendanceSheetController extends Controller
 			DB::commit();
 			return (new AttendanceSheetDetailResource($attendanceSheet))
 				->additional(['message' => 'Attendance Sheet updated . ']);
+		} catch (\Exception $e) {
+			DB::rollback();
+			throw new BadRequestException($e->getMessage());
+		}
+	}
+
+	function get_config_times($turn)
+	{
+		$search = "time_turn_" . $turn;
+		$times = Configuration::where('name', 'like', '%' . $search . '%')->get();
+		$start_time_db = $times->where('name', 'start_' . $search)->first()->value;
+		$end_time_db = $times->where('name', 'end_' . $search)->first()->value;
+		return [$start_time_db, $end_time_db];
+	}
+
+	function check_in(AttendanceUpdateCheckInRequest $request, AttendanceSheet $attendanceSheet)
+	{
+		DB::beginTransaction();
+		try {
+//			$employees = [];
+			[$start_time_db, $end_time_db] = $this->get_config_times($attendanceSheet->turn);
+			array_map(function ($employee) use ($start_time_db, $end_time_db, $request, $attendanceSheet) {
+				$employee_id = $employee['id'];
+				$check_in = $employee['check_in'];
+				$attendance = $employee['attendance'];
+				$employee_db = $attendanceSheet->employees()->where('id', $employee_id)->first()->pivot;
+				if (!$employee_db->check_in && !$employee_db->attendance && !$employee_db->missed_reason) {
+					$changes = [
+						"check_in" => max($check_in, $start_time_db),
+						"attendance" => $attendance,
+					];
+					$attendanceSheet->employees()->updateExistingPivot($employee_id, $changes);
+				}
+			}, $request->employees);
+			DB::commit();
+			return (new AttendanceSheetDetailResource($attendanceSheet->load('employees')))
+				->additional(['message' => 'Attendance Sheet updated.']);
 		} catch (\Exception $e) {
 			DB::rollback();
 			throw new BadRequestException($e->getMessage());

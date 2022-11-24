@@ -74,7 +74,13 @@ Route::prefix('v1/')->group(function () {
 			Route::get('attendance-sheets', [AttendanceSheetController::class, 'index']);
 			Route::get('attendance-sheets/{attendanceSheet}', [AttendanceSheetController::class, 'show']);
 			Route::post('attendance-sheets', [AttendanceSheetController::class, 'store']);
-			Route::put('attendance-sheets/{attendanceSheet}', [AttendanceSheetController::class, 'update']);
+//			Route::put('attendance-sheets/{attendanceSheet}', [AttendanceSheetController::class, 'update']);
+			Route::put('attendance-sheets/{attendanceSheet}/check-in', [AttendanceSheetController::class, 'check_in']);
+			Route::put('attendance-sheets/{attendanceSheet}/check-out', [AttendanceSheetController::class, 'check_out']);
+			Route::put('attendance-sheets/{attendanceSheet}/justified-absence', [AttendanceSheetController::class, 'justified_absence']);
+			Route::put('attendance-sheets/{attendanceSheet}/closed', [AttendanceSheetController::class, 'closed']);
+
+
 
 
 		});
