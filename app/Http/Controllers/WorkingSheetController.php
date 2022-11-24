@@ -53,7 +53,7 @@ class WorkingSheetController extends Controller
 		try {
 			$working_sheet = WorkingSheet::create([
 				'machine_id' => $request->machine["id"],
-				'date' => $request->date,
+				'date' => date('Y-m-d H:i:s'),
 				'description' => $request->description,
 				'is_open' => true
 			]);
@@ -159,7 +159,7 @@ class WorkingSheetController extends Controller
 			$last_working_hour = $workingSheet->working_hours()->orderBy('created_at', 'desc')->first();
 			if (!$last_working_hour->date_time_end) {
 				$last_working_hour->update([
-					'date_time_end' => $request->date
+					'date_time_end' => date('Y-m-d H:i:s'),
 				]);
 			}
 			$this->deleteNotifications($workingSheet->machine->id);
@@ -178,7 +178,7 @@ class WorkingSheetController extends Controller
 		DB::beginTransaction();
 		try {
 			$workingSheet->working_hours()->create([
-				'date_time_start' => $request->date
+				'date_time_start' => date('Y-m-d H:i:s'),
 			]);
 			DB::commit();
 			return (new WorkingSheetDetailResource($workingSheet))
