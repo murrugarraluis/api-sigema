@@ -60,7 +60,7 @@ class WorkingSheetController extends Controller
 			$request_restart = new WorkUpdateRequest();
 			$request_restart->merge(['date' => $request->date]);
 			$this->restart($request_restart, $working_sheet);
-			$this->pushNotifications($request->machine["id"]);
+//			$this->pushNotifications($request->machine["id"]);
 			DB::commit();
 			return (new WorkingSheetDetailResource($working_sheet))
 				->additional(['message' => 'Work started.'])
@@ -180,6 +180,7 @@ class WorkingSheetController extends Controller
 			$workingSheet->working_hours()->create([
 				'date_time_start' => date('Y-m-d H:i:s'),
 			]);
+			$this->pushNotifications($workingSheet->machine->id);
 			DB::commit();
 			return (new WorkingSheetDetailResource($workingSheet))
 				->additional(['message' => 'Work restarted.']);
