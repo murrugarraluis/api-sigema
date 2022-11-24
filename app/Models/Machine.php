@@ -64,7 +64,7 @@ class Machine extends Model
 
 	public function getStatusAttribute(): string
 	{
-		$status = ["available", "operating", "not available"];
+		$status = ["available", "operating", "unavailable"];
 
 		$time_working_today = $this->getTimeWorkingToday();
 		$time_working = $this->getTimeWorking();
