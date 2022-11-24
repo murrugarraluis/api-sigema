@@ -16,6 +16,8 @@ class NotificationResource extends JsonResource
 	{
 		return [
 			"machine" => [
+//				"name" => $this->machine->id,
+				"serie_number" => $this->machine->serie_number,
 				"name" => $this->machine->name,
 			],
 			"message" => $this->message,
