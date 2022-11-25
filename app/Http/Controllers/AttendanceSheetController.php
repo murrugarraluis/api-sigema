@@ -333,6 +333,51 @@ class AttendanceSheetController extends Controller
 		}
 	}
 
+	function closed(AttendanceSheet $attendanceSheet)
+	{
+		DB::beginTransaction();
+		try {
+			$date_format = date('Y-m-d', strtotime($attendanceSheet->date));
+			[$start_time_db, $end_time_db] = $this->get_config_times($date_format, $attendanceSheet->turn);
+			$this->updateEmployees($attendanceSheet, $end_time_db);
+			$attendanceSheet->update(['is_open' => false]);
+			DB::commit();
+			return (new AttendanceSheetDetailResource($attendanceSheet->load('employees')))
+				->additional(['message' => 'Attendance Sheet updated.']);
+		} catch (\Exception $e) {
+			DB::rollback();
+			throw new BadRequestException($e->getMessage());
+		}
+	}
+
+	function updateEmployees(AttendanceSheet $attendanceSheet, $end_time_db)
+	{
+		$employees = [];
+		$attendanceSheet->employees->map(function ($employee) use (&$employees, $end_time_db) {
+			$employee_id = $employee['id'];
+//			dd($employee['pivot']);
+			$check_in = $employee['pivot']['check_in'];
+			$check_out = $employee['pivot']['check_out'];
+			$attendance = $employee['pivot']['attendance'];
+			$missed_reason = $employee['pivot']['missed_reason'];
+			$missed_description = $employee['pivot']['missed_description'];
+			if ($attendance && $check_in && !$check_out) {
+				$employees[$employee_id] = [
+					"check_out" => $end_time_db
+				];
+			} else {
+				$employees[$employee_id] = [
+					"check_in" => $check_in,
+					"check_out" => $check_out,
+					"attendance" => $attendance,
+					"missed_reason" => $missed_reason,
+					"missed_description" => $missed_description,
+				];
+			}
+		});
+		$attendanceSheet->employees()->sync($employees);
+	}
+
 	/**
 	 * Remove the specified resource from storage.
 	 *

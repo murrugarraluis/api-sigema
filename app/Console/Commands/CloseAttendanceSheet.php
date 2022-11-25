@@ -74,11 +74,12 @@ class CloseAttendanceSheet extends Command
 		$employees = [];
 		$attendanceSheet->employees->map(function ($employee) use (&$employees, $end_time_db) {
 			$employee_id = $employee['id'];
-			$check_in = array_key_exists('check_in', $employee) ? $employee['check_in'] : null;
-			$check_out = array_key_exists('check_out', $employee) ? $employee['check_out'] : null;
-			$attendance = $employee['attendance'];
-			$missed_reason = array_key_exists('missed_reason', $employee) ? $employee['missed_reason'] : null;;
-			$missed_description = array_key_exists('missed_description', $employee) ? $employee['missed_description'] : null;;
+//			dd($employee['pivot']);
+			$check_in = $employee['pivot']['check_in'];
+			$check_out = $employee['pivot']['check_out'];
+			$attendance = $employee['pivot']['attendance'];
+			$missed_reason = $employee['pivot']['missed_reason'];
+			$missed_description = $employee['pivot']['missed_description'];
 			if ($attendance && $check_in && !$check_out) {
 				$employees[$employee_id] = [
 					"check_out" => $end_time_db
