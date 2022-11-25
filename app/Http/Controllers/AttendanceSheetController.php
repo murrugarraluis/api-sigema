@@ -6,6 +6,7 @@ use App\Http\Requests\AttendancePDFRequest;
 use App\Http\Requests\AttendanceStoreRequest;
 use App\Http\Requests\AttendanceUpdateCheckInRequest;
 use App\Http\Requests\AttendanceUpdateCheckOutRequest;
+use App\Http\Requests\AttendanceUpdateJustifiedAbsenceRequest;
 use App\Http\Requests\AttendanceUpdateRequest;
 use App\Http\Resources\AttendanceSheetDetailResource;
 use App\Http\Resources\AttendanceSheetPDFResource;
@@ -294,6 +295,31 @@ class AttendanceSheetController extends Controller
 				if (!$employee_db->check_out && $employee_db->attendance && !$employee_db->missed_reason) {
 					$changes = [
 						"check_out" => $start_time_db < $check_out && $check_out < $end_time_db ? $check_out : $end_time_db,
+					];
+					$attendanceSheet->employees()->updateExistingPivot($employee_id, $changes);
+				}
+			}, $request->employees);
+			DB::commit();
+			return (new AttendanceSheetDetailResource($attendanceSheet->load('employees')))
+				->additional(['message' => 'Attendance Sheet updated.']);
+		} catch (\Exception $e) {
+			DB::rollback();
+			throw new BadRequestException($e->getMessage());
+		}
+	}
+
+	function justified_absence(AttendanceUpdateJustifiedAbsenceRequest $request, AttendanceSheet $attendanceSheet)
+	{
+		DB::beginTransaction();
+		try {
+			array_map(function ($employee) use ($request, $attendanceSheet) {
+				$employee_id = $employee['id'];
+				$employee_db = $attendanceSheet->employees()->where('id', $employee_id)->first()->pivot;
+				if (!$employee_db->check_in && !$employee_db->check_out && !$employee_db->missed_reason) {
+					$changes = [
+						"attendance" => false,
+						"missed_reason" => $employee['missed_reason'],
+						"missed_description" => $employee['missed_description'],
 					];
 					$attendanceSheet->employees()->updateExistingPivot($employee_id, $changes);
 				}
