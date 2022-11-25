@@ -230,12 +230,20 @@ class AttendanceSheetController extends Controller
 		}
 	}
 
-	function get_config_times($turn)
+	function get_config_times($date, $turn)
 	{
 		$search = "time_turn_" . $turn;
 		$times = Configuration::where('name', 'like', '%' . $search . '%')->get();
 		$start_time_db = $times->where('name', 'start_' . $search)->first()->value;
 		$end_time_db = $times->where('name', 'end_' . $search)->first()->value;
+
+		if ($start_time_db <= $end_time_db) {
+			$start_time_db = $date . " " . $start_time_db;
+			$end_time_db = $date . " " . $end_time_db;
+		} else {
+			$start_time_db = $date . " " . $start_time_db;
+			$end_time_db = date('Y-m-d', strtotime($date . "+ 1 days")) . " " . $end_time_db;
+		}
 		return [$start_time_db, $end_time_db];
 	}
 
@@ -244,16 +252,18 @@ class AttendanceSheetController extends Controller
 		DB::beginTransaction();
 		try {
 //			$employees = [];
-			[$start_time_db, $end_time_db] = $this->get_config_times($attendanceSheet->turn);
+			if (!$attendanceSheet->is_open) return response()->json(['message' => 'cannot modify a closed sheet.'], 400);
+
+			$date_format = date('Y-m-d', strtotime($attendanceSheet->date));
+			[$start_time_db, $end_time_db] = $this->get_config_times($date_format, $attendanceSheet->turn);
 			array_map(function ($employee) use ($start_time_db, $end_time_db, $request, $attendanceSheet) {
 				$employee_id = $employee['id'];
 				$check_in = $employee['check_in'];
-				$attendance = $employee['attendance'];
 				$employee_db = $attendanceSheet->employees()->where('id', $employee_id)->first()->pivot;
 				if (!$employee_db->check_in && !$employee_db->attendance && !$employee_db->missed_reason) {
 					$changes = [
-						"check_in" => max($check_in, $start_time_db),
-						"attendance" => $attendance,
+						"check_in" => $start_time_db < $check_in && $check_in < $end_time_db ? $check_in : $start_time_db,
+						"attendance" => true,
 					];
 					$attendanceSheet->employees()->updateExistingPivot($employee_id, $changes);
 				}

@@ -16,8 +16,8 @@ class CreateAttendanceSheetEmployee extends Migration
         Schema::create('attendance_sheet_employee', function (Blueprint $table) {
             $table->foreignUuid('attendance_sheet_id')->constrained('attendance_sheets');
             $table->foreignUuid('employee_id')->constrained('employees');
-            $table->time('check_in')->nullable();
-            $table->time('check_out')->nullable();
+            $table->Datetime('check_in')->nullable();
+            $table->Datetime('check_out')->nullable();
             $table->boolean('attendance')->default(0);// missed=0 ; attended=1 ;
             $table->string('missed_reason')->nullable();
             $table->text('missed_description')->nullable();

@@ -26,8 +26,8 @@ class AttendanceUpdateCheckInRequest extends FormRequest
 		return [
 			'employees' => ['bail', 'required', 'array'],
 			'employees.*.id' => ['bail', 'required', 'uuid', 'exists:employees,id'],
-			'employees.*.check_in' => ['bail', 'required', 'date_format:H:i:s'],
-			'employees.*.attendance' => ['bail', 'required', 'boolean'],
+			'employees.*.check_in' => ['bail', 'required', 'date_format:Y-m-d H:i:s'],
+//			'employees.*.attendance' => ['bail', 'required', 'boolean'],
 		];
 	}
 }
