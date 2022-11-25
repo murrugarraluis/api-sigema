@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AttendancePDFRequest;
 use App\Http\Requests\AttendanceStoreRequest;
 use App\Http\Requests\AttendanceUpdateCheckInRequest;
+use App\Http\Requests\AttendanceUpdateCheckOutRequest;
 use App\Http\Requests\AttendanceUpdateRequest;
 use App\Http\Resources\AttendanceSheetDetailResource;
 use App\Http\Resources\AttendanceSheetPDFResource;
@@ -264,6 +265,35 @@ class AttendanceSheetController extends Controller
 					$changes = [
 						"check_in" => $start_time_db < $check_in && $check_in < $end_time_db ? $check_in : $start_time_db,
 						"attendance" => true,
+					];
+					$attendanceSheet->employees()->updateExistingPivot($employee_id, $changes);
+				}
+			}, $request->employees);
+			DB::commit();
+			return (new AttendanceSheetDetailResource($attendanceSheet->load('employees')))
+				->additional(['message' => 'Attendance Sheet updated.']);
+		} catch (\Exception $e) {
+			DB::rollback();
+			throw new BadRequestException($e->getMessage());
+		}
+	}
+
+	function check_out(AttendanceUpdateCheckOutRequest $request, AttendanceSheet $attendanceSheet)
+	{
+		DB::beginTransaction();
+		try {
+//			$employees = [];
+			if (!$attendanceSheet->is_open) return response()->json(['message' => 'cannot modify a closed sheet.'], 400);
+
+			$date_format = date('Y-m-d', strtotime($attendanceSheet->date));
+			[$start_time_db, $end_time_db] = $this->get_config_times($date_format, $attendanceSheet->turn);
+			array_map(function ($employee) use ($start_time_db, $end_time_db, $request, $attendanceSheet) {
+				$employee_id = $employee['id'];
+				$check_out = $employee['check_out'];
+				$employee_db = $attendanceSheet->employees()->where('id', $employee_id)->first()->pivot;
+				if (!$employee_db->check_out && $employee_db->attendance && !$employee_db->missed_reason) {
+					$changes = [
+						"check_out" => $start_time_db < $check_out && $check_out < $end_time_db ? $check_out : $end_time_db,
 					];
 					$attendanceSheet->employees()->updateExistingPivot($employee_id, $changes);
 				}
