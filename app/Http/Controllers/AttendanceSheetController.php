@@ -353,9 +353,9 @@ class AttendanceSheetController extends Controller
 	function updateEmployees(AttendanceSheet $attendanceSheet, $end_time_db)
 	{
 		$employees = [];
-		$attendanceSheet->employees->map(function ($employee) use (&$employees, $end_time_db) {
+		$now = date('Y-m-d H:i:s');
+		$attendanceSheet->employees->map(function ($employee) use (&$employees, $end_time_db,$now) {
 			$employee_id = $employee['id'];
-//			dd($employee['pivot']);
 			$check_in = $employee['pivot']['check_in'];
 			$check_out = $employee['pivot']['check_out'];
 			$attendance = $employee['pivot']['attendance'];
@@ -363,7 +363,7 @@ class AttendanceSheetController extends Controller
 			$missed_description = $employee['pivot']['missed_description'];
 			if ($attendance && $check_in && !$check_out) {
 				$employees[$employee_id] = [
-					"check_out" => $end_time_db
+					"check_out" => $now<$end_time_db?$now:$end_time_db
 				];
 			} else {
 				$employees[$employee_id] = [
