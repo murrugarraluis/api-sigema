@@ -151,6 +151,7 @@ class MaintenanceSheetController extends Controller
 
 			$machine = Machine::find($request->machine["id"]);
 			$machine->update([
+				"recommendation"=>$request->recommendation,
 				"maximum_working_time" => $request->maximum_working_time
 			]);
 			DB::commit();

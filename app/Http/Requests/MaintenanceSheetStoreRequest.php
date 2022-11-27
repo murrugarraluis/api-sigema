@@ -43,6 +43,8 @@ class MaintenanceSheetStoreRequest extends FormRequest
             "detail.*.description" => ['bail', 'nullable', 'string'],
             "detail.*.price" => ['bail', 'required', 'numeric'],
             "detail.*.quantity" => ['bail', 'required', 'numeric'],
-        ];
+						'recommendation' => ['bail','nullable','string'],
+
+				];
     }
 }
