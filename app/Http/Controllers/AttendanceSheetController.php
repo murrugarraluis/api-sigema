@@ -98,12 +98,13 @@ class AttendanceSheetController extends Controller
 //		return $data;
 
 		$pdf = \PDF::loadView('attendance-report', compact('data'));
-		$pdf->setPaper('A4');
+		$orientation = $request->type == 'attended' ? 'portraint' : 'landscape';
+		$pdf->setPaper('A4',$orientation);
 //        $font = $pdf->getFontMetrics()->get_font("helvetica", "bold");
 //        $pdf->getCanvas()->page_text(72, 18, "Header: {PAGE_NUM} of {PAGE_COUNT}", $font, 10, array(0,0,0));
 
 
-//		return $pdf->download();
+		return $pdf->download();
 
 		$name_file = Str::uuid()->toString();
 		$path = 'public/reports/' . $name_file . '.pdf';

@@ -18,8 +18,8 @@ class AttendanceSheetSeeder extends Seeder
         $employees = Employee::all();
         AttendanceSheet::factory(5)
             ->hasAttached($employees, [
-                "check_in" => '10:00:00',
-                "check_out" => '15:00:00',
+                "check_in" => '2022-01-10 10:00:00',
+                "check_out" => '2022-01-10 15:00:00',
                 "attendance" => true,
             ])
             ->create();
