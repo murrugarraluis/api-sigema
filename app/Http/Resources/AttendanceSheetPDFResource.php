@@ -34,7 +34,7 @@ class AttendanceSheetPDFResource extends JsonResource
 
 	function get_absences()
 	{
-		return $this->attendance_sheets->where('pivot.attendance', 0)->whereNull('pivot.missed_reason')->count();
+		return $this->attendance_sheets->where('pivot.attendance', 0)->count();
 	}
 
 	function get_justified_absences()
