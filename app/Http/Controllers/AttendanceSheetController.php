@@ -23,6 +23,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -78,6 +79,7 @@ class AttendanceSheetController extends Controller
 //		return $report;
 //
 		$data = [
+			"title" => $request->type == 'attended' ? 'title_attendance_sheet' : 'title_absences_sheet',
 			"type" => $request->type,
 			"sort_by" => $request->sort_by,
 			"start_date" => $request->start_date,
@@ -96,15 +98,19 @@ class AttendanceSheetController extends Controller
 			}),
 		];
 //		return $data;
+		$language = (Auth()->user()->employee->native_language);
+		$locale = $language == 'spanish' ?'es':'en';
+		App::setLocale($locale);
+
 
 		$pdf = \PDF::loadView('attendance-report', compact('data'));
 		$orientation = $request->type == 'attended' ? 'portraint' : 'landscape';
-		$pdf->setPaper('A4',$orientation);
+		$pdf->setPaper('A4', $orientation);
 //        $font = $pdf->getFontMetrics()->get_font("helvetica", "bold");
 //        $pdf->getCanvas()->page_text(72, 18, "Header: {PAGE_NUM} of {PAGE_COUNT}", $font, 10, array(0,0,0));
 
 
-//		return $pdf->download();
+		return $pdf->download();
 
 		$name_file = Str::uuid()->toString();
 		$path = 'public/reports/' . $name_file . '.pdf';
@@ -355,7 +361,7 @@ class AttendanceSheetController extends Controller
 	{
 		$employees = [];
 		$now = date('Y-m-d H:i:s');
-		$attendanceSheet->employees->map(function ($employee) use (&$employees, $end_time_db,$now) {
+		$attendanceSheet->employees->map(function ($employee) use (&$employees, $end_time_db, $now) {
 			$employee_id = $employee['id'];
 			$check_in = $employee['pivot']['check_in'];
 			$check_out = $employee['pivot']['check_out'];
@@ -364,7 +370,7 @@ class AttendanceSheetController extends Controller
 			$missed_description = $employee['pivot']['missed_description'];
 			if ($attendance && $check_in && !$check_out) {
 				$employees[$employee_id] = [
-					"check_out" => $now<$end_time_db?$now:$end_time_db
+					"check_out" => $now < $end_time_db ? $now : $end_time_db
 				];
 			} else {
 				$employees[$employee_id] = [

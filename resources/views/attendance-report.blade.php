@@ -5,19 +5,19 @@
 </head>
 <body>
 <header>
-	@include('includes.header',['title' => 'Attendance Sheet'])
+	@include('includes.header',['title' => __("messages.".$data["title"])])
 </header>
 <div>
 	<table class="table-info">
 		<tr>
-			<td class="text-left">Sort By: {{$data["sort_by"]}}</td>
+			<td class="text-left">{{__('messages.sort_by')}}: {{__("messages.".$data["sort_by"])}}</td>
 		</tr>
 	</table>
 	<table class="table-info">
 		<tr>
-			<td class="text-left">Start Date: {{$data["start_date"]}}</td>
-			<td class="text-center">End Date: {{$data["end_date"]}}</td>
-			<td class="text-right">Report Date: {{$data["date_report"]}}</td>
+			<td class="text-left">{{__('messages.start_date')}}: {{$data["start_date"]}}</td>
+			<td class="text-center">{{__('messages.end_date')}}: {{$data["end_date"]}}</td>
+			<td class="text-right">{{__('messages.report_date')}}: {{$data["date_report"]}}</td>
 		</tr>
 	</table>
 </div>
@@ -25,17 +25,17 @@
 <table class="table-data">
 	<thead>
 	<th scope="col">#</th>
-	<th scope="col">Last Name</th>
-	<th scope="col">Name</th>
+	<th scope="col">{{__('messages.lastname')}}</th>
+	<th scope="col">{{__('messages.name')}}</th>
 	@if ($data["type"] == 'attended')
-		<th scope="col" class="text-center">Attendances</th>
-		<th scope="col" class="text-center">Absences</th>
-		<th scope="col" class="text-center">Justified Absences</th>
-		<th scope="col" class="text-center">Working Hours</th>
+		<th scope="col" class="text-center">{{__('messages.attendances')}}</th>
+		<th scope="col" class="text-center">{{__('messages.absences')}}</th>
+		<th scope="col" class="text-center">{{__('messages.justified_absences')}}</th>
+		<th scope="col" class="text-center">{{__('messages.working_hours')}}</th>
 	@else
-		<th scope="col" class="text-center">Date</th>
-		<th scope="col" class="text-center">Reason</th>
-		<th scope="col" class="text-center">Description</th>
+		<th scope="col" class="text-center">{{__('messages.date')}}</th>
+		<th scope="col" class="text-center">{{__('messages.reason')}}</th>
+		<th scope="col" class="text-center">{{__('messages.description')}}</th>
 	@endif
 	</thead>
 	<tbody>
@@ -52,7 +52,7 @@
 			</tr>
 		@endforeach
 		<tr>
-			<td colspan="3" class="text-center"><strong>Total Employees {{$data["total_employees"]}}</strong></td>
+			<td colspan="3" class="text-center"><strong>{{__('messages.total_employees')}} {{$data["total_employees"]}}</strong></td>
 			<td class="text-center"><strong>{{$data["total_attendances"]}}</strong></td>
 			<td class="text-center"><strong>{{$data["total_absences"]}}</strong></td>
 			<td class="text-center"><strong>{{$data["total_justified_absences"]}}</strong></td>
@@ -85,15 +85,15 @@
 					</tr>
 				@endforeach
 				<tr>
-					<td colspan="2"><strong>Total Justified Absences: {{$item["justified_absences"]}}</strong></td>
-					<td colspan="2"><strong>Total Unexcused Absences: {{$item["absences"]}}</strong>
+					<td colspan="2"><strong>{{__('messages.total_justified_absences')}}: {{$item["justified_absences"]}}</strong></td>
+					<td colspan="2"><strong>{{__('messages.total_unexcused_absences')}}: {{$item["absences"]}}</strong>
 					</td>
-					<td colspan="2"><strong>Total Absences: {{$item["absences"] + $item["justified_absences"]}}</strong></td>
+					<td colspan="2"><strong>{{__('messages.total_absences')}}: {{$item["absences"] + $item["justified_absences"]}}</strong></td>
 				</tr>
 			@endif
 		@endforeach
 		<tr>
-			<td colspan="6"><strong>Total Employees {{$number_employee}}</strong></td>
+			<td colspan="6"><strong>{{__('messages.total_employees')}} {{$number_employee}}</strong></td>
 			{{--				<td class="text-center"><strong>{{$data["total_attendances"]}}</strong></td>--}}
 			{{--				<td class="text-center"><strong>{{$data["total_absences"]}}</strong></td>--}}
 			{{--				<td class="text-center"><strong>{{$data["total_justified_absences"]}}</strong></td>--}}
