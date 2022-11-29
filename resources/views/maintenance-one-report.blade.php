@@ -1,58 +1,59 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    @include('includes.head')
+	@include('includes.head')
 </head>
 <body>
 <header>
-	@include('includes.header',['title' => 'Maintenance Sheet'])
+	@include('includes.header',['title' => __('messages.title_maintenance_sheet')])
 </header>
 <div>
-    <table class="table-info">
-        <tr>
-            <td class="text-left">DATE: {{$data["date"]}}</td>
-            <td class="text-center">TYPE: {{$data["maintenance_type"]["name"]}}</td>
-            <td class="text-right">RESPONSIBLE: {{$data["responsible"]}}</td>
-        </tr>
-    </table>
-    <table class="table-info">
-        <tr>
-            <td class="text-left">SUPPLIER: {{$data["supplier"]["name"]}}</td>
-            <td class="text-left">TECHNICAL: {{$data["technical"]}}</td>
-            <td class="text-right">MACHINE: {{$data["machine"]["name"]}}</td>
-        </tr>
-    </table>
+	<table class="table-info">
+		<tr>
+			<td class="text-left">{{__('messages.date')}}: {{$data["date"]}}</td>
+			<td class="text-center">{{__('messages.type')}}: {{__("messages.".strtolower($data["maintenance_type"]["name"]
+			))}}</td>
+			<td class="text-right">{{__('messages.responsible')}}: {{$data["responsible"]}}</td>
+		</tr>
+	</table>
+	<table class="table-info">
+		<tr>
+			<td class="text-left">{{__('messages.supplier')}}: {{$data["supplier"]["name"]}}</td>
+			<td class="text-left">{{__('messages.technical')}}: {{$data["technical"]}}</td>
+			<td class="text-right">{{__('messages.machine')}}: {{$data["machine"]["name"]}}</td>
+		</tr>
+	</table>
 </div>
 <hr>
 <div class="">
-    <table class="table-data">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">serie</th>
-            <th scope="col">description</th>
-            <th scope="col" class="text-right">price</th>
-            <th scope="col" class="text-right">quantity</th>
-            <th scope="col" class="text-right">import</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($data["detail"]->jsonSerialize() as $key=>$item)
-            <tr>
-                <td scope="row">{{$key+1}}</td>
-                <td>{{$item["article"]?$item["article"]["serie_number"]:"XXXXXXXXXXXXX"}}</td>
-                <td>{{$item["article"]?$item["article"]["name"]:$item["description"]}}</td>
-                <td class="text-right">{{number_format((float)$item["price"], 2, '.', '')}}
-                <td class="text-right">{{$item["quantity"]}}</td>
-                <td class="text-right">{{number_format((float)$item["price"]*$item["quantity"], 2, '.', '')}}</td>
-            </tr>
-        @endforeach
-        <tr>
-            <td colspan="5"><strong>Total</strong></td>
-            <td class="text-right"><strong>{{number_format((float)$data["amount"], 2, '.', '')}}</strong></td>
-        </tr>
-        </tbody>
-    </table>
+	<table class="table-data">
+		<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">{{__('messages.serie_number')}}</th>
+			<th scope="col">{{__('messages.description')}}</th>
+			<th scope="col" class="text-right">{{__('messages.price')}}</th>
+			<th scope="col" class="text-right">{{__('messages.quantity')}}</th>
+			<th scope="col" class="text-right">{{__('messages.import')}}</th>
+		</tr>
+		</thead>
+		<tbody>
+		@foreach($data["detail"]->jsonSerialize() as $key=>$item)
+			<tr>
+				<td scope="row">{{$key+1}}</td>
+				<td>{{$item["article"]?$item["article"]["serie_number"]:"XXXXXXXXXXXXX"}}</td>
+				<td>{{$item["article"]?$item["article"]["name"]:$item["description"]}}</td>
+				<td class="text-right">{{number_format((float)$item["price"], 2, '.', '')}}
+				<td class="text-right">{{$item["quantity"]}}</td>
+				<td class="text-right">{{number_format((float)$item["price"]*$item["quantity"], 2, '.', '')}}</td>
+			</tr>
+		@endforeach
+		<tr>
+			<td colspan="5"><strong>Total</strong></td>
+			<td class="text-right"><strong>{{number_format((float)$data["amount"], 2, '.', '')}}</strong></td>
+		</tr>
+		</tbody>
+	</table>
 </div>
 </body>
 </html>

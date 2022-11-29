@@ -17,6 +17,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -181,10 +182,14 @@ class MaintenanceSheetController extends Controller
 
 	public function show_pdf(MaintenanceSheet $maintenanceSheet)
 	{
+		$language = (Auth()->user()->employee->native_language);
+		$locale = $language == 'spanish' ?'es':'en';
+		App::setLocale($locale);
+
 		$data = $this->show($maintenanceSheet)->jsonSerialize();
 		$pdf = \PDF::loadView('maintenance-one-report', compact('data'));
 		$pdf->setPaper('A4');
-//		return $pdf->download();
+		return $pdf->download();
 
 		$name_file = Str::uuid()->toString();
 		$path = 'public/reports/' . $name_file . '.pdf';

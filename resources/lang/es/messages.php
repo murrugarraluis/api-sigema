@@ -21,5 +21,20 @@ return [
 	'total_unexcused_absences' => 'Total Faltas No Justificadas',
 	'total_absences' => 'Total Faltas',
 
+	'title_maintenance_sheet_report'=>'Reporte de Mantenimiento',
+	'title_maintenance_sheet'=>'Ficha de Mantenimiento',
+	'type'=>'Tipo',
+	'responsible'=>'Responsable',
+	'supplier'=>'Proveedor',
+	'technical'=>'Tecnico',
+	'machine'=>'Maquina',
+	'serie_number'=>'Numero Serie',
+	'price'=>'Precio',
+	'quantity'=>'Cantidad',
+	'import'=>'Importe',
+	'corrective' => 'Correctivo',
+	'preventive' => 'Preventivo',
+	'predictive' => 'Predictivo'
+
 
 ];
