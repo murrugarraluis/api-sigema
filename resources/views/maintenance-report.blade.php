@@ -5,16 +5,16 @@
 </head>
 <body>
 <header>
-	@include('includes.header',['title' => 'Maintenance Sheet'])
+	@include('includes.header',['title' => __('messages.title_maintenance_sheet_report')])
 </header>
 <div>
 	<table class="table-info">
 		<thead>
 		<tr>
-			<td scope="col">start date: {{$data["start_date"]}}</td>
-			<td scope="col">end date: {{$data["end_date"]}}</td>
-			<td scope="col">type: {{$data["type"]}}</td>
-			<td scope="col">date: {{date('Y-m-d H:i:s')}}</td>
+			<td scope="col">{{__('messages.start_date')}}: {{$data["start_date"]}}</td>
+			<td scope="col">{{__('messages.end_date')}}: {{$data["end_date"]}}</td>
+			<td scope="col">{{__('messages.type')}}: {{$data["type"]}}</td>
+			<td scope="col">{{__('messages.date')}}: {{date('Y-m-d H:i:s')}}</td>
 		</tr>
 		</thead>
 	</table>
@@ -25,20 +25,20 @@
 		<thead>
 		<tr>
 			{{--            <th scope="col">#</th>--}}
-			<th scope="col">serie_number</th>
-			<th scope="col">name</th>
-			<th scope="col">brand</th>
-			<th scope="col">model</th>
+			<th scope="col">{{__('messages.serie_number')}}</th>
+			<th scope="col">{{__('messages.machine')}}</th>
+			<th scope="col">{{__('messages.brand')}}</th>
+			<th scope="col">{{__('messages.model')}}</th>
 			@if($data["type"] == "resumen")
-				<th scope="col">maintenance_count</th>
-				<th scope="col">amount</th>
+				<th scope="col">{{__('messages.maintenance_count')}}</th>
+				<th scope="col">{{__('messages.amount')}}</th>
 			@else
-				<th scope="col">code</th>
-				<th scope="col">date</th>
-				<th scope="col">type</th>
-				<th scope="col">supplier</th>
-				<th scope="col">responsible</th>
-				<th scope="col" class="text-right">amount</th>
+				<th scope="col">{{__('messages.code')}}</th>
+				<th scope="col">{{__('messages.date')}}</th>
+				<th scope="col">{{__('messages.type')}}</th>
+				<th scope="col">{{__('messages.supplier')}}</th>
+				<th scope="col">{{__('messages.responsible')}}</th>
+				<th scope="col" class="text-right">{{__('messages.amount')}}</th>
 			@endif
 
 
@@ -81,15 +81,15 @@
 					</tr>
 				@endforeach
 				<tr>
-					<td colspan="9"><strong>Number Maintenance: {{count($item["maintenance_sheets"])}}</strong></td>
+					<td colspan="9"><strong>{{__('messages.number_maintenance')}}: {{count($item["maintenance_sheets"])}}</strong></td>
 					<td style="text-align: right"><strong>{{number_format((float)$item["amount"], 2, '.', '')}}</strong></td>
 				</tr>
 			@endforeach
 		@endif
 		<tr>
 			<td colspan="{{$data["type"] == "resumen"?5:9}}">
-				<strong style="margin-right: 7px">Number Machines: {{$data["total_machines"]}} </strong>
-				<strong>Number Maintenances: {{$data["total_maintenances"]}} </strong>
+				<strong style="margin-right: 7px">{{__('messages.number_machines')}}: {{$data["total_machines"]}} </strong>
+				<strong>{{__('messages.number_maintenances')}}: {{$data["total_maintenances"]}} </strong>
 			</td>
 			<td style="text-align: right"><strong>{{number_format((float)$data["total_amount"], 2, '.', '')}}</strong></td>
 		</tr>

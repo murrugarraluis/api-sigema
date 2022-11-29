@@ -84,6 +84,9 @@ class MaintenanceSheetController extends Controller
 			"type" => $request->type
 		];
 //		return $data;
+		$language = (Auth()->user()->employee->native_language);
+		$locale = $language == 'spanish' ? 'es' : 'en';
+		App::setLocale($locale);
 
 		$pdf = \PDF::loadView('maintenance-report', compact('data'));
 		$orientation = $request->type == 'resumen' ? 'portraint' : 'landscape';
@@ -152,7 +155,7 @@ class MaintenanceSheetController extends Controller
 
 			$machine = Machine::find($request->machine["id"]);
 			$machine->update([
-				"recommendation"=>$request->recommendation,
+				"recommendation" => $request->recommendation,
 				"maximum_working_time" => $request->maximum_working_time
 			]);
 			DB::commit();
@@ -183,13 +186,13 @@ class MaintenanceSheetController extends Controller
 	public function show_pdf(MaintenanceSheet $maintenanceSheet)
 	{
 		$language = (Auth()->user()->employee->native_language);
-		$locale = $language == 'spanish' ?'es':'en';
+		$locale = $language == 'spanish' ? 'es' : 'en';
 		App::setLocale($locale);
 
 		$data = $this->show($maintenanceSheet)->jsonSerialize();
 		$pdf = \PDF::loadView('maintenance-one-report', compact('data'));
 		$pdf->setPaper('A4');
-		return $pdf->download();
+//		return $pdf->download();
 
 		$name_file = Str::uuid()->toString();
 		$path = 'public/reports/' . $name_file . '.pdf';

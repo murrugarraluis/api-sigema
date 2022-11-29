@@ -34,7 +34,15 @@ return [
 	'import' => 'Import',
 	'corrective' => 'Corrective',
 	'preventive' => 'Preventive',
-	'predictive' => 'Predictive'
+	'predictive' => 'Predictive',
 
+	'brand' => 'Brand',
+	'model' => 'Model',
+	'maintenance_count' => 'Maintenance Count',
+	'amount' => 'Amount',
+	'code' => 'Code',
+	'number_maintenance' => 'Number Maintenance',
+	'number_machines' => 'Number Machines',
+	'number_maintenances' => 'Number Maintenances',
 
 ];
