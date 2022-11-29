@@ -45,4 +45,8 @@ return [
 	'number_machines' => 'Number Machines',
 	'number_maintenances' => 'Number Maintenances',
 
+	'work_sheet' => 'Work Sheet',
+	'time' => 'Time',
+
+
 ];

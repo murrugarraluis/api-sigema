@@ -13,6 +13,7 @@ use App\Models\WorkingSheet;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -221,6 +222,10 @@ class WorkingSheetController extends Controller
 
 	public function show_pdf(WorkingSheet $workingSheet)
 	{
+		$language = (Auth()->user()->employee->native_language);
+		$locale = $language == 'spanish' ?'es':'en';
+		App::setLocale($locale);
+
 		$data = $this->show($workingSheet)->jsonSerialize();
 //        dd($data);
 		$pdf = \PDF::loadView('work-one-report', compact('data'));

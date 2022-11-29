@@ -5,19 +5,19 @@
 </head>
 <body>
 <header>
-	@include('includes.header',['title' => 'Work Sheet'])
+	@include('includes.header',['title' => __('messages.work_sheet')])
 </header>
 <div>
     <table class="table-info">
         <tr>
-            <td class="text-left">DATE: {{$data["date"]}}</td>
+            <td class="text-left">{{__('messages.date')}}: {{$data["date"]}}</td>
         </tr>
     </table>
     <table class="table-info">
         <tr>
-            <td class="text-left">MACHINE: {{$data["machine"]["name"]}}</td>
-            <td class="text-left">BRAND: {{$data["machine"]["brand"]}}</td>
-            <td class="text-left">MODEL: {{$data["machine"]["model"]}}</td>
+            <td class="text-left">{{__('messages.name')}}: {{$data["machine"]["name"]}}</td>
+            <td class="text-left">{{__('messages.brand')}}: {{$data["machine"]["brand"]}}</td>
+            <td class="text-left">{{__('messages.model')}}: {{$data["machine"]["model"]}}</td>
         </tr>
     </table>
 </div>
@@ -27,9 +27,9 @@
         <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Start Date</th>
-            <th scope="col">End Date</th>
-            <th scope="col" class="text-right">Diff</th>
+            <th scope="col">{{__('messages.start_date')}}</th>
+            <th scope="col">{{__('messages.end_date')}}</th>
+            <th scope="col" class="text-right">{{__('messages.time')}}</th>
         </tr>
         </thead>
         <tbody>
