@@ -230,7 +230,7 @@ class WorkingSheetController extends Controller
 //        dd($data);
 		$pdf = \PDF::loadView('work-one-report', compact('data'));
 		$pdf->setPaper('A4');
-//		return $pdf->download();
+		return $pdf->download();
 
 		$name_file = Str::uuid()->toString();
 		$path = 'public/reports/' . $name_file . '.pdf';

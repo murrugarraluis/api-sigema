@@ -29,7 +29,7 @@
             <th scope="col">#</th>
             <th scope="col">{{__('messages.start_date')}}</th>
             <th scope="col">{{__('messages.end_date')}}</th>
-            <th scope="col" class="text-right">{{__('messages.time')}}</th>
+            <th scope="col" class="text-right" style="text-align: right">{{__('messages.time')}}</th>
         </tr>
         </thead>
         <tbody>
@@ -38,12 +38,12 @@
                 <td scope="row">{{$key+1}}</td>
                 <td>{{$item["date_time_start"]}}</td>
                 <td>{{$item["date_time_end"]}}</td>
-                <td class="text-right">{{$item["date_time_diff"]["hours"].":".$item["date_time_diff"]["minutes"].":".$item["date_time_diff"]["secons"]}}</td>
+                <td class="text-right" style="text-align: right">{{$item["date_time_diff"]["hours"].":".$item["date_time_diff"]["minutes"].":".$item["date_time_diff"]["secons"]}}</td>
             </tr>
         @endforeach
         <tr>
             <td colspan="3"><strong>Total</strong></td>
-            <td class="text-right"><strong>{{$data["working_hours_total"]}}</strong></td>
+            <td class="text-right" style="text-align: right"><strong>{{$data["working_hours_total"]}}</strong></td>
         </tr>
         </tbody>
     </table>
