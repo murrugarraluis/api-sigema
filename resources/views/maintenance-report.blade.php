@@ -30,7 +30,7 @@
 			<th scope="col">{{__('messages.brand')}}</th>
 			<th scope="col">{{__('messages.model')}}</th>
 			@if($data["type"] == "resumen")
-				<th scope="col">{{__('messages.maintenance_count')}}</th>
+				<th scope="col" style="width: 5%">{{__('messages.maintenance_count')}}</th>
 				<th scope="col">{{__('messages.amount')}}</th>
 			@else
 				<th scope="col">{{__('messages.code')}}</th>
