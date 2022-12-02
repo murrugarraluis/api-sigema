@@ -12,6 +12,7 @@ return [
 	'attendances' => 'Asistencias',
 	'absences' => 'Faltas',
 	'justified_absences' => 'Faltas Justificadas',
+	'unexcused_absences' => 'Faltas No Justificadas',
 	'working_hours' => 'Horas de Trabajo',
 	'date' => 'Fecha',
 	'reason' => 'Motivo',

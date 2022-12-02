@@ -33,6 +33,7 @@
                 <th scope="col" class="text-center" style="width: 10%">{{ __('messages.attendances') }}</th>
                 <th scope="col" class="text-center"style="width: 10%">{{ __('messages.absences') }}</th>
                 <th scope="col" class="text-center" style="width: 10%">{{ __('messages.justified_absences') }}</th>
+								<th scope="col" class="text-center" style="width: 10%">{{ __('messages.unexcused_absences') }}</th>
                 <th scope="col" class="text-center"style="width: 12%">{{ __('messages.working_hours') }}</th>
             @else
                 <th scope="col" class="text-center">{{ __('messages.date') }}</th>
@@ -48,8 +49,9 @@
                         <td>{{ $item['lastname'] }}</td>
                         <td>{{ $item['name'] }}</td>
                         <td class="text-center">{{ $item['attendances'] }}</td>
-                        <td class="text-center">{{ $item['absences'] }}</td>
+												<td class="text-center">{{ $item['absences'] + $item['justified_absences'] }}</td>
                         <td class="text-center">{{ $item['justified_absences'] }}</td>
+                        <td class="text-center">{{ $item['absences'] }}</td>
                         <td class="text-center">{{ $item['working_hours'] }}</td>
                     </tr>
                 @endforeach

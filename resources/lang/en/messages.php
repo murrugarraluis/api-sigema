@@ -12,6 +12,7 @@ return [
 	'attendances' => 'Attendances',
 	'absences' => 'Absences',
 	'justified_absences' => 'Justified Absences',
+	'unexcused_absences' => 'Unexcused Absences',
 	'working_hours' => 'Working Hours',
 	'date' => 'Date',
 	'reason' => 'Reason',
