@@ -69,8 +69,16 @@ class MaintenanceSheetController extends Controller
 
 //		$total_maintenances = $report->count();
 
-		if ($request->order_by == "asc") $report = $report->sortBy($request->sort_by)->values();
-		else $report = $report->sortByDesc($request->sort_by)->values();
+//		dd($report);
+		if ($request->order_by == "asc") {
+			$report = $report->sortBy(function ($item) use($request) {
+				return ($item->jsonSerialize()[$request->sort_by]);
+			})->values();
+		} else{
+			$report = $report->sortByDesc(function ($item) use($request) {
+				return ($item->jsonSerialize()[$request->sort_by]);
+			})->values();
+		}
 
 		$data = [
 			"data" => $report->jsonSerialize(),
@@ -96,7 +104,7 @@ class MaintenanceSheetController extends Controller
 
 //		dd($data);
 
-		// return $pdf->download();
+//		return $pdf->download();
 
 		$name_file = Str::uuid()->toString();
 		$path = 'public/reports/' . $name_file . '.pdf';
