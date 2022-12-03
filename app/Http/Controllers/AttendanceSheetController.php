@@ -115,6 +115,7 @@ class AttendanceSheetController extends Controller
 
 //		 return $pdf->download();
 
+
 		$name_file = Str::uuid()->toString();
 		$path = 'public/reports/' . $name_file . '.pdf';
 		Storage::put($path, $pdf->output());

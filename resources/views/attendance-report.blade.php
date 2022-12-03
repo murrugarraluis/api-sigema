@@ -49,9 +49,9 @@
 				<td>{{ $item['lastname'] }}</td>
 				<td>{{ $item['name'] }}</td>
 				<td class="text-center">{{ $item['attendances'] }}</td>
-				<td class="text-center">{{ $item['absences'] + $item['justified_absences'] }}</td>
+				<td class="text-center">{{ $item['absences']}}</td>
 				<td class="text-center">{{ $item['justified_absences'] }}</td>
-				<td class="text-center">{{ $item['absences'] }}</td>
+				<td class="text-center">{{ $item['unexcused_absences'] }}</td>
 				<td class="text-center">{{ $item['working_hours'] }}</td>
 			</tr>
 		@endforeach

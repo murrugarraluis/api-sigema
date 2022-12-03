@@ -21,6 +21,7 @@ class AttendanceSheetPDFResource extends JsonResource
 			"attendances" => $this->get_attendances(),
 			"absences" => $this->get_absences(),
 			"justified_absences" => $this->get_justified_absences(),
+			"unexcused_absences" => $this->get_unexcused_absences(),
 			"get_total_absences" => $this->get_total_absences(),
 			"working_hours" => $this->get_working_hours_total(),
 		];
@@ -32,14 +33,21 @@ class AttendanceSheetPDFResource extends JsonResource
 		return $this->attendance_sheets->where('pivot.attendance', 1)->count();
 	}
 
+	/**
+	 * @return mixed
+	 */
 	function get_absences()
 	{
-		return $this->attendance_sheets->where('pivot.attendance', 0)->count();
+		return $this->get_justified_absences() + $this->get_unexcused_absences();
 	}
 
 	function get_justified_absences()
 	{
 		return $this->attendance_sheets->where('pivot.attendance', 0)->whereNotNull('pivot.missed_reason')->count();
+	}
+	function get_unexcused_absences()
+	{
+		return $this->attendance_sheets->where('pivot.attendance', 0)->count();
 	}
 
 	function get_total_absences()
