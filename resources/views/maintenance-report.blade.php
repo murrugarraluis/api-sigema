@@ -11,9 +11,15 @@
 	<table class="table-info">
 		<thead>
 		<tr>
-			<td scope="col">{{__('messages.start_date')}}: {{$data["start_date"]}}</td>
-			<td scope="col">{{__('messages.end_date')}}: {{$data["end_date"]}}</td>
-			<td scope="col">{{__('messages.type')}}: {{$data["type"]}}</td>
+			<td scope="col" colspan="2">{{__('messages.start_date')}}: {{$data["start_date"]}}</td>
+			<td scope="col" colspan="2">{{__('messages.end_date')}}: {{$data["end_date"]}}</td>
+{{--			<td scope="col">{{__('messages.type')}}: {{$data["type"]}}</td>--}}
+{{--			<td scope="col">{{__('messages.sort_by')}}: {{__("messages.".$data["sort_by"])}}</td>--}}
+{{--			<td scope="col">{{__('messages.date')}}: {{date('Y-m-d H:i:s')}}</td>--}}
+		</tr>
+		<tr>
+			<td scope="col" colspan="2">{{__('messages.type')}}: {{$data["type"]}}</td>
+			<td scope="col" colspan="2">{{__('messages.sort_by')}}: {{__("messages.".$data["sort_by"])}}</td>
 			<td scope="col">{{__('messages.date')}}: {{date('Y-m-d H:i:s')}}</td>
 		</tr>
 		</thead>
@@ -81,7 +87,8 @@
 					</tr>
 				@endforeach
 				<tr>
-					<td colspan="9"><strong>{{__('messages.number_maintenance')}}: {{count($item["maintenance_sheets"])}}</strong></td>
+					<td colspan="9"><strong>{{__('messages.number_maintenance')}}: {{count($item["maintenance_sheets"])}}</strong>
+					</td>
 					<td style="text-align: right"><strong>{{number_format((float)$item["amount"], 2, '.', '')}}</strong></td>
 				</tr>
 			@endforeach

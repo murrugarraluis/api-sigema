@@ -89,7 +89,8 @@ class MaintenanceSheetController extends Controller
 			"total_amount" => $machines->sum('amount'),
 			"start_date" => $request->start_date,
 			"end_date" => $request->end_date,
-			"type" => $request->type
+			"type" => $request->type,
+			"sort_by" => $request->sort_by
 		];
 //		return $data;
 		$language = (Auth()->user()->employee->native_language);
