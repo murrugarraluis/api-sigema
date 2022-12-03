@@ -91,10 +91,13 @@ class AttendanceSheetController extends Controller
 				return ($employee->jsonSerialize()['attendances']);
 			}),
 			"total_absences" => $employees->sum(function ($employee) {
-				return ($employee->jsonSerialize()['absences']);
+				return ($employee->jsonSerialize()['absences'] + $employee->jsonSerialize()['justified_absences']);
 			}),
 			"total_justified_absences" => $employees->sum(function ($employee) {
 				return ($employee->jsonSerialize()['justified_absences']);
+			}),
+			"total_unexcused_absences" => $employees->sum(function ($employee) {
+				return ($employee->jsonSerialize()['absences']);
 			}),
 		];
 //		return $data;
@@ -110,7 +113,7 @@ class AttendanceSheetController extends Controller
 //        $pdf->getCanvas()->page_text(72, 18, "Header: {PAGE_NUM} of {PAGE_COUNT}", $font, 10, array(0,0,0));
 
 
-		// return $pdf->download();
+//		 return $pdf->download();
 
 		$name_file = Str::uuid()->toString();
 		$path = 'public/reports/' . $name_file . '.pdf';
