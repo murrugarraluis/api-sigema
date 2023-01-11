@@ -86,18 +86,18 @@
 						<td class="align-middle">{{ $key2 == 0 ? $item['lastname'] : '' }}</td>
 						<td class="align-middle">{{ $key2 == 0 ? $item['name'] : '' }}</td>
 						<td>{{ $item2['date'] }}</td>
-						<td>{{ $item2['pivot']['missed_reason'] }}</td>
-						<td>{{ $item2['pivot']['missed_description'] }}</td>
+						<td style="font-style: italic;">{{ $item2['pivot']['missed_reason']?$item2['pivot']['missed_reason']:'NULL' }}</td>
+						<td style="font-style: italic;">{{ $item2['pivot']['missed_description']? $item2['pivot']['missed_description']:'NULL' }}</td>
 					</tr>
 				@endforeach
 				<tr>
 					<td colspan="2"><strong>{{ __('messages.total_justified_absences') }}:
 							{{ $item['justified_absences'] }}</strong></td>
 					<td colspan="2"><strong>{{ __('messages.total_unexcused_absences') }}:
-							{{ $item['absences'] }}</strong>
+							{{ $item['unexcused_absences'] }}</strong>
 					</td>
 					<td colspan="2"><strong>{{ __('messages.total_absences') }}:
-							{{ $item['absences'] + $item['justified_absences'] }}</strong></td>
+							{{ $item['absences'] }}</strong></td>
 				</tr>
 			@endif
 		@endforeach
