@@ -62,6 +62,7 @@ class AttendanceSheetController extends Controller
 //			$query->where('title', 'like', '%first%');
 //
 //		}])->get();
+//		return $employees;
 		$employees = AttendanceSheetPDFResource::collection($employees);
 //		return ($employees);
 //		dd($employees->jsonSerialize());
@@ -91,18 +92,18 @@ class AttendanceSheetController extends Controller
 				return ($employee->jsonSerialize()['attendances']);
 			}),
 			"total_absences" => $employees->sum(function ($employee) {
-				return ($employee->jsonSerialize()['absences'] + $employee->jsonSerialize()['justified_absences']);
+				return ($employee->jsonSerialize()['absences']);
 			}),
 			"total_justified_absences" => $employees->sum(function ($employee) {
 				return ($employee->jsonSerialize()['justified_absences']);
 			}),
 			"total_unexcused_absences" => $employees->sum(function ($employee) {
-				return ($employee->jsonSerialize()['absences']);
+				return ($employee->jsonSerialize()['unexcused_absences']);
 			}),
 		];
 //		return $data;
 		$language = (Auth()->user()->employee->native_language);
-		$locale = $language == 'spanish' ?'es':'en';
+		$locale = $language == 'spanish' ? 'es' : 'en';
 		App::setLocale($locale);
 
 

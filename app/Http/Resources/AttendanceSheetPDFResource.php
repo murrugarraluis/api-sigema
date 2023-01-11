@@ -29,7 +29,7 @@ class AttendanceSheetPDFResource extends JsonResource
 
 	function get_attendances()
 	{
-//		dd($this->attendance_sheets);
+//		dd($this->name);
 		return $this->attendance_sheets->where('pivot.attendance', 1)->count();
 	}
 
@@ -47,7 +47,7 @@ class AttendanceSheetPDFResource extends JsonResource
 	}
 	function get_unexcused_absences()
 	{
-		return $this->attendance_sheets->where('pivot.attendance', 0)->count();
+		return $this->attendance_sheets->where('pivot.attendance', 0)->whereNull('pivot.missed_reason')->count();
 	}
 
 	function get_total_absences()
