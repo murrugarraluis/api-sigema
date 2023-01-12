@@ -100,11 +100,11 @@ class WorkingSheetController extends Controller
 		$date_limit_per_day_1 = date('Y-m-d H:i:s', (time() + $time_limit_per_day_1));;;
 
 		$now = date('Y-m-d H:i:s');
-		$users = User::select('id')->with(['roles','roles.permissions'])->whereHas('roles.permissions', function ($query){
-			$query->where('name','notifications');
+		$users = User::select('id')->with(['roles', 'roles.permissions'])->whereHas('roles.permissions', function ($query) {
+			$query->where('name', 'notifications');
 		})->get();
 		$user_ids = [];
-		$users->map(function($user) use (&$user_ids){
+		$users->map(function ($user) use (&$user_ids) {
 			$user_ids[] = $user->id;
 		});
 //		$users = User::with(['roles','roles.permissions'])->get();
@@ -121,7 +121,7 @@ class WorkingSheetController extends Controller
 		}
 //		notify 6 hours before the limit is reached
 		if ($date_limit_global_6 >= $now) {
-			$notification=Notification::create([
+			$notification = Notification::create([
 				"machine_id" => $machine_id,
 				"message" => "has 6 hours of working time left",
 				"date_send_notification" => $date_limit_global_6
@@ -131,7 +131,7 @@ class WorkingSheetController extends Controller
 
 //		notify 1 hours before the limit is reached
 		if ($date_limit_per_day_1 >= $now) {
-			$notification=Notification::create([
+			$notification = Notification::create([
 				"machine_id" => $machine_id,
 				"message" => "has 1 hours of working time left today",
 				"date_send_notification" => $date_limit_per_day_1
@@ -139,8 +139,10 @@ class WorkingSheetController extends Controller
 			$notification->users()->attach($user_ids);
 		}
 	}
-	public function deleteNotifications($machine_id){
-		Notification::where('is_send', false)->where('machine_id',$machine_id)->delete();
+
+	public function deleteNotifications($machine_id)
+	{
+		Notification::where('is_send', false)->where('machine_id', $machine_id)->delete();
 	}
 
 	function converterTimeSeconds($hour, $minute, $second)
@@ -223,14 +225,14 @@ class WorkingSheetController extends Controller
 	public function show_pdf(WorkingSheet $workingSheet)
 	{
 		$language = (Auth()->user()->employee->native_language);
-		$locale = $language == 'spanish' ?'es':'en';
+		$locale = $language == 'spanish' ? 'es' : 'en';
 		App::setLocale($locale);
 
 		$data = $this->show($workingSheet)->jsonSerialize();
-//        dd($data);
+//		dd($data);
 		$pdf = \PDF::loadView('work-one-report', compact('data'));
 		$pdf->setPaper('A4');
-		// return $pdf->download();
+//		return $pdf->download();
 
 		$name_file = Str::uuid()->toString();
 		$path = 'public/reports/' . $name_file . '.pdf';

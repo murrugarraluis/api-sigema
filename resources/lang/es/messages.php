@@ -49,5 +49,7 @@ return [
 	'work_sheet' => 'Ficha de Trabajo',
 	'time' => 'Tiempo',
 
+	'pre_check' => 'Descripción de verificación previa',
+
 
 ];

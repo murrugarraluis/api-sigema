@@ -49,5 +49,7 @@ return [
 	'work_sheet' => 'Work Sheet',
 	'time' => 'Time',
 
+	'pre_check' => 'Precheck Description',
+
 
 ];
