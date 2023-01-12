@@ -23,6 +23,15 @@
 			<td class="text-right">{{__('messages.machine')}}: {{$data["machine"]["name"]}}</td>
 		</tr>
 	</table>
+	<hr>
+	<table class="table-info">
+		<tr>
+			<td>{{__('messages.description')}}:</td>
+		</tr>
+		<tr>
+			<td class="text-left">{{$data["description"]}}</td>
+		</tr>
+	</table>
 </div>
 <hr>
 <div class="">

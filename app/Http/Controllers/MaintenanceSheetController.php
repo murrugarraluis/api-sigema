@@ -71,11 +71,11 @@ class MaintenanceSheetController extends Controller
 
 //		dd($report);
 		if ($request->order_by == "asc") {
-			$report = $report->sortBy(function ($item) use($request) {
+			$report = $report->sortBy(function ($item) use ($request) {
 				return ($item->jsonSerialize()[$request->sort_by]);
 			})->values();
-		} else{
-			$report = $report->sortByDesc(function ($item) use($request) {
+		} else {
+			$report = $report->sortByDesc(function ($item) use ($request) {
 				return ($item->jsonSerialize()[$request->sort_by]);
 			})->values();
 		}
@@ -199,9 +199,10 @@ class MaintenanceSheetController extends Controller
 		App::setLocale($locale);
 
 		$data = $this->show($maintenanceSheet)->jsonSerialize();
+//		dd($data);
 		$pdf = \PDF::loadView('maintenance-one-report', compact('data'));
 		$pdf->setPaper('A4');
-		// return $pdf->download();
+//		return $pdf->download();
 
 		$name_file = Str::uuid()->toString();
 		$path = 'public/reports/' . $name_file . '.pdf';
