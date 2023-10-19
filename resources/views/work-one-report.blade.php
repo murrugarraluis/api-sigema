@@ -42,7 +42,7 @@
 		</tr>
 		</thead>
 		<tbody>
-		@foreach($data["working_hours"]->jsonSerialize() as $key=>$item)
+		@foreach($data["working_hours"] as $key=>$item)
 			<tr>
 				<td scope="row">{{$key+1}}</td>
 				<td>{{$item["date_time_start"]}}</td>

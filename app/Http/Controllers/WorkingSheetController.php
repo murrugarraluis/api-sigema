@@ -229,7 +229,10 @@ class WorkingSheetController extends Controller
 		App::setLocale($locale);
 
 		$data = $this->show($workingSheet)->jsonSerialize();
-//		dd($data);
+		//jsonSerialize for Template Blade
+		$data['working_hours'] = array_map(function ($workingHour) {
+			return $workingHour->jsonSerialize();
+		}, $data['working_hours']);
 		$pdf = \PDF::loadView('work-one-report', compact('data'));
 		$pdf->setPaper('A4');
 //		return $pdf->download();
