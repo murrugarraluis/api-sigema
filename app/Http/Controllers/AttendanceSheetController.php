@@ -237,7 +237,7 @@ class AttendanceSheetController extends Controller
 			}
 			DB::commit();
 			return (new AttendanceSheetDetailResource($attendanceSheet))
-				->additional(['message' => 'Attendance Sheet updated . ']);
+				->additional(['message' => 'Attendance Sheet updated.']);
 		} catch (\Exception $e) {
 			DB::rollback();
 			throw new BadRequestException($e->getMessage());

@@ -94,7 +94,7 @@ class WorkingSheetControllerTest extends TestCase
                     'image',
                     'status',
                     'date_last_use',
-                    'total_hours_used',
+                    'total_time_used',
                     'date_last_maintenance',
                 ],
                 'working_hours' => [
@@ -140,7 +140,7 @@ class WorkingSheetControllerTest extends TestCase
                     'status',
                     'date_last_use',
                     'date_last_maintenance',
-                    'total_hours_used',
+                    'total_time_used',
                 ],
                 'working_hours' => [
                     '*' => [
@@ -191,7 +191,7 @@ class WorkingSheetControllerTest extends TestCase
                     'status',
                     'date_last_use',
                     'date_last_maintenance',
-                    'total_hours_used',
+                    'total_time_used',
                 ],
                 'working_hours' => [
                     '*' => [
@@ -220,7 +220,7 @@ class WorkingSheetControllerTest extends TestCase
 
         $working_sheet = WorkingSheet::factory()
             ->has(WorkingHour::factory()->count(1)->state(function (array $attributes, WorkingSheet $ws) {
-                return ['date_time_start' => '2022-02-02 12:00:00', 'date_time_end' => '2022-02-13:00:00'];
+                return ['date_time_start' => '2022-02-02 12:00:00', 'date_time_end' => '2022-02-13 13:00:00'];
             }), 'working_hours')
             ->create();
         $payload = [
@@ -242,7 +242,7 @@ class WorkingSheetControllerTest extends TestCase
                     'status',
                     'date_last_use',
                     'date_last_maintenance',
-                    'total_hours_used',
+                    'total_time_used',
                 ],
                 'working_hours' => [
                     '*' => [
@@ -271,7 +271,7 @@ class WorkingSheetControllerTest extends TestCase
 
         $working_sheet = WorkingSheet::factory()
             ->has(WorkingHour::factory()->count(1)->state(function (array $attributes, WorkingSheet $ws) {
-                return ['date_time_start' => '2022-02-02 12:00:00', 'date_time_end' => '2022-02-13:00:00'];
+                return ['date_time_start' => '2022-02-02 12:00:00', 'date_time_end' => '2022-02-13 13:00:00'];
             }), 'working_hours')
             ->create();
         $payload = [
@@ -293,7 +293,7 @@ class WorkingSheetControllerTest extends TestCase
                     'status',
                     'date_last_use',
                     'date_last_maintenance',
-                    'total_hours_used',
+                    'total_time_used',
                 ],
                 'working_hours' => [
                     '*' => [

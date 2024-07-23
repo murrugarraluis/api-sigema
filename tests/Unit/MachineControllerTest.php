@@ -99,7 +99,7 @@ class MachineControllerTest extends TestCase
                 ],
                 'status',
                 'date_last_use',
-                'total_hours_used',
+                'total_time_used',
                 'date_last_maintenance',
             ]]);
 
@@ -138,6 +138,7 @@ class MachineControllerTest extends TestCase
             'model' => 'model',
             'image' => 'www.image.com',
             'maximum_working_time' => 300,
+						'maximum_working_time_per_day' => 10,
             'articles' => [
                 [
                     'id' => Article::limit(1)->first()->id,
@@ -193,6 +194,7 @@ class MachineControllerTest extends TestCase
             'model' => 'model',
             'image' => '',
             'maximum_working_time' => 300,
+						'maximum_working_time_per_day' => 10,
             'articles' => [
                 [
                     'id' => Article::limit(1)->first()->id,

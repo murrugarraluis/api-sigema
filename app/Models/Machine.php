@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Uuids;
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -120,7 +121,7 @@ class Machine extends Model
 				->sum(function ($ws) {
 					return $ws->working_hours->sum(function ($wh) {
 						$datetime1 = date_create($wh["date_time_start"]);
-						$datetime2 = date_create($wh["date_time_end"]);
+						$datetime2 = $wh["date_time_end"] ? date_create($wh["date_time_end"]) : new DateTime(); // Usar la hora actual si es null
 						$interval = date_diff($datetime2, $datetime1);
 						$seconds = (($interval->days * 24) * 60 * 60) + ($interval->h * 60 * 60) + ($interval->i * 60) + $interval->s;
 						return $seconds;

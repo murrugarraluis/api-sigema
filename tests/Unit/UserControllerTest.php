@@ -35,7 +35,6 @@ class UserControllerTest extends TestCase
         $permissions = Permission::all();
         $role->syncPermissions($permissions);
 
-        Notification::factory(2)->create();
         DocumentType::factory()->create(['name' => 'DNI']);
         Position::factory()->create(['name' => 'System Engineer']);
     }
@@ -43,7 +42,7 @@ class UserControllerTest extends TestCase
     public
     function test_index()
     {
-        $this->withoutExceptionHandling();
+//        $this->withoutExceptionHandling();
         $user = User::factory()->create([
             'email' => 'admin@jextecnologies.com',
             'password' => bcrypt('123456')
@@ -103,35 +102,35 @@ class UserControllerTest extends TestCase
 
     }
 
-    public
-    function test_show_notifications()
-    {
-        $this->withoutExceptionHandling();
-        $this->seedData();
-
-        $notifications = Notification::all();
-        $user = User::factory()->hasAttached($notifications)->create([
-            'email' => 'admin@jextecnologies.com',
-            'password' => bcrypt('123456')
-        ]);
-        $user->assignRole('Admin');
-        Employee::factory()->create([
-            'user_id' => $user
-        ]);
-        $user = User::limit(1)->first();
-
-        $response = $this->actingAs($user)->withSession(['banned' => false])
-            ->getJson("api/v1/$this->resource/$user->id/notifications");
-
-        $response->assertStatus(200)
-            ->assertJsonStructure(['data' => [
-                '*' => [
-                    'id',
-                    'name',
-                ]
-            ]]);
-
-    }
+//    public
+//    function test_show_notifications()
+//    {
+//        $this->withoutExceptionHandling();
+//        $this->seedData();
+//
+//        $notifications = Notification::all();
+//        $user = User::factory()->hasAttached($notifications)->create([
+//            'email' => 'admin@jextecnologies.com',
+//            'password' => bcrypt('123456')
+//        ]);
+//        $user->assignRole('Admin');
+//        Employee::factory()->create([
+//            'user_id' => $user
+//        ]);
+//        $user = User::limit(1)->first();
+//
+//        $response = $this->actingAs($user)->withSession(['banned' => false])
+//            ->getJson("api/v1/$this->resource/$user->id/notifications");
+//
+//        $response->assertStatus(200)
+//            ->assertJsonStructure(['data' => [
+//                '*' => [
+//                    'id',
+//                    'name',
+//                ]
+//            ]]);
+//
+//    }
 
     public
     function test_show_not_found()

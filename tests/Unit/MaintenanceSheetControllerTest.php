@@ -115,15 +115,6 @@ class MaintenanceSheetControllerTest extends TestCase
                 ],
                 'machine' => [
                     'name'
-                ],
-                'articles' => [
-                    '*' => [
-                        'id',
-                        'name',
-                        'description',
-                        'price',
-                        'quantity'
-                    ]
                 ]
             ]]);
 

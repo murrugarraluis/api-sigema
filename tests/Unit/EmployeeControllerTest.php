@@ -123,7 +123,7 @@ class EmployeeControllerTest extends TestCase
     public function test_store()
     {
 
-        $this->withoutExceptionHandling();
+//        $this->withoutExceptionHandling();
         $user = User::factory()->create([
             'email' => 'admin@jextecnologies.com',
             'password' => bcrypt('123456')
@@ -144,7 +144,9 @@ class EmployeeControllerTest extends TestCase
             'document_type' => [
                 'id' => DocumentType::limit(1)->first()->id,
             ],
-            'native_language' => 'Spanish'
+						'type' => 'permanent',
+            'native_language' => 'spanish',
+						'turn' => 'day'
         ];
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->postJson("api/v1/$this->resource", $payload);
@@ -198,8 +200,10 @@ class EmployeeControllerTest extends TestCase
             'document_type' => [
                 'id' => DocumentType::limit(1)->first()->id,
             ],
-            'native_language' => 'Spanish'
-        ];
+						'type' => 'permanent',
+						'native_language' => 'spanish',
+						'turn' => 'day'
+				];
         $response = $this->actingAs($user)->withSession(['banned' => false])
             ->putJson("api/v1/$this->resource/$employee->id", $payload);
 
